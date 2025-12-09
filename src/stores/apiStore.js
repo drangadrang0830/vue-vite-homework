@@ -1,48 +1,58 @@
-import axios from 'axios'
-
 import { defineStore } from 'pinia'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 const APIurl = import.meta.env.VITE_APP_API
 
-export default defineStore('apiStore', {
-  state: () => ({
-    loginResult: {},
-  }),
-  getters: {
-    // 計算操作
-  },
-  //async/await版本
-  actions: {
-    // 1. 在函式宣告前加上 async 關鍵字
-    async login(username, password) {
-      // 實例化 網路連結
-      const loginUrl = `${APIurl}admin/signin`
-      //清空存放物件
-      this.loginResult = {}
-      //嘗試
-      try {
-        // 2. 在非同步操作前加上 await，程式會在這裡「暫停」等待結果
-        const response = await axios.post(loginUrl, { username, password }) // 暫停並等待 API 回應
-        // 3. 取得回應後，程式才繼續往下執行
-        //解構出資料屬性值
-        const { data } = response
-        //將該值賦值到物件變數上
-        this.loginResult = data
-        //提示
-        console.log('登入成功回應:', data.message)
-        //解構出兩值
-        const { token, expired } = data
-        //儲存金鑰
+//Setup Store 設定式寫法
+export default defineStore('apiStore', () => {
+  const router = useRouter()
+
+  const login = async (username, password) => {
+    const loginUrl = `${APIurl}v2/admin/signin`
+
+    try {
+      const response = await axios.post(loginUrl, { username, password })
+
+      if (response.data.success) {
+        const { token, expired } = response.data
         document.cookie = `hexToken=${token}; expires=${new Date(expired)}; path=/`
-        //提示
         console.log('Token 已成功儲存至 Cookie')
-        // 4. 使用 try-catch 捕捉任何錯誤
-      } catch (error) {
-        //提示
-        console.error('登入失敗回應:', error.message)
-      } finally {
-        // 5. 無論成功失敗，最後都會執行的區塊，適合放置關閉 Loading 的程式碼
+
+        // 直接使用上面定義的 router 實例
+        router.push('/dashboardviews')
       }
-    },
-  },
+    } catch (error) {
+      console.error('登入失敗回應:', error.message)
+    }
+  }
+
+  const getToken = async () => {
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')
+
+    if (token) {
+      axios.defaults.headers.common.Authorization = token
+      const loginUrl = `${APIurl}v2/api/user/check`
+      try {
+        const response = await axios.post(loginUrl)
+        console.log(response)
+        if (!response.data.success) {
+          router.push('/loginviews')
+        }
+      } catch (error) {
+        console.error('登入失敗回應:', error.message)
+        router.push('/loginviews')
+      }
+    } else {
+      // this.token = null; // 如果用 ref() 記得更新狀態
+      console.error('Cookie 中沒有找到 Token')
+    }
+  }
+
+  // 最後返回所有 state, actions, getters 供外部使用
+  return {
+    login,
+    getToken,
+    // token // 如果有定義狀態，也要返回
+  }
 })
