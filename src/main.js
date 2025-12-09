@@ -6,6 +6,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 //引入頁面
 import App from './App.vue'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 const app = createApp(App)
 
