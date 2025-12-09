@@ -20,7 +20,7 @@ export default defineStore('apiStore', () => {
         console.log('Token 已成功儲存至 Cookie')
 
         // 直接使用上面定義的 router 實例
-        router.push('/dashboardviews')
+        router.push('/dashboardview')
       }
     } catch (error) {
       console.error('登入失敗回應:', error.message)
@@ -37,11 +37,11 @@ export default defineStore('apiStore', () => {
         const response = await axios.post(loginUrl)
         console.log(response)
         if (!response.data.success) {
-          router.push('/loginviews')
+          router.push('/loginview')
         }
       } catch (error) {
         console.error('登入失敗回應:', error.message)
-        router.push('/loginviews')
+        router.push('/loginview')
       }
     } else {
       // this.token = null; // 如果用 ref() 記得更新狀態
