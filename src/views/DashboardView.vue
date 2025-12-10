@@ -1,10 +1,8 @@
-<template>
-  Dashboard
-</template>
-
 <script setup>
 import { onMounted } from 'vue';
 import useApiStore from '@/stores/apiStore';
+
+import Navbar from '../components/DashboardNavbar.vue';
 
 const apiStore = useApiStore();
 
@@ -14,3 +12,10 @@ onMounted(() => {
   apiStore.getToken();
 });
 </script>
+
+<template>
+  <div>
+    <Navbar></Navbar>
+    <router-view></router-view>
+  </div>
+</template>

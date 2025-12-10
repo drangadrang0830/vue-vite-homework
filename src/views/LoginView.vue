@@ -31,14 +31,13 @@ const clearInput = async () => {
         <div class="mb-2">
           <label for="inputEmail" class="sr-only">Email address</label>
           <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus
-            v-model="user.username" />
+            v-model="user.username" autocomplete="on" />
         </div>
         <div class="mb-2">
           <label for="inputPassword" class="sr-only">Password</label>
           <input type="password" id="inputPassword" class="form-control" placeholder="Password" required
-            v-model="user.password" autocomplete />
+            v-model="user.password" autocomplete="on" @keyup.enter="clearInput" />
         </div>
-
         <div class="text-end mt-4">
           <!-- 這是送出按鈕 不是普通按鈕 -->
           <button class="btn btn-lg btn-primary btn-block" type="submit">登入</button>

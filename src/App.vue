@@ -1,17 +1,13 @@
-<script setup>
-
-</script>
-
 <template>
-  <router-link to="/">首頁</router-link>
-  <router-link to="/loginview">登入</router-link>
-  <router-link to="/dashboardview">儀錶板</router-link>
-  <router-view></router-view>
+  <div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <style lang="scss">
 @import "./assets/all";
 </style>
+<style></style>
 
 <style>
 body {

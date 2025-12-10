@@ -1,9 +1,9 @@
+<script setup>
+import Navbar from '../components/HomeNavbar.vue'
+</script>
+
 <template>
-  <div class="home">
-    <router-view></router-view>
+  <div>
+    <Navbar></Navbar>
   </div>
 </template>
-
-<script setup>
-
-</script>
