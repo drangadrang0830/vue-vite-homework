@@ -17,7 +17,7 @@ export default defineStore('productsStore', () => {
       const response = await axios.get(loginUrl)
       if (response.data.success) {
         products.value = response.data.products
-        console.log('產品取得成功:', products.value)
+        console.log('產品取得成功')
       } else {
         console.log('產品取得失敗:', response.data.message)
       }
@@ -34,7 +34,6 @@ export default defineStore('productsStore', () => {
     let httpMethod = 'post'
     let msg = '新增'
     if (item.id) {
-      // 如果有 ID，表示是修改 (PUT)
       api = `${api}/${item.id}`
       httpMethod = 'put'
       msg = '修改:'
@@ -43,7 +42,7 @@ export default defineStore('productsStore', () => {
       const response = await axios[httpMethod](api, { data: item })
 
       if (response.data.success) {
-        console.log(`產品${msg}成功:`, response)
+        console.log(`產品${msg}成功`)
         return true
       } else {
         console.log(`產品${msg}失敗:`, response.data.message)
@@ -54,11 +53,33 @@ export default defineStore('productsStore', () => {
       return false
     }
   }
+
+  // -----------------
+
+  // 處理檔案上傳的方法
+  const uploadFile = async (formData) => {
+    const url = `${APIurl}api/${PATHurl}/admin/upload`
+    try {
+      const response = await axios.post(url, formData)
+      if (response.data.success) {
+        console.log('上傳圖片成功', response.data)
+        return response.data.imageUrl
+      } else {
+        console.log('上傳圖片失敗:', response.data.message)
+        return null
+      }
+    } catch (error) {
+      console.log('上傳圖片伺服器失敗:', error)
+      return null
+    }
+  }
+
   // -----------------
 
   return {
     products,
     getProducts,
     updateProduct,
+    uploadFile,
   }
 })

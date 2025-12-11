@@ -57,6 +57,31 @@ const submitProduct = async () => {
 }
 
 // -----------------
+
+//預處理上傳圖片
+const uploadFile = async (event) => {
+  //讀取選取資料
+  const file = event.target.files[0];
+  if (!file) return;
+
+  //建立 FormData 物件
+  const formData = new FormData()
+  formData.append('file-to-upload', file)
+
+  //後處理
+  const imageUrl = await productsStore.uploadFile(formData);
+
+  //回傳存進modal資料
+  if (imageUrl) {
+    tempProduct.value.imageUrl = imageUrl;
+  }
+
+  // 清空 input
+  event.target.value = '';
+};
+
+// -----------------
+
 defineExpose({
   openModal,
   submitProduct
@@ -88,7 +113,7 @@ defineExpose({
                   <label for="customFile" class="form-label">或 上傳圖片
                     <i class="fas fa-spinner fa-spin"></i>
                   </label>
-                  <input type="file" id="customFile" class="form-control">
+                  <input type="file" id="customFile" class="form-control" @change="uploadFile">
                 </div>
                 <img class="img-fluid" :src="tempProduct.imageUrl" alt="">
                 <!-- 延伸技巧，多圖 -->

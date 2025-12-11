@@ -35,7 +35,6 @@ export default defineStore('apiStore', () => {
       const loginUrl = `${APIurl}api/user/check`
       try {
         const response = await axios.post(loginUrl)
-        console.log('驗證成功')
         if (!response.data.success) {
           router.push('/loginview')
         }
@@ -55,13 +54,12 @@ export default defineStore('apiStore', () => {
 
     try {
       const response = await axios.post(loginUrl)
-
       if (response.data.success) {
-        console.log('已登出:', response.data.success)
         router.push('/loginview')
       }
     } catch (error) {
-      console.log('登入失敗回應:', error.message)
+      console.log('登出失敗回應:', error.message)
+      router.push('/loginview')
     }
   }
 
