@@ -7,8 +7,8 @@ import store from '../stores/productsStore'
 const modal = ref(null)
 //操作實體
 const bsModal = ref(null)
-
-
+// 用於多圖上傳 input 的 ref
+const filesInput = ref(null);
 
 //modal控制區
 onMounted(() => {
@@ -18,8 +18,17 @@ onMounted(() => {
   }
 })
 
+
+// 覆寫 openModal 方法，確保編輯舊資料時 imagesUrl 陣列存在
 const openModal = (item = {}) => {
+  // 淺拷貝傳入的產品資料
   tempProduct.value = { ...item };
+
+  // 確保 tempProduct 中有 imagesUrl 陣列，避免 v-for 錯誤
+  if (!tempProduct.value.imagesUrl) {
+    tempProduct.value.imagesUrl = [];
+  }
+
   bsModal.value.toggle();
 }
 
@@ -38,7 +47,9 @@ const productsStore = store();
 
 const emit = defineEmits(['update-complete'])
 
-const tempProduct = ref({});
+const tempProduct = ref({
+  imagesUrl: [],
+});
 
 //呼叫通知父層關閉modal
 const submitProduct = async () => {
@@ -61,12 +72,12 @@ const submitProduct = async () => {
 //預處理上傳圖片
 const uploadFile = async (event) => {
   //讀取選取資料
-  const file = event.target.files[0];
+  const file = event.target.files[0]; // *** 修改這裡，取得第一個檔案 ***
   if (!file) return;
 
   //建立 FormData 物件
   const formData = new FormData()
-  formData.append('file-to-upload', file)
+  formData.append('file-to-upload', file) // *** 傳入正確的 File 物件 ***
 
   //後處理
   const imageUrl = await productsStore.uploadFile(formData);
@@ -78,6 +89,37 @@ const uploadFile = async (event) => {
 
   // 清空 input
   event.target.value = '';
+};
+
+// 添加新的方法來處理多張圖片上傳
+const uploadFiles = async (event) => {
+  const uploadedFiles = event.target.files;
+  if (uploadedFiles.length === 0) return;
+
+  // 使用 Promise.all 來並行上傳所有圖片
+  const uploadPromises = Array.from(uploadedFiles).map(file => {
+    const formData = new FormData();
+    // 沿用您的格式: 'file-to-upload'
+    formData.append('file-to-upload', file);
+    // 呼叫 store 中的上傳方法
+    return productsStore.uploadFile(formData);
+  });
+
+  try {
+    const imageUrls = await Promise.all(uploadPromises);
+    // 將所有成功的 URL 添加到 imagesUrl 陣列中
+    imageUrls.forEach(url => {
+      if (url) {
+        tempProduct.value.imagesUrl.push(url);
+      }
+    });
+    // 清空 input file 的值，以便下次可以選擇相同的檔案
+    filesInput.value.value = '';
+
+  } catch (error) {
+    console.error("多圖上傳失敗:", error);
+    filesInput.value.value = '';
+  }
 };
 
 // -----------------
@@ -118,17 +160,25 @@ defineExpose({
                 <img class="img-fluid" :src="tempProduct.imageUrl" alt="">
                 <!-- 延伸技巧，多圖 -->
                 <div class="mt-5">
-                  <div class="mb-3 input-group">
-                    <input type="url" class="form-control form-control" placeholder="請輸入連結" v-model="tempProduct.image">
-                    <button type="button" class="btn btn-outline-danger">
+                  <label for="customFiles" class="form-label">上傳其他圖片</label>
+                  <!-- 1. 新增一個支援 multiple 的 input file，綁定 filesInput ref -->
+                  <input type="file" id="customFiles" class="form-control mb-3" multiple @change="uploadFiles"
+                    ref="filesInput">
+
+                  <!-- 2. 使用 v-for 迴圈來顯示 imagesUrl 陣列中的所有圖片 -->
+                  <div v-for="(imgUrl, key) in tempProduct.imagesUrl" :key="key" class="mb-3 input-group">
+                    <input type="url" class="form-control" placeholder="請輸入連結" v-model="tempProduct.imagesUrl[key]">
+                    <!-- 3. 綁定點擊事件，使用 splice 移除該圖片 -->
+                    <button type="button" class="btn btn-outline-danger" @click="tempProduct.imagesUrl.splice(key, 1)">
                       移除
                     </button>
                   </div>
-                  <div>
-                    <button class="btn btn-outline-primary btn-sm d-block w-100">
-                      新增圖片
-                    </button>
-                  </div>
+
+                  <!-- 4. 新增一個按鈕，用於手動添加空的輸入框，方便直接貼上網址 -->
+                  <button class="btn btn-outline-primary btn-sm d-block w-100" @click="tempProduct.imagesUrl.push('')"
+                    type="button">
+                    新增圖片欄位
+                  </button>
                 </div>
               </div>
               <div class="col-sm-8">
