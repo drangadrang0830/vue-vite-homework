@@ -36,7 +36,7 @@ const clearInput = async () => {
         <div class="mb-2">
           <label for="inputPassword" class="sr-only">Password</label>
           <input type="password" id="inputPassword" class="form-control" placeholder="Password" required
-            v-model="user.password" autocomplete="on" @keyup.enter="clearInput" />
+            v-model="user.password" autocomplete="off" @keyup.enter="clearInput" />
         </div>
         <div class="text-end mt-4">
           <!-- 這是送出按鈕 不是普通按鈕 -->

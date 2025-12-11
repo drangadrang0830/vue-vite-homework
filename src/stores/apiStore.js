@@ -18,8 +18,6 @@ export default defineStore('apiStore', () => {
       if (response.data.success) {
         const { token, expired } = response.data
         document.cookie = `hexToken=${token}; expires=${new Date(expired)}; path=/`
-        console.log('Token 已成功儲存至 Cookie')
-
         // 直接使用上面定義的 router 實例
         router.push('/dashboardview/productsview')
       }
@@ -37,7 +35,7 @@ export default defineStore('apiStore', () => {
       const loginUrl = `${APIurl}api/user/check`
       try {
         const response = await axios.post(loginUrl)
-        console.log(response)
+        console.log('驗證成功')
         if (!response.data.success) {
           router.push('/loginview')
         }
