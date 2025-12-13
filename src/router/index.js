@@ -31,7 +31,7 @@ const router = createRouter({
   ],
 })
 
-// **變更 3: 添加全域前置守衛**
+// 添加全域前置守衛
 router.beforeEach(async (to, from, next) => {
   // 實例化您的 Store
   const apiStore = useApiStore()

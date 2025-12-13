@@ -1,20 +1,22 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import useStatusStore from '../stores/statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 
 //Setup Store 設定式寫法
 export default defineStore('apiStore', () => {
   const router = useRouter()
+  const statusStore = useStatusStore()
 
   //登入 方法
   const login = async (username, password) => {
     const loginUrl = `${APIurl}admin/signin`
 
     try {
+      statusStore.isLoading = true
       const response = await axios.post(loginUrl, { username, password })
-
       if (response.data.success) {
         const { token, expired } = response.data
         document.cookie = `hexToken=${token}; expires=${new Date(expired)}; path=/`

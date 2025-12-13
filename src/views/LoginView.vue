@@ -2,8 +2,10 @@
 import { ref } from 'vue';
 
 import useApiStore from '@/stores/apiStore';
+import useStatusStore from '../stores/statusStore'
 
 const apiStore = useApiStore()
+const statusStore = useStatusStore()
 
 const user = ref(
   {
@@ -22,8 +24,8 @@ const clearInput = async () => {
 </script>
 
 <template>
-
   <div class="container mt-5">
+    <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
     <!-- 送出實質型商店的 login函式-->
     <form class="row justify-content-center" @submit.prevent="clearInput">
       <div class="col-md-6">

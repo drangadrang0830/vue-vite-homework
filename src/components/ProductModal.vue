@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
-import store from '../stores/productsStore'
+import useProductsStore from '../stores/productsStore'
 
 //DOM元素
 const modal = ref(null)
@@ -18,13 +18,10 @@ onMounted(() => {
   }
 })
 
-
-// 覆寫 openModal 方法，確保編輯舊資料時 imagesUrl 陣列存在
 const openModal = (item = {}) => {
   // 淺拷貝傳入的產品資料
   tempProduct.value = { ...item };
 
-  // 確保 tempProduct 中有 imagesUrl 陣列，避免 v-for 錯誤
   if (!tempProduct.value.imagesUrl) {
     tempProduct.value.imagesUrl = [];
   }
@@ -34,16 +31,19 @@ const openModal = (item = {}) => {
 
 const handleModalHide = () => {
   document.activeElement.blur();
+  // 在 Modal 確定隱藏後，才通知父元件更新資料
+  emit('update-complete');
 };
 
 onUnmounted(() => {
-  if (modal.value) {
+  if (modal.value && bsModal.value) {
     modal.value.removeEventListener('hide.bs.modal', handleModalHide);
+    bsModal.value.dispose();
   }
 });
 
 // -----------------
-const productsStore = store();
+const productsStore = useProductsStore();
 
 const emit = defineEmits(['update-complete'])
 
@@ -51,69 +51,46 @@ const tempProduct = ref({
   imagesUrl: [],
 });
 
-//呼叫通知父層關閉modal
+// 呼叫通知父層關閉modal
 const submitProduct = async () => {
-  // 呼叫 Store 的方法，並等待結果 (使用 await)
-  const success = await productsStore.updateProduct(tempProduct.value);
-
-  if (success) {
-    // 如果成功，關閉 Modal
-    bsModal.value.hide();
-    // 通知父元件更新列表
-    emit('update-complete');
-  } else {
-    // 失敗時可能顯示錯誤訊息等
-    console.log("操作失敗，請檢查 API 回應。");
-  }
+  await productsStore.updateProduct(tempProduct.value);
+  bsModal.value.hide();
 }
 
 // -----------------
 
-//預處理上傳圖片
-const uploadFile = async (event) => {
-  //讀取選取資料
-  const file = event.target.files[0]; // *** 修改這裡，取得第一個檔案 ***
-  if (!file) return;
-
-  //建立 FormData 物件
-  const formData = new FormData()
-  formData.append('file-to-upload', file) // *** 傳入正確的 File 物件 ***
-
-  //後處理
-  const imageUrl = await productsStore.uploadFile(formData);
-
-  //回傳存進modal資料
-  if (imageUrl) {
-    tempProduct.value.imageUrl = imageUrl;
-  }
-
-  // 清空 input
-  event.target.value = '';
-};
+// 添加一個計算屬性或方法來檢查是否達到上限
+const MAX_IMAGES = 5;
 
 // 添加新的方法來處理多張圖片上傳
 const uploadFiles = async (event) => {
   const uploadedFiles = event.target.files;
   if (uploadedFiles.length === 0) return;
 
-  // 使用 Promise.all 來並行上傳所有圖片
+  // 檢查當前加上新上傳的圖片總數是否超過限制
+  const currentTotal = tempProduct.value.imagesUrl.length;
+  const potentialTotal = currentTotal + uploadedFiles.length;
+
+  if (potentialTotal > MAX_IMAGES) {
+    alert(`圖片總數不能超過 ${MAX_IMAGES} 張。您已上傳 ${currentTotal} 張。`);
+    filesInput.value.value = ''; // 清空 input file
+    return;
+  }
+
   const uploadPromises = Array.from(uploadedFiles).map(file => {
+    // ... (原有的 formData 建立和 store 呼叫)
     const formData = new FormData();
-    // 沿用您的格式: 'file-to-upload'
     formData.append('file-to-upload', file);
-    // 呼叫 store 中的上傳方法
     return productsStore.uploadFile(formData);
   });
 
   try {
     const imageUrls = await Promise.all(uploadPromises);
-    // 將所有成功的 URL 添加到 imagesUrl 陣列中
     imageUrls.forEach(url => {
       if (url) {
         tempProduct.value.imagesUrl.push(url);
       }
     });
-    // 清空 input file 的值，以便下次可以選擇相同的檔案
     filesInput.value.value = '';
 
   } catch (error) {
@@ -145,43 +122,53 @@ defineExpose({
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
+                <!-- 移除原有的 "上傳產品圖片 (最多 5 張)" 標題 -->
+
                 <div class="mb-3">
-                  <label for="image" class="form-label">輸入圖片網址</label>
-                  <input type="text" class="form-control" id="image" placeholder="請輸入圖片連結"
-                    v-model="tempProduct.imageUrl">
-                </div>
-                <div class="mb-3">
-                  <label for="customFile" class="form-label">或 上傳圖片
-                    <i class="fas fa-spinner fa-spin"></i>
+                  <!-- 只有上傳按鈕，沒有網址輸入框 -->
+                  <label for="customFiles" class="btn btn-outline-secondary w-100 mb-0">
+                    選擇圖片檔案上傳
                   </label>
-                  <input type="file" id="customFile" class="form-control" @change="uploadFile">
+                  <!-- 隱藏實際的檔案選擇 input，並支援多選 -->
+                  <input type="file" id="customFiles" class="form-control d-none" multiple
+                    accept="image/jpeg, image/png" @change="uploadFiles" ref="filesInput">
                 </div>
-                <img class="img-fluid" :src="tempProduct.imageUrl" alt="">
-                <!-- 延伸技巧，多圖 -->
-                <div class="mt-5">
-                  <label for="customFiles" class="form-label">上傳其他圖片</label>
-                  <!-- 1. 新增一個支援 multiple 的 input file，綁定 filesInput ref -->
-                  <input type="file" id="customFiles" class="form-control mb-3" multiple @change="uploadFiles"
-                    ref="filesInput">
 
-                  <!-- 2. 使用 v-for 迴圈來顯示 imagesUrl 陣列中的所有圖片 -->
-                  <div v-for="(imgUrl, key) in tempProduct.imagesUrl" :key="key" class="mb-3 input-group">
-                    <input type="url" class="form-control" placeholder="請輸入連結" v-model="tempProduct.imagesUrl[key]">
-                    <!-- 3. 綁定點擊事件，使用 splice 移除該圖片 -->
-                    <button type="button" class="btn btn-outline-danger" @click="tempProduct.imagesUrl.splice(key, 1)">
-                      移除
-                    </button>
+                <!-- 顯示圖片區域 -->
+                <div class="row">
+                  <!-- 使用 v-for 迴圈來顯示 imagesUrl 陣列中的所有圖片 -->
+                  <template v-for="(imgUrl, key) in tempProduct.imagesUrl" :key="key">
+                    <div :class="{ 'col-12': key === 0, 'col-6': key > 0 }" class="mb-3">
+                      <!-- 使用 card 類別 -->
+                      <div class="card h-100">
+                        <!-- 圖片使用 card-img-top，並強制統一高度與 object-fit -->
+                        <img :src="imgUrl" class="card-img-top" :alt="'產品圖片 ' + (key + 1)"
+                          :style="{ height: key === 0 ? '180px' : '90px' }">
+                        <div class="list-group list-group-flush mt-auto">
+                          <button type="button"
+                            class="list-group-item list-group-item-action btn btn-outline-danger text-center py-2"
+                            @click="tempProduct.imagesUrl.splice(key, 1)">
+                            移除
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+
+                  <!-- 提示目前張數，並加上格式與大小限制 -->
+                  <div class="col-12 mb-3">
+                    <p class="text-muted text-center">
+                      僅支援 JPG、PNG 格式 <br>
+                      總計限制 3MB 以內<br>
+                      目前已上傳 {{ tempProduct.imagesUrl.length }} / {{ MAX_IMAGES }} 張圖片
+                    </p>
                   </div>
-
-                  <!-- 4. 新增一個按鈕，用於手動添加空的輸入框，方便直接貼上網址 -->
-                  <button class="btn btn-outline-primary btn-sm d-block w-100" @click="tempProduct.imagesUrl.push('')"
-                    type="button">
-                    新增圖片欄位
-                  </button>
                 </div>
               </div>
-              <div class="col-sm-8">
+
+              <!-- 右側欄位：產品資訊 (保留不變) -->
+              <div class="col-sm-9">
                 <div class="mb-3">
                   <label for="title" class="form-label">標題</label>
                   <input type="text" class="form-control" id="title" placeholder="請輸入標題 " v-model="tempProduct.title">

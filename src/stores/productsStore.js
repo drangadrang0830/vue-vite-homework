@@ -1,28 +1,35 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import useStatusStore from '../stores/statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
+const statusStore = useStatusStore()
 //Setup Store 設定式寫法
 export default defineStore('productsStore', () => {
   const products = ref([])
 
+  const pagination = ref({})
+
   //取得產品資訊
-  const getProducts = async () => {
-    const loginUrl = `${APIurl}api/${PATHurl}/admin/products/all`
+  const getProducts = async (page = 1) => {
+    const loginUrl = `${APIurl}api/${PATHurl}/admin/products/?page=${page}`
+    statusStore.isLoading = true
 
     try {
       const response = await axios.get(loginUrl)
       if (response.data.success) {
         products.value = response.data.products
-        console.log('產品取得成功')
+        pagination.value = response.data.pagination
       } else {
         console.log('產品取得失敗:', response.data.message)
       }
     } catch (error) {
       console.log('產品取得伺服器失敗回應:', error.message)
+    } finally {
+      statusStore.isLoading = false
     }
   }
 
@@ -36,20 +43,40 @@ export default defineStore('productsStore', () => {
     if (item.id) {
       api = `${api}/${item.id}`
       httpMethod = 'put'
-      msg = '修改:'
+      msg = '修改'
     }
     try {
       const response = await axios[httpMethod](api, { data: item })
 
       if (response.data.success) {
-        console.log(`產品${msg}成功`)
+        statusStore.pushMessage({
+          title: `${item.title}${msg}成功`,
+          style: 'success',
+        })
         return true
       } else {
-        console.log(`產品${msg}失敗:`, response.data.message)
+        statusStore.pushMessage({
+          title: `產品${msg}失敗`,
+          style: 'danger',
+          content: response.data.message.join('.'),
+        })
         return false
       }
     } catch (error) {
-      console.log(`產品${msg}伺服器失敗回應:`, error.message)
+      if (error.response && error.response.status === 400) {
+        statusStore.pushMessage({
+          title: `產品${msg}失敗`,
+          style: 'danger',
+          content: error.response.data.message.join('.'),
+        })
+        return false
+      } else {
+        statusStore.pushMessage({
+          title: `產品${msg}失敗`,
+          style: 'danger',
+          content: error.message.join('.'),
+        })
+      }
       return false
     }
   }
@@ -62,7 +89,7 @@ export default defineStore('productsStore', () => {
     try {
       const response = await axios.post(url, formData)
       if (response.data.success) {
-        console.log('上傳圖片成功', response.data)
+        console.log('上傳圖片成功')
         return response.data.imageUrl
       } else {
         console.log('上傳圖片失敗:', response.data.message)
@@ -81,5 +108,6 @@ export default defineStore('productsStore', () => {
     getProducts,
     updateProduct,
     uploadFile,
+    pagination,
   }
 })

@@ -1,21 +1,24 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import storeA from '../stores/productsStore'
+import useStatusStore from '../stores/statusStore'
+import useProductsStore from '../stores/productsStore'
 import ProductModal from '../components/ProductModal.vue'
+import ProductPagination from '../components/ProductPagination.vue'
 
-const productsStore = storeA()
+const statusStore = useStatusStore()
+const productsStore = useProductsStore()
 
 const modal = ref(null);
 
 // 創建時讀取產品資訊
 onMounted(() => {
   productsStore.getProducts();
-});
+})
 
 //新增按鈕
 const openNewProductModal = () => {
   modal.value.openModal();
-};
+}
 
 //編輯按鈕
 const openEditProductModal = (item) => {
@@ -26,24 +29,24 @@ const openEditProductModal = (item) => {
 const handleUpdateComplete = () => {
   console.log("收到子元件通知，正在重新整理產品列表...");
   productsStore.getProducts();
-};
+}
 
 </script>
 
 <template>
   <div>
+    <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
     <div class="text-end m-3">
       <button class="btn btn-primary" type="button" @click="openNewProductModal()">新增商品</button>
     </div>
-    <ProductModal ref="modal" @update-complete="handleUpdateComplete"></ProductModal>
     <table class="table mt-4">
       <thead>
         <tr>
           <th width="120">分類</th>
           <th>產品名稱</th>
-          <th width="120">原價</th>
-          <th width="120">售價</th>
-          <th width="100">是否啟用</th>
+          <th width="60" class="text-center">原價</th>
+          <th width="60" class="text-center">售價</th>
+          <th width="100" class="text-center">是否啟用</th>
           <th width="200">編輯</th>
         </tr>
       </thead>
@@ -51,13 +54,13 @@ const handleUpdateComplete = () => {
         <tr v-for="item in productsStore.products" :key="item.id">
           <td>{{ item.category }}</td>
           <td>{{ item.title }}</td>
-          <td class="text-right">
-            {{ item.origin_price }}
+          <td class="text-end">
+            {{ $filters.currency(item.origin_price) }}
           </td>
-          <td class="text-right">
-            {{ item.price }}
+          <td class="text-end">
+            {{ $filters.currency(item.price) }}
           </td>
-          <td>
+          <td class="text-center">
             <span class="text-success" v-if="item.is_enabled">已啟用</span>
             <span class="text-muted" v-else>未啟用</span>
           </td>
@@ -70,5 +73,7 @@ const handleUpdateComplete = () => {
         </tr>
       </tbody>
     </table>
+    <ProductPagination></ProductPagination>
+    <ProductModal ref="modal" @update-complete="handleUpdateComplete"></ProductModal>
   </div>
 </template>
