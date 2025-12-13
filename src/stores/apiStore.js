@@ -34,28 +34,26 @@ export default defineStore('apiStore', () => {
 
     if (token) {
       axios.defaults.headers.common.Authorization = token
-      const loginUrl = `${APIurl}api/user/check`
+      const tokenUrl = `${APIurl}api/user/check`
       try {
-        const response = await axios.post(loginUrl)
-        if (!response.data.success) {
-          router.push('/loginview')
-        }
+        const response = await axios.post(tokenUrl)
+        return response.data.success // 只回傳 true/false
       } catch (error) {
         console.log('登入失敗回應:', error.message)
-        router.push('/loginview')
+        return false // 失敗回傳 false
       }
     } else {
-      // this.token = null; // 如果用 ref() 記得更新狀態
       console.log('Cookie 中沒有找到 Token')
+      return false // 沒有 token 就回傳 false
     }
   }
 
   //登出 方法
   const logout = async () => {
-    const loginUrl = `${APIurl}logout`
+    const logoutUrl = `${APIurl}logout`
 
     try {
-      const response = await axios.post(loginUrl)
+      const response = await axios.post(logoutUrl)
       if (response.data.success) {
         router.push('/loginview')
       }

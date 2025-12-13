@@ -39,21 +39,19 @@ const router = createRouter({
   ],
 })
 
-// 添加全域前置守衛
+// 路由表 (修改後)
 router.beforeEach(async (to, from, next) => {
-  // 實例化您的 Store
   const apiStore = useApiStore()
 
-  // 檢查目標路由是否需要驗證
   if (to.meta.requiresAuth) {
-    // 如果需要，就等待 getToken() 執行完畢
-    await apiStore.getToken()
+    const isAuthenticated = await apiStore.getToken() // 取得回傳的布林值
 
-    // getToken() 內部已經有導向 loginview 的邏輯了，
-    // 所以這裡確保執行完畢後，直接放行到目標頁面
-    next()
+    if (isAuthenticated) {
+      next() // 驗證成功，放行
+    } else {
+      next('/loginview') // 驗證失敗，導向登入頁
+    }
   } else {
-    // 如果不需要驗證 (例如 HomeView, LoginView)，則直接前往
     next()
   }
 })
