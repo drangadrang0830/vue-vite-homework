@@ -16,40 +16,6 @@ const toggleNav = () => { //test
 
 <template>
   <div>
-    <!-- <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-      <div class="container-fluid">
-        <router-link class="navbar-brand" to="/">返回首頁</router-link>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <router-link class="nav-link" to="/dashboardview/productsview">產品列表</router-link>
-            </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                待開發
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">待開發1</a></li>
-                <li><a class="dropdown-item" href="#">待開發2</a></li>
-                <li><a class="dropdown-item" href="#">待開發3</a></li>
-              </ul>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="#" @click.prevent="apiStore.logout">登出</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav> -->
-
-    <!-- test -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
       <div class="container-fluid">
         <router-link class="navbar-brand" to="/">返回首頁</router-link>
@@ -65,25 +31,18 @@ const toggleNav = () => { //test
           <ul class="navbar-nav">
             <li class="nav-item">
               <!-- 點擊 router-link 後自動關閉選單，增加使用者體驗 -->
-              <router-link class="nav-link" to="/dashboardview/productsview"
-                @click="isNavOpen = false">產品列表</router-link>
+              <router-link class="nav-link" to="/dashboardview/productsview" @click="isNavOpen = false">產品</router-link>
             </li>
-
-            <li class="nav-item dropdown">
-              <!-- 下拉選單開關也需要手動控制狀態或使用 Bootstrap JS -->
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                待開發
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" @click="isNavOpen = false" href="#">待開發1</a></li>
-                <li><a class="dropdown-item" @click="isNavOpen = false" href="#">待開發2</a></li>
-                <li><a class="dropdown-item" @click="isNavOpen = false" href="#">待開發3</a></li>
-              </ul>
-            </li>
-
             <li class="nav-item">
-              <a class="nav-link" href="#" @click.prevent="apiStore.logout">登出</a>
+              <!-- 點擊 router-link 後自動關閉選單，增加使用者體驗 -->
+              <router-link class="nav-link" to="/dashboardview/ordersview" @click="isNavOpen = false">訂單</router-link>
+            </li>
+            <li class="nav-item">
+              <!-- 點擊 router-link 後自動關閉選單，增加使用者體驗 -->
+              <router-link class="nav-link" to="/dashboardview/couponview" @click="isNavOpen = false">優惠劵</router-link>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" @click.prevent="apiStore.logout" @click="isNavOpen = false">登出</a>
             </li>
           </ul>
         </div>

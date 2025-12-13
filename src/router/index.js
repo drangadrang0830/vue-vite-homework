@@ -26,6 +26,14 @@ const router = createRouter({
           path: 'productsview',
           component: () => import('../views/ProductsView.vue'),
         },
+        {
+          path: 'ordersview',
+          component: () => import('../views/OrdersView.vue'),
+        },
+        {
+          path: 'couponview',
+          component: () => import('../views/CouponView.vue'),
+        },
       ],
     },
   ],

@@ -1,13 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import ProductModal from '../components/ProductModal.vue'
+import { onMounted } from 'vue'
+// import ProductModal from '../components/ProductModal.vue'
+import useStatusStore from '../stores/statusStore'
+import useOrderStore from '../stores/orderStore'
 
-const modal = ref(null);
+// const modal = ref(null);
+const statusStore = useStatusStore()
+const orderStore = useOrderStore()
 
 // 創建時讀取產品資訊
-// onMounted(() => {
-//   productsStore.getProducts();
-// })
+onMounted(() => {
+  orderStore.getOrders();
+})
 
 //新增按鈕
 // const openNewProductModal = () => {
@@ -35,8 +39,8 @@ const modal = ref(null);
         <tr>
           <th width="120">購買時間</th>
           <th>Email</th>
-          <th width="60" class="text-center">購買款項</th>
-          <th width="60" class="text-center">應付金額</th>
+          <th>購買款項</th>
+          <th width="100" class="text-center">應付金額</th>
           <th width="200">是否付款</th>
           <th width="200">編輯</th>
         </tr>
@@ -55,19 +59,25 @@ const modal = ref(null);
           <td class="text-end">
             1,234
           </td>
-          <td class="text-end">
-            switch確認紐 已付款
+          <td>
+            <div class="form-check form-switch d-flex align-items-center">
+              <input class="form-check-input" type="checkbox" id="paymentStatusSwitch">
+              <label class="form-check-label ms-2" for="paymentStatusSwitch">
+                已付款
+              </label>
+            </div>
           </td>
           <td>
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openEditProductModal(item)">編輯</button>
+              <!-- 封存 @click="openEditProductModal(item)"-->
+              <button class="btn btn-outline-primary btn-sm">編輯</button>
               <button class="btn btn-outline-danger btn-sm">刪除</button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <ProductPagination></ProductPagination>
-    <ProductModal ref="modal" @update-complete="handleUpdateComplete"></ProductModal>
+    <!-- <ProductPagination></ProductPagination>
+    <ProductModal ref="modal" @update-complete="handleUpdateComplete"></ProductModal> -->
   </div>
 </template>

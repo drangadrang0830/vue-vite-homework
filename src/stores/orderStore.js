@@ -1,40 +1,40 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import useStatusStore from '../stores/statusStore'
+import useStatusStore from './statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
+
+const statusStore = useStatusStore()
 //Setup Store 設定式寫法
-export default defineStore('productsStore', () => {
-  const products = ref([])
+export default defineStore('orderStore', () => {
+  const orders = ref([])
 
   const pagination = ref({})
 
   //取得產品資訊
-  const getProducts = async (page = 1) => {
-    const statusStore = useStatusStore()
-    const loginUrl = `${APIurl}api/${PATHurl}/admin/products/?page=${page}`
+  const getOrders = async (page = 1) => {
+    const getUrl = `${APIurl}api/${PATHurl}/admin/orders/?page=${page}`
     statusStore.isLoading = true
 
     try {
-      const response = await axios.get(loginUrl)
+      const response = await axios.get(getUrl)
       if (response.data.success) {
-        products.value = response.data.products
+        orders.value = response.data.orders
         pagination.value = response.data.pagination
+        console.log(orders.value, pagination.value)
+        if (response.data.success) {
+          statusStore.pushMessage({
+            title: `訂單取得成功`,
+            style: 'success',
+          })
+        }
       } else {
-        statusStore.pushMessage({
-          title: `產品取得失敗`,
-          style: 'danger',
-          content: response.data.message,
-        })
+        console.log('訂單取得失敗:', response.data.message)
       }
     } catch (error) {
-      statusStore.pushMessage({
-        title: `產品取得伺服器失敗`,
-        style: 'danger',
-        content: error.message.join('.'),
-      })
+      console.log('訂單取得伺服器失敗回應:', error.message)
     } finally {
       statusStore.isLoading = false
     }
@@ -44,7 +44,6 @@ export default defineStore('productsStore', () => {
 
   //新增/變更函式
   const updateProduct = async (item) => {
-    const statusStore = useStatusStore()
     let api = `${APIurl}api/${PATHurl}/admin/product`
     let httpMethod = 'post'
     let msg = '新增'
@@ -63,32 +62,26 @@ export default defineStore('productsStore', () => {
         })
         return true
       } else {
-        const contentMsg = Array.isArray(response.data.message)
-          ? response.data.message.join('.')
-          : response.data.message
         statusStore.pushMessage({
           title: `產品${msg}失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: response.data.message.join('.'),
         })
         return false
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        const contentMsg = Array.isArray(error.response?.data?.message)
-          ? error.response.data.message.join('.')
-          : error.message || '未知錯誤'
         statusStore.pushMessage({
           title: `產品${msg}失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: error.response.data.message.join('.'),
         })
         return false
       } else {
         statusStore.pushMessage({
-          title: `產品${msg}伺服器失敗`,
+          title: `產品${msg}失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message.join('.'),
         })
       }
       return false
@@ -99,33 +92,18 @@ export default defineStore('productsStore', () => {
 
   // 處理檔案上傳的方法
   const uploadFile = async (formData) => {
-    const statusStore = useStatusStore()
     const url = `${APIurl}api/${PATHurl}/admin/upload`
     try {
       const response = await axios.post(url, formData)
       if (response.data.success) {
-        statusStore.pushMessage({
-          title: `圖片上傳成功`,
-          style: 'success',
-        })
+        console.log('上傳圖片成功')
         return response.data.imageUrl
       } else {
-        const contentMsg = Array.isArray(response.data.message)
-          ? response.data.message.join('.')
-          : response.data.message
-        statusStore.pushMessage({
-          title: `圖片上傳失敗`,
-          style: 'danger',
-          content: contentMsg,
-        })
+        console.log('上傳圖片失敗:', response.data.message)
         return null
       }
     } catch (error) {
-      statusStore.pushMessage({
-        title: `圖片上傳伺服器失敗`,
-        style: 'danger',
-        content: error.message,
-      })
+      console.log('上傳圖片伺服器失敗:', error)
       return null
     }
   }
@@ -133,8 +111,8 @@ export default defineStore('productsStore', () => {
   // -----------------
 
   return {
-    products,
-    getProducts,
+    orders,
+    getOrders,
     updateProduct,
     uploadFile,
     pagination,

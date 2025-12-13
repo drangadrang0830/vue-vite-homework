@@ -14,29 +14,40 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import Toast from 'bootstrap/js/dist/toast';
 import useStatusStore from '../stores/statusStore'
 
 const props = defineProps(['msg']);
 const toastEl = ref(null);
 const statusStore = useStatusStore()
+let bsToastInstance = null; // 用於存放 Bootstrap Toast 實例
 
-// 3. 使用 onMounted 生命週期鉤子取代 Options API 的 mounted()
 onMounted(() => {
-  // 透過 .value 存取實際的 DOM 元素
-  const bsToast = new Toast(toastEl.value, {
-    // 顯示時間設定
-    delay: 5000,
+  const toastDomElement = toastEl.value;
+
+  // 實例化 Bootstrap Toast
+  bsToastInstance = new Toast(toastDomElement, {
+    delay: 3000,
   });
 
-  // 吐司顯示
-  bsToast.show();
+  bsToastInstance.show();
 
-  // 核心修改：監聽 Bootstrap 關閉事件
-  toastEl.value.addEventListener('hidden.bs.toast', () => {
-    // 當動畫結束、吐司完全隱藏後，呼叫 Store 的 removeMessage 方法，傳入當前訊息的 ID
+  // 添加監聽器，並將事件處理函數抽出，方便移除
+  const handleHidden = () => {
     statusStore.removeMessage(props.msg.id);
+  };
+
+  toastDomElement.addEventListener('hidden.bs.toast', handleHidden);
+
+  // 在元件卸載前，手動移除事件監聽器和銷毀 Bootstrap Toast 實例
+  onUnmounted(() => {
+    if (toastDomElement && handleHidden) {
+      toastDomElement.removeEventListener('hidden.bs.toast', handleHidden);
+    }
+    if (bsToastInstance) {
+      bsToastInstance.dispose(); // 銷毀 Bootstrap 實例
+    }
   });
 });
 
