@@ -3,10 +3,11 @@ import { ref } from 'vue';
 
 import useApiStore from '@/stores/apiStore';
 import useStatusStore from '../stores/statusStore'
+import { useRouter } from 'vue-router'
 
 const apiStore = useApiStore()
 const statusStore = useStatusStore()
-
+const router = useRouter()
 const user = ref(
   {
     username: '',
@@ -15,8 +16,12 @@ const user = ref(
 )
 
 const clearInput = async () => {
-  // 呼叫 apiStore.login 時傳遞當前值
-  await apiStore.login(user.value.username, user.value.password);
+  const loginSuccess = await apiStore.login(user.value.username, user.value.password);
+
+  if (loginSuccess) {
+    router.push('/dashboardview/productsview')
+  }
+
   user.value.username = '';
   user.value.password = '';
 };

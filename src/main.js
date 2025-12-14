@@ -27,4 +27,14 @@ app.use(router)
 app.use(VueAxios, axios)
 app.component('LoadingOverlay', Loading)
 
+window.addEventListener('error', function (event) {
+  if (
+    event.message.includes("Cannot read properties of null (reading 'classList')") &&
+    event.filename.includes('bootstrap')
+  ) {
+    console.warn('捕捉到已知的 Bootstrap Toast classList 錯誤，已阻止其影響其他功能。')
+    event.preventDefault()
+  }
+})
+
 app.mount('#app')

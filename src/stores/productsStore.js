@@ -14,11 +14,11 @@ export default defineStore('productsStore', () => {
   //取得產品資訊
   const getProducts = async (page = 1) => {
     const statusStore = useStatusStore()
-    const loginUrl = `${APIurl}api/${PATHurl}/admin/products/?page=${page}`
+    const getProductsUrl = `${APIurl}api/${PATHurl}/admin/products/?page=${page}`
     statusStore.isLoading = true
 
     try {
-      const response = await axios.get(loginUrl)
+      const response = await axios.get(getProductsUrl)
       if (response.data.success) {
         products.value = response.data.products
         pagination.value = response.data.pagination
@@ -45,16 +45,16 @@ export default defineStore('productsStore', () => {
   //新增/變更函式
   const updateProduct = async (item) => {
     const statusStore = useStatusStore()
-    let api = `${APIurl}api/${PATHurl}/admin/product`
+    let updateProductUrl = `${APIurl}api/${PATHurl}/admin/product`
     let httpMethod = 'post'
     let msg = '新增'
     if (item.id) {
-      api = `${api}/${item.id}`
+      updateProductUrl = `${updateProductUrl}/${item.id}`
       httpMethod = 'put'
       msg = '修改'
     }
     try {
-      const response = await axios[httpMethod](api, { data: item })
+      const response = await axios[httpMethod](updateProductUrl, { data: item })
 
       if (response.data.success) {
         statusStore.pushMessage({
@@ -95,14 +95,40 @@ export default defineStore('productsStore', () => {
     }
   }
 
+  //刪除物品函式
+  const deleteProduct = async (item) => {
+    const statusStore = useStatusStore()
+    const deleteProductUrl = `${APIurl}api/${PATHurl}/admin/product/${item.id}`
+    statusStore.isLoading = true
+    try {
+      const response = await axios.delete(deleteProductUrl)
+      if (response.data.success) {
+        statusStore.pushMessage({
+          title: `成功刪除${item.title}`,
+          style: 'success',
+        })
+        getProducts()
+        return true
+      }
+    } catch (error) {
+      statusStore.pushMessage({
+        title: `帳號登出伺服器失敗`,
+        style: 'danger',
+        content: error.message,
+      })
+      return false
+    } finally {
+      statusStore.isLoading = false // (E) 一定會執行到這裡，關閉 Loading
+    }
+  }
   // -----------------
 
   // 處理檔案上傳的方法
   const uploadFile = async (formData) => {
     const statusStore = useStatusStore()
-    const url = `${APIurl}api/${PATHurl}/admin/upload`
+    const uploadFileUrl = `${APIurl}api/${PATHurl}/admin/upload`
     try {
-      const response = await axios.post(url, formData)
+      const response = await axios.post(uploadFileUrl, formData)
       if (response.data.success) {
         statusStore.pushMessage({
           title: `圖片上傳成功`,
@@ -138,5 +164,6 @@ export default defineStore('productsStore', () => {
     updateProduct,
     uploadFile,
     pagination,
+    deleteProduct,
   }
 })

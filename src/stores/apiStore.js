@@ -1,17 +1,14 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 import useStatusStore from '../stores/statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 
 //Setup Store 設定式寫法
 export default defineStore('apiStore', () => {
-  const router = useRouter()
-  const statusStore = useStatusStore()
-
   //登入 方法
   const login = async (username, password) => {
+    const statusStore = useStatusStore()
     const loginUrl = `${APIurl}admin/signin`
 
     try {
@@ -20,11 +17,25 @@ export default defineStore('apiStore', () => {
       if (response.data.success) {
         const { token, expired } = response.data
         document.cookie = `hexToken=${token}; expires=${new Date(expired)}; path=/`
-        // 直接使用上面定義的 router 實例
-        router.push('/dashboardview/productsview')
+        statusStore.isLoading = true
+        return true
+      } else {
+        statusStore.pushMessage({
+          title: `帳號登入失敗`,
+          style: 'danger',
+          content: response.data.message,
+        })
+        statusStore.isLoading = true
+        return false
       }
     } catch (error) {
-      console.log('登入失敗回應:', error.message)
+      statusStore.pushMessage({
+        title: `帳號登入伺服器失敗`,
+        style: 'danger',
+        content: error.message,
+      })
+      statusStore.isLoading = true
+      return false
     }
   }
 
@@ -50,16 +61,22 @@ export default defineStore('apiStore', () => {
 
   //登出 方法
   const logout = async () => {
+    const statusStore = useStatusStore()
     const logoutUrl = `${APIurl}logout`
 
     try {
       const response = await axios.post(logoutUrl)
       if (response.data.success) {
-        router.push('/loginview')
+        return true
       }
     } catch (error) {
       console.log('登出失敗回應:', error.message)
-      router.push('/loginview')
+      statusStore.pushMessage({
+        title: `帳號登出伺服器失敗`,
+        style: 'danger',
+        content: error.message,
+      })
+      return false
     }
   }
 

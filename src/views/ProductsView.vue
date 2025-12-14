@@ -3,31 +3,37 @@ import { ref, onMounted } from 'vue'
 import useStatusStore from '../stores/statusStore'
 import useProductsStore from '../stores/productsStore'
 import ProductModal from '../components/ProductModal.vue'
+import DeleteProductModal from '../components/DeleteProductModal.vue'
 import ProductPagination from '../components/ProductPagination.vue'
 
 const statusStore = useStatusStore()
 const productsStore = useProductsStore()
 
-const modal = ref(null);
+const productModal = ref(null);
+const deleteModal = ref(null);
 
 // 創建時讀取產品資訊
 onMounted(() => {
   productsStore.getProducts();
 })
 
-//新增按鈕
+//新增按鈕：開啟新增 Modal
 const openNewProductModal = () => {
-  modal.value.openModal();
+  productModal.value.openModal();
 }
 
-//編輯按鈕
+//編輯按鈕：開啟編輯 Modal
 const openEditProductModal = (item) => {
-  modal.value.openModal(item);
+  productModal.value.openModal(item);
 }
 
-//按鈕後續處理
+//刪除按鈕：開啟刪除確認 Modal
+const openDeleteProductModal = (item) => {
+  deleteModal.value.openModal(item);
+}
+
+//按鈕後續處理(emit事件處理函式)
 const handleUpdateComplete = () => {
-  console.log("收到子元件通知，正在重新整理產品列表...");
   productsStore.getProducts();
 }
 
@@ -67,13 +73,14 @@ const handleUpdateComplete = () => {
           <td>
             <div class="btn-group">
               <button class="btn btn-outline-primary btn-sm" @click="openEditProductModal(item)">編輯</button>
-              <button class="btn btn-outline-danger btn-sm">刪除</button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDeleteProductModal(item)">刪除</button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
     <ProductPagination></ProductPagination>
-    <ProductModal ref="modal" @update-complete="handleUpdateComplete"></ProductModal>
+    <ProductModal ref="productModal" @update-complete="handleUpdateComplete"></ProductModal>
+    <DeleteProductModal ref="deleteModal"></DeleteProductModal>
   </div>
 </template>
