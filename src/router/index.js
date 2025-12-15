@@ -5,6 +5,9 @@ import useApiStore from '@/stores/apiStore'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
+import UserboardView from '../views/UserboardView.vue'
+import UserProductView from '../views/UserProductView.vue'
+import UserCartView from '../views/UserCartView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -33,6 +36,20 @@ const router = createRouter({
         {
           path: 'couponview',
           component: () => import('../views/CouponView.vue'),
+        },
+      ],
+    },
+    {
+      path: '/user',
+      component: UserboardView,
+      children: [
+        {
+          path: 'product/:productId',
+          component: UserProductView,
+        },
+        {
+          path: 'cart',
+          component: UserCartView,
         },
       ],
     },

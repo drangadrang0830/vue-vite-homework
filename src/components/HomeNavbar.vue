@@ -21,7 +21,7 @@ const toggleNav = () => {
         <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <router-link class="nav-link" to="/dashboardview" @click="isNavOpen = false" disabled>前台</router-link>
+              <router-link class="nav-link" to="/user" @click="isNavOpen = false">前台</router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/loginview" @click="isNavOpen = false">後台</router-link>

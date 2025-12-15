@@ -5,6 +5,8 @@ export default defineStore('statusStore', () => {
   // const pageNumber = ref({})
   const isLoading = ref(false)
 
+  const loadingItem = ref('')
+
   const messages = ref([])
 
   // 吐司內容製作 (稍微修改以加入 ID)
@@ -31,5 +33,6 @@ export default defineStore('statusStore', () => {
     isLoading,
     pushMessage,
     removeMessage,
+    loadingItem,
   }
 })
