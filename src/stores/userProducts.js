@@ -72,32 +72,6 @@ export default defineStore('productsStore', () => {
 
   // -----------------
 
-  //刪除物品函式
-  // const deleteProduct = async (item) => {
-  //   const statusStore = useStatusStore()
-  //   const deleteProductUrl = `${APIurl}api/${PATHurl}/admin/product/${item.id}`
-  //   statusStore.isLoading = true
-  //   try {
-  //     const response = await axios.delete(deleteProductUrl)
-  //     if (response.data.success) {
-  //       statusStore.pushMessage({
-  //         title: `成功刪除${item.title}`,
-  //         style: 'success',
-  //       })
-  //       getProducts()
-  //       return true
-  //     }
-  //   } catch (error) {
-  //     statusStore.pushMessage({
-  //       title: `帳號登出伺服器失敗`,
-  //       style: 'danger',
-  //       content: error.message,
-  //     })
-  //     return false
-  //   }
-  // }
-  // -----------------
-
   // 處理檔案上傳的方法
   const uploadFile = async (formData) => {
     const statusStore = useStatusStore()

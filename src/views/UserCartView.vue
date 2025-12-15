@@ -31,24 +31,24 @@ const getProduct = (id) => {
     <div class="container">
       <div class="row mt4">
         <div class="col-md-7">
-          <table class="table mt-4 align-middle">
+          <table class="table mt-4 align-middle table-hover">
             <thead>
               <tr>
-                <th>圖片</th>
-                <th>商品名稱</th>
-                <th>價格</th>
-                <th>123</th>
+                <th class="text-center">圖片</th>
+                <th class="text-center">商品名稱</th>
+                <th class="text-center">價格</th>
+                <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="table-group-divider">
               <tr v-for="item in userProducts.products" :key="item.id">
                 <td style="width: 150px;">
-
                   <div style="height: 100px; background-size: cover; background-position: center"
-                    :style="{ backgroundImage: `url(${item.imageUrl})` }"></div>
+                    :style="{ backgroundImage: `url(${item.imagesUrl[0]})` }"></div>
                 </td>
-                <td><a href="#" class="text-dark" @click.prevent="getProduct(item.id)">{{ item.title }}</a></td>
-                <td>
+                <td class="text-center"><a href="#" class="text-dark" @click.prevent="getProduct(item.id)">{{ item.title
+                    }}</a></td>
+                <td class="text-center">
                   <p class="text-decoration-line-through h5" v-if="!item.price">原價{{
                     $filters.currency(item.origin_price) }}元</p>
                   <div v-else>

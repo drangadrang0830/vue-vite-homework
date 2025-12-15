@@ -1,57 +1,72 @@
 <script setup>
+import { onMounted } from 'vue'
 import useUserCartStore from '../stores/userCartStore'
+import useStatusStore from '../stores/statusStore'
 
 const userCartStore = useUserCartStore()
+
+
+onMounted(() => {
+  userCartStore.getCart();
+})
 </script>
 
 <template>
-  <div class="col-md-5">
+  <div class="col-md-5 mt-4">
     <div class="sticky-top">
-      <table class="table align-middle">
+      <table class="table align-middle table-hover">
         <thead>
-          <tr>
+          <tr class="text-center">
             <th></th>
             <th>品名</th>
             <th style="width: 110px">數量</th>
             <th>單價</th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="item in userCartStore.cartData.carts" :key="item.id">
-            <td>
-              <button type="button" class="btn btn-outline-danger btn-sm">
-                刪除
-              </button>
-            </td>
-            <td>
-              {{ item.product.title }}
-              <div class="text-success" v-if="item.coupon">
-                已套用優惠券
-              </div>
-            </td>
-            <td>
-              <div class="input-group input-group-sm">
-                <input type="number" class="form-control" :value="item.qty">
-                <div class="input-group-text">/ 單位</div>
-              </div>
-            </td>
-            <td class="text-end">
-              {{ $filters.currency(item.final_total) }}
-              <small class="text-success" v-if="item.coupon">折扣價：</small>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3" class="text-end">總計</td>
-            <td class="text-end">{{ $filters.currency(userCartStore.cartData.final_total) }}</td>
-          </tr>
-          <tr v-if="userCartStore.cartData.final_total !== userCartStore.cartData.total">
-            <td colspan="3" class="text-end text-success">折扣價</td>
-            <td class="text-end text-success">{{ userCartStore.cartData.total - userCartStore.cartData.final_total }}
-            </td>
-          </tr>
-        </tfoot>
+        <template v-if="userCartStore.cartData.carts?.length > 0">
+          <tbody class="table-group-divider">
+            <tr v-for="item in userCartStore.cartData.carts" :key="item.id">
+              <td>
+                <button type="button" class="btn btn-outline-danger btn-sm" @click="userCartStore.removeCartItem(item)">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </td>
+              <td class="text-center">
+                {{ item.product.title }}
+                <div class="text-success" v-if="item.coupon">
+                  已套用優惠券
+                </div>
+              </td>
+              <td>
+                <div class="input-group input-group-sm">
+                  <input type="number" class="form-control" min="1" v-model.number="item.qty"
+                    @change="userCartStore.updateCart(item)" :disabled="useStatusStore.LoadingItem === item.id">
+                  <div class="input-group-text">/ {{ item.product.unit }}</div>
+                </div>
+              </td>
+              <td class="text-end">
+                {{ $filters.currency(item.final_total) }}
+                <small class="text-success" v-if="item.coupon">折扣價：</small>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="table-group-divider">
+            <tr>
+              <td colspan="3" class="text-end fw-bold">總計</td>
+              <td class="text-end">{{ $filters.currency(userCartStore.cartData.total) }}</td>
+            </tr>
+            <template v-if="userCartStore.cartData.final_total !== userCartStore.cartData.total">
+              <tr>
+                <td colspan="3" class="text-end">折扣抵免</td>
+                <td class="text-end">{{ userCartStore.cartData.total - userCartStore.cartData.final_total }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-end text-success fw-bold">折扣價</td>
+                <td class="text-end text-success">{{ $filters.currency(userCartStore.cartData.final_total) }}</td>
+              </tr>
+            </template>
+          </tfoot>
+        </template>
       </table>
       <div class="input-group mb-3 input-group-sm">
         <input type="text" class="form-control" placeholder="請輸入優惠碼">

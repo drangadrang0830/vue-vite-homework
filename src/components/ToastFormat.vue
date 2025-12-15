@@ -35,7 +35,9 @@ onMounted(() => {
 
   // 添加監聽器，並將事件處理函數抽出，方便移除
   const handleHidden = () => {
-    statusStore.removeMessage(props.msg.id);
+    setTimeout(() => {
+      statusStore.removeMessage(props.msg.id);
+    }, 10);
   };
 
   toastDomElement.addEventListener('hidden.bs.toast', handleHidden);

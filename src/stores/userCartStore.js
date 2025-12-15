@@ -7,7 +7,7 @@ const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
 export default defineStore('userCartStore', () => {
-  const cartData = ref([])
+  const cartData = ref({})
 
   //新增購物車函式
   const addCart = async (id) => {
@@ -27,25 +27,13 @@ export default defineStore('userCartStore', () => {
           title: `購物車加入成功`,
           style: 'success',
         })
-      } else {
-        const contentMsg = Array.isArray(response.data.message)
-          ? response.data.message.join('.')
-          : response.data.message
-        statusStore.pushMessage({
-          title: `購物車加入失敗`,
-          style: 'danger',
-          content: contentMsg,
-        })
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        const contentMsg = Array.isArray(error.response?.data?.message)
-          ? error.response.data.message.join('.')
-          : error.message || '未知錯誤'
         statusStore.pushMessage({
           title: `購物車加入失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: error.data.message,
         })
       } else {
         statusStore.pushMessage({
@@ -68,25 +56,13 @@ export default defineStore('userCartStore', () => {
       const response = await axios.get(getCartUrl)
       if (response.data.success) {
         cartData.value = response.data.data
-      } else {
-        const contentMsg = Array.isArray(response.data.message)
-          ? response.data.message.join('.')
-          : response.data.message
-        statusStore.pushMessage({
-          title: `購物車讀取失敗`,
-          style: 'danger',
-          content: contentMsg,
-        })
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        const contentMsg = Array.isArray(error.response?.data?.message)
-          ? error.response.data.message.join('.')
-          : error.message || '未知錯誤'
         statusStore.pushMessage({
           title: `購物車讀取失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: error.data.message,
         })
       } else {
         statusStore.pushMessage({
@@ -100,9 +76,91 @@ export default defineStore('userCartStore', () => {
     }
   }
 
+  //變更購物車品項
+  const updateCart = async (item) => {
+    const statusStore = useStatusStore()
+    statusStore.isLoading = true
+    statusStore.loadingItem = item.id
+    if (item.qty <= 0) {
+      await removeCartItem(item)
+      return
+    }
+    const cart = {
+      product_id: item.product_id,
+      qty: item.qty,
+    }
+    const updateCartUrl = `${APIurl}api/${PATHurl}/cart/${item.id}`
+    try {
+      const response = await axios.put(updateCartUrl, { data: cart })
+      if (response.data.success) {
+        getCart()
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        const contentMsg = Array.isArray(error.response?.data?.message)
+          ? error.response.data.message.join('.')
+          : error.message || '未知錯誤'
+        statusStore.pushMessage({
+          title: `商品變更失敗`,
+          style: 'danger',
+          content: contentMsg,
+        })
+      } else {
+        statusStore.pushMessage({
+          title: `商品變更伺服器失敗`,
+          style: 'danger',
+          content: error.message,
+        })
+      }
+    } finally {
+      statusStore.loadingItem = ''
+      statusStore.isLoading = false
+    }
+  }
+
+  //刪除購物車品項
+  const removeCartItem = async (item) => {
+    const statusStore = useStatusStore()
+    statusStore.isLoading = true
+    statusStore.loadingItem = item.id
+    const cart = {
+      product_id: item.product_id,
+      qty: item.qty,
+    }
+    const deleteCartUrl = `${APIurl}api/${PATHurl}/cart/${item.id}`
+    try {
+      const response = await axios.delete(deleteCartUrl, { data: cart })
+      if (response.data.success) {
+        getCart()
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        const contentMsg = Array.isArray(error.response?.data?.message)
+          ? error.response.data.message.join('.')
+          : error.message || '未知錯誤'
+        statusStore.pushMessage({
+          title: `商品刪除失敗`,
+          style: 'danger',
+          content: contentMsg,
+        })
+      } else {
+        statusStore.pushMessage({
+          title: `商品刪除伺服器失敗`,
+          style: 'danger',
+          content: error.message,
+        })
+      }
+    } finally {
+      statusStore.loadingItem = ''
+      statusStore.isLoading = false
+    }
+  }
+
   return {
     addCart,
     getCart,
     cartData,
+    updateCart,
+    removeCartItem,
   }
 })

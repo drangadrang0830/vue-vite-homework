@@ -7,6 +7,7 @@ import VueAxios from 'vue-axios'
 
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/css/index.css'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 
 // 3. 第三方樣式/副作用引入 (Third-party Styles/Side Effects)
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
@@ -26,15 +27,5 @@ app.use(createPinia())
 app.use(router)
 app.use(VueAxios, axios)
 app.component('LoadingOverlay', Loading)
-
-window.addEventListener('error', function (event) {
-  if (
-    event.message.includes("Cannot read properties of null (reading 'classList')") &&
-    event.filename.includes('bootstrap')
-  ) {
-    console.warn('捕捉到已知的 Bootstrap Toast classList 錯誤，已阻止其影響其他功能。')
-    event.preventDefault()
-  }
-})
 
 app.mount('#app')
