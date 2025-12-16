@@ -1,35 +1,40 @@
 <script setup>
-// import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import useStatusStore from '../stores/statusStore'
-
-// import ProductModal from '../components/ProductModal.vue'
-// import ProductPagination from '../components/ProductPagination.vue'
+import useCouponStore from '../stores/couponStore'
+import DeleteCouponModal from '../components/DeleteCouponModal.vue'
+import CouponModal from '../components/CouponModal.vue'
+import SharedPagination from '../components/SharedPagination.vue'
 
 const statusStore = useStatusStore()
+const couponStore = useCouponStore()
 
-
-// const modal = ref(null);
+const couponModal = ref(null);
+const deleteModal = ref(null);
 
 // 創建時讀取產品資訊
-// onMounted(() => {
-//   productsStore.getProducts();
-// })
+onMounted(() => {
+  couponStore.getCoupon();
+})
 
 //新增按鈕
-// const openNewProductModal = () => {
-//   modal.value.openModal();
-// }
+const openNewCouponModal = () => {
+  couponModal.value.openModal(null, true);
+}
 
 //編輯按鈕
-// const openEditProductModal = (item) => {
-//   modal.value.openModal(item);
-// }
+const openEditCouponModal = (item) => {
+  couponModal.value.openModal(item, false);
+}
 
-//按鈕後續處理
-// const handleUpdateComplete = () => {
-//   console.log("收到子元件通知，正在重新整理產品列表...");
-//   productsStore.getProducts();
-// }
+//刪除按鈕：開啟刪除確認 Modal
+const openDeleteCouponModal = (item) => {
+  deleteModal.value.openModal(item);
+}
+
+const handlePageChange = (page) => {
+  couponStore.getCoupon(page);
+};
 
 </script>
 
@@ -37,12 +42,11 @@ const statusStore = useStatusStore()
   <div>
     <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
     <div class="text-end m-3">
-      <!-- 封存@click="openNewProductModal()" -->
-      <button class="btn btn-primary" type="button">新增優惠劵</button>
+      <button class="btn btn-primary" type="button" @click="openNewCouponModal()">新增優惠劵</button>
     </div>
-    <table class="table mt-4">
+    <table class="table mt-4 table-hover">
       <thead>
-        <tr>
+        <tr class="text-center">
           <th>名稱</th>
           <th>折扣百分比</th>
           <th>到期日</th>
@@ -51,27 +55,26 @@ const statusStore = useStatusStore()
         </tr>
       </thead>
       <tbody>
-        <!-- 封存 v-for="item in productsStore.products" :key="item.id"-->
-        <tr>
-          <td>good</td>
-          <td>50%</td>
-          <td>2021/8/31</td>
-          <td class="text-center">
-            <!-- 封存 v-if="item.is_enabled" -->
-            <span class="text-success">已啟用</span>
-            <!-- 封存  v-else-->
-            <!-- <span class="text-muted">未啟用</span> -->
+        <tr class="text-center" v-for="item in couponStore.couponData.coupons" :key="item.id">
+          <td>{{ item.title }}</td>
+          <td>{{ item.percent }}</td>
+          <td>{{ $filters.date(item.due_date) }}</td>
+          <td>
+            <span class="text-success" v-if="item.is_enabled">已啟用</span>
+            <span class="text-muted" v-else>未啟用</span>
           </td>
           <td>
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openEditProductModal(item)">編輯</button>
-              <button class="btn btn-outline-danger btn-sm">刪除</button>
+              <button class="btn btn-outline-primary btn-sm" @click="openEditCouponModal(item)">編輯</button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDeleteCouponModal(item)">刪除</button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <!-- <ProductPagination></ProductPagination> -->
-    <!-- <ProductModal ref="modal" @update-complete="handleUpdateComplete"></ProductModal> -->
+    <SharedPagination v-if="couponStore.couponData.pagination" :pages="couponStore.couponData.pagination"
+      @emit-pages="handlePageChange"></SharedPagination>
+    <DeleteCouponModal ref="deleteModal"></DeleteCouponModal>
+    <CouponModal ref="couponModal"></CouponModal>
   </div>
 </template>
