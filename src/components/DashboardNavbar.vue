@@ -28,29 +28,27 @@ const handleLogout = async () => {
       <div class="container-fluid">
         <router-link class="navbar-brand" to="/">返回首頁</router-link>
 
-        <!-- 移除 data-* 屬性，改用 @click 綁定 Vue 方法，並綁定 aria-expanded 和 class -->
         <button class="navbar-toggler" type="button" @click="toggleNav" :aria-expanded="isNavOpen ? 'true' : 'false'"
           aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- 使用 :class 動態綁定 Bootstrap 的 'show' class -->
         <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }" id="navbarNavDropdown">
-          <ul class="navbar-nav">
+          <ul class="navbar-nav w-100">
             <li class="nav-item">
-              <!-- 點擊 router-link 後自動關閉選單，增加使用者體驗 -->
               <router-link class="nav-link" to="/dashboardview/productsview" @click="isNavOpen = false">產品</router-link>
             </li>
             <li class="nav-item">
-              <!-- 點擊 router-link 後自動關閉選單，增加使用者體驗 -->
               <router-link class="nav-link" to="/dashboardview/ordersview" @click="isNavOpen = false">訂單</router-link>
             </li>
             <li class="nav-item">
-              <!-- 點擊 router-link 後自動關閉選單，增加使用者體驗 -->
               <router-link class="nav-link" to="/dashboardview/couponview" @click="isNavOpen = false">優惠劵</router-link>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#" @click.prevent="handleLogout" @click="isNavOpen = false">登出</a>
+            </li>
+            <li class="nav-item ms-auto">
+              <router-link class="nav-link" to="/user/cart" @click="isNavOpen = false">購物車</router-link>
             </li>
           </ul>
         </div>

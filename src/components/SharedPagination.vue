@@ -13,10 +13,7 @@ const props = defineProps({
 const emit = defineEmits(['emit-pages']);
 
 const changePage = (page) => {
-  // 使用 props.pages 來訪問屬性
-  if (page >= 1 && page <= props.pages.total_pages) {
-    emit('emit-pages', page);
-  }
+  emit('emit-pages', page);
 };
 </script>
 
@@ -25,7 +22,7 @@ const changePage = (page) => {
     <ul class="pagination justify-content-center">
       <!-- 上一頁按鈕 -->
       <li class="page-item" :class="{ 'disabled': !pages.has_pre }">
-        <a class="page-link" href="#" aria-label="Previous" @click.prevent="changePage(pages.current_page - 1)">
+        <a class="page-link" href="#" aria-label="Previous" @click.prevent="changePage(props.pages.current_page - 1)">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>

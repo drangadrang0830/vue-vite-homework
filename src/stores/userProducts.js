@@ -6,7 +6,7 @@ import useStatusStore from './statusStore'
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 //Setup Store 設定式寫法
-export default defineStore('productsStore', () => {
+export default defineStore('userProducts', () => {
   const products = ref([])
 
   const pagination = ref({})
@@ -112,7 +112,6 @@ export default defineStore('productsStore', () => {
     getProducts,
     uploadFile,
     pagination,
-    // deleteProduct,
     descriptionProduct,
     product,
   }

@@ -4,7 +4,7 @@ import useStatusStore from '../stores/statusStore'
 import useProductsStore from '../stores/productsStore'
 import ProductModal from '../components/ProductModal.vue'
 import DeleteProductModal from '../components/DeleteProductModal.vue'
-import ProductPagination from '../components/ProductPagination.vue'
+import SharedPagination from '../components/SharedPagination.vue'
 
 const statusStore = useStatusStore()
 const productsStore = useProductsStore()
@@ -37,6 +37,11 @@ const handleUpdateComplete = () => {
   productsStore.getProducts();
 }
 
+const handlePageChange = (page) => {
+  productsStore.getProducts(page);
+};
+
+
 </script>
 
 <template>
@@ -47,19 +52,19 @@ const handleUpdateComplete = () => {
     </div>
     <table class="table mt-4">
       <thead>
-        <tr>
-          <th width="120">分類</th>
-          <th>產品名稱</th>
-          <th width="60" class="text-center">原價</th>
-          <th width="60" class="text-center">售價</th>
-          <th width="100" class="text-center">是否啟用</th>
-          <th width="200">編輯</th>
+        <tr class="text-center">
+          <th width="15%">分類</th>
+          <th width="35%">產品名稱</th>
+          <th width="5%">原價</th>
+          <th width="5%">售價</th>
+          <th width="20%">是否啟用</th>
+          <th width="20%">編輯</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in productsStore.products" :key="item.id">
-          <td>{{ item.category }}</td>
-          <td>{{ item.title }}</td>
+          <td class="text-center">{{ item.category }}</td>
+          <td class="text-center">{{ item.title }}</td>
           <td class="text-end">
             {{ $filters.currency(item.origin_price) }}
           </td>
@@ -70,7 +75,7 @@ const handleUpdateComplete = () => {
             <span class="text-success" v-if="item.is_enabled">已啟用</span>
             <span class="text-muted" v-else>未啟用</span>
           </td>
-          <td>
+          <td class="text-center">
             <div class="btn-group">
               <button class="btn btn-outline-primary btn-sm" @click="openEditProductModal(item)">編輯</button>
               <button class="btn btn-outline-danger btn-sm" @click="openDeleteProductModal(item)">刪除</button>
@@ -79,7 +84,9 @@ const handleUpdateComplete = () => {
         </tr>
       </tbody>
     </table>
-    <ProductPagination></ProductPagination>
+    <SharedPagination v-if="productsStore.pagination.total_pages" :pages="productsStore.pagination"
+      @emit-pages="handlePageChange">
+    </SharedPagination>
     <ProductModal ref="productModal" @update-complete="handleUpdateComplete"></ProductModal>
     <DeleteProductModal ref="deleteModal"></DeleteProductModal>
   </div>

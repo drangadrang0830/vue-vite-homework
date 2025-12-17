@@ -1,14 +1,29 @@
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import useUserCartStore from '../stores/userCartStore'
 import useStatusStore from '../stores/statusStore'
 
 const userCartStore = useUserCartStore()
+const statusStore = useStatusStore()
 
+const code = ref('')
 
 onMounted(() => {
   userCartStore.getCart();
 })
+
+const useCouponButton = async () => {
+  if (!code.value) {
+    statusStore.pushMessage({
+      title: `無法使用優惠劵`,
+      style: 'danger',
+      content: '優惠碼不可為空值',
+    })
+    return
+  }
+  await userCartStore.useCoupon(code.value)
+  code.value = ''
+}
 </script>
 
 <template>
@@ -40,13 +55,13 @@ onMounted(() => {
               <td>
                 <div class="input-group input-group-sm">
                   <input type="number" class="form-control" min="1" v-model.number="item.qty"
-                    @change="userCartStore.updateCart(item)" :disabled="useStatusStore.LoadingItem === item.id">
+                    @change="userCartStore.updateCart(item)" :disabled="statusStore.LoadingItem === item.id">
                   <div class="input-group-text">/ {{ item.product.unit }}</div>
                 </div>
               </td>
               <td class="text-end">
-                {{ $filters.currency(item.final_total) }}
                 <small class="text-success" v-if="item.coupon">折扣價：</small>
+                <small>{{ $filters.currency(item.final_total) }}</small>
               </td>
             </tr>
           </tbody>
@@ -58,7 +73,8 @@ onMounted(() => {
             <template v-if="userCartStore.cartData.final_total !== userCartStore.cartData.total">
               <tr>
                 <td colspan="3" class="text-end">折扣抵免</td>
-                <td class="text-end">{{ userCartStore.cartData.total - userCartStore.cartData.final_total }}</td>
+                <td class="text-end">{{ Math.floor(userCartStore.cartData.total) -
+                  Math.floor(userCartStore.cartData.final_total) }}</td>
               </tr>
               <tr>
                 <td colspan="3" class="text-end text-success fw-bold">折扣價</td>
@@ -69,9 +85,9 @@ onMounted(() => {
         </template>
       </table>
       <div class="input-group mb-3 input-group-sm">
-        <input type="text" class="form-control" placeholder="請輸入優惠碼">
+        <input type="text" class="form-control" placeholder="請輸入優惠碼" v-model="code">
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button">
+          <button class="btn btn-outline-secondary" type="button" @click="useCouponButton">
             套用優惠碼
           </button>
         </div>

@@ -4,6 +4,11 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import { Field, Form, ErrorMessage, defineRule, configure } from 'vee-validate'
+import { required, email, min, max, alpha_dash } from '@vee-validate/rules'
+// 引入繁體中文語系
+import { localize, setLocale } from '@vee-validate/i18n'
+import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/css/index.css'
@@ -17,6 +22,20 @@ import { currency, date } from './methods/filters'
 import router from './router'
 import App from './App.vue'
 
+// 定義規則
+defineRule('required', required)
+defineRule('email', email)
+defineRule('min', min)
+defineRule('alpha_dash', alpha_dash)
+defineRule('max', max)
+
+// 設定 vee-validate
+configure({
+  generateMessage: localize('zh_TW', zhTW), // 使用繁體中文語系
+  validateOnInput: true, // 輸入時即時驗證
+})
+setLocale('zh_TW')
+
 // 5. 創建應用實例並使用插件
 const app = createApp(App)
 // 新增全域屬性 $filters，並將 currency 方法掛載在其下，任何地方都可以透過 this.$filters.currency(參數) 來使用它
@@ -28,5 +47,8 @@ app.use(createPinia())
 app.use(router)
 app.use(VueAxios, axios)
 app.component('LoadingOverlay', Loading)
+app.component('VForm', Form)
+app.component('VField', Field)
+app.component('ErrorMessage', ErrorMessage)
 
 app.mount('#app')

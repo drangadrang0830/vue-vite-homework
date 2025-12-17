@@ -156,11 +156,44 @@ export default defineStore('userCartStore', () => {
     }
   }
 
+  //使用優惠劵
+  const useCoupon = async (code) => {
+    const statusStore = useStatusStore()
+    statusStore.isLoading = true
+    const data = {
+      code,
+    }
+    const deleteCartUrl = `${APIurl}api/${PATHurl}/coupon`
+    try {
+      const response = await axios.post(deleteCartUrl, { data })
+      if (response.data.success) {
+        getCart()
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        statusStore.pushMessage({
+          title: `優惠劵使用失敗`,
+          style: 'danger',
+          content: error.response.data.message,
+        })
+      } else {
+        statusStore.pushMessage({
+          title: `優惠劵使用伺服器失敗`,
+          style: 'danger',
+          content: error.message,
+        })
+      }
+    } finally {
+      statusStore.isLoading = false
+    }
+  }
+
   return {
     addCart,
     getCart,
     cartData,
     updateCart,
     removeCartItem,
+    useCoupon,
   }
 })
