@@ -13,9 +13,11 @@ const toggleNav = () => {
 <template>
   <div>
     <ToastMessages></ToastMessages>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <router-link class="navbar-brand" to="/user">首頁</router-link>
+        <router-link class="navbar-brand" to="/user">
+          <img src="../../public/favicon2.ico" alt="" width="25" height="30"
+            class="d-inline-block align-text-top">獅子鄉聯合行銷網</router-link>
 
         <button class="navbar-toggler" type="button" @click="toggleNav" :aria-expanded="isNavOpen ? 'true' : 'false'"
           aria-label="Toggle navigation">
@@ -27,9 +29,6 @@ const toggleNav = () => {
             <li class="nav-item">
               <router-link class="nav-link" to="/user/cart" @click="isNavOpen = false">購物車</router-link>
             </li>
-            <!-- <li class="nav-item">
-              <router-link class="nav-link" to="/user/product/:productId" @click="isNavOpen = false">產品介紹</router-link>
-            </li> -->
           </ul>
         </div>
       </div>

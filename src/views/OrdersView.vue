@@ -1,33 +1,47 @@
 <script setup>
-import { onMounted } from 'vue'
-// import ProductModal from '../components/ProductModal.vue'
+import { onMounted, ref } from 'vue'
+import OrderModal from '../components/OrderModal.vue'
+import DeleteOrderModal from '../components/DeleteOrderModal.vue';
 import useStatusStore from '../stores/statusStore'
 import useOrderStore from '../stores/orderStore'
+import useUserOrder from '../stores/userOrder'
+import SharedPagination from '../components/SharedPagination.vue'
 
 // const modal = ref(null);
 const statusStore = useStatusStore()
 const orderStore = useOrderStore()
+const userOrder = useUserOrder()
+
+// 綁定 Modal 實例，用於呼叫 openModal 方法
+const orderModalRef = ref(null);
+const deleteModalRef = ref(null);
+
+// 打開訂單詳情 Modal 的方法
+const openOrderDetailModal = (orderItem) => {
+  // 將選中的訂單資料傳遞給 Modal 元件的 openModal 方法
+  orderModalRef.value.openModal(orderItem);
+}
+
+const openDeleteModal = (orderId) => {
+  deleteModalRef.value.openModal(orderId);
+}
 
 // 創建時讀取產品資訊
 onMounted(() => {
   orderStore.getOrders();
 })
 
-//新增按鈕
-// const openNewProductModal = () => {
-//   modal.value.openModal();
-// }
+//轉已付費
+const changeCheckbox = async (orderId) => {
+  const isPay = await userOrder.payOrder(orderId)
+  if (isPay) {
+    await orderStore.getOrders()
+  }
+}
 
-//編輯按鈕
-// const openEditProductModal = (item) => {
-//   modal.value.openModal(item);
-// }
-
-//按鈕後續處理
-// const handleUpdateComplete = () => {
-//   console.log("收到子元件通知，正在重新整理產品列表...");
-//   productsStore.getProducts();
-// }
+const handlePageChange = (page) => {
+  orderStore.getOrders(page);
+};
 
 </script>
 
@@ -41,43 +55,46 @@ onMounted(() => {
           <th>Email</th>
           <th>購買款項</th>
           <th width="100" class="text-center">應付金額</th>
-          <th width="200">是否付款</th>
-          <th width="200">編輯</th>
+          <th width="200" class="text-center">是否付款</th>
+          <th width="200" class="text-center">編輯</th>
         </tr>
       </thead>
       <tbody>
-        <!-- 封存v-for="item in productsStore.products" :key="item.id" -->
-        <tr>
-          <td>2021/4/8</td>
-          <td>1234@567.890</td>
+        <tr v-for="item in orderStore.orders" :key="item.id">
+          <td>{{ $filters.date(item.create_at) }}</td>
+          <td>{{ item.user.email }}</td>
           <td>
-            A:1片 <br>
-            B:1片 <br>
-            C:2片 <br>
+            <p v-for="product in item.products" :key="product.id">{{ product.product.title }} 數量： {{ product.qty }} {{
+              product.product.unit }}</p>
           </td>
-          <!-- 封存{{ $filters.currency(item.price) }} -->
           <td class="text-end">
-            1,234
+            {{ $filters.currency(item.total) }}
           </td>
-          <td>
-            <div class="form-check form-switch d-flex align-items-center">
-              <input class="form-check-input" type="checkbox" id="paymentStatusSwitch">
-              <label class="form-check-label ms-2" for="paymentStatusSwitch">
-                已付款
+          <td class="text-center ">
+            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+              <!-- 封存 變更事件-付費函式  -->
+              <input class="form-check-input" type="checkbox" :id="`paymentStatusSwitch-${item.id}`"
+                :checked="item.is_paid" @change="changeCheckbox(item.id)">
+
+              <label class="form-check-label ms-2" :for="`paymentStatusSwitch-${item.id}`"> <!-- 動態綁定 for -->
+                <span v-if="!item.is_paid">尚未付款</span>
+                <span v-else class="text-success">付款完成</span>
               </label>
             </div>
           </td>
-          <td>
+          <td class="text-center">
             <div class="btn-group">
-              <!-- 封存 @click="openEditProductModal(item)"-->
-              <button class="btn btn-outline-primary btn-sm">編輯</button>
-              <button class="btn btn-outline-danger btn-sm">刪除</button>
+              <button class="btn btn-outline-primary btn-sm" @click="openOrderDetailModal(item)">檢視</button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDeleteModal(item.id)">刪除</button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <!-- <ProductPagination></ProductPagination>
-    <ProductModal ref="modal" @update-complete="handleUpdateComplete"></ProductModal> -->
+    <SharedPagination v-if="orderStore.pagination.total_pages > 1" :pages="orderStore.pagination"
+      @emit-pages="handlePageChange">
+    </SharedPagination>
+    <OrderModal ref="orderModalRef"></OrderModal>
+    <DeleteOrderModal ref="deleteModalRef"></DeleteOrderModal>
   </div>
 </template>

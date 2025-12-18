@@ -1,10 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import useUserOrder from '../stores/userOrder'
 import useStatusStore from '../stores/statusStore'
 
 const route = useRoute()
+const router = useRouter()
 const userOrder = useUserOrder()
 const statusStore = useStatusStore()
 
@@ -25,7 +26,7 @@ onMounted(async () => {
 const onSubmit = async () => {
   const isPay = await userOrder.payOrder(orderId)
   if (isPay) {
-    // router.push(`/user/checkout/${orderId}`)
+    router.push(`/user/cart`)
     await fetchOrder()
   }
 }
@@ -84,8 +85,8 @@ const onSubmit = async () => {
           </tr>
         </tbody>
       </table>
-      <div class="text-end">
-        <button class="btn btn-danger" :disabled="statusStore.isLoading">確認付款去</button>
+      <div class="text-end" v-if="!orderDate.order.is_paid">
+        <button class="btn btn-danger" :disabled="statusStore.isLoading" type="submit">確認付款去</button>
       </div>
     </form>
   </div>

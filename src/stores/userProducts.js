@@ -44,6 +44,7 @@ export default defineStore('userProducts', () => {
 
   //取得單一產品說明
   const descriptionProduct = async (id) => {
+    product.value = {}
     const statusStore = useStatusStore()
     const descriptionProductUrl = `${APIurl}api/${PATHurl}/product/${id}`
     statusStore.isLoading = true

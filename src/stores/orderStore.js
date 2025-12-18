@@ -23,13 +23,6 @@ export default defineStore('orderStore', () => {
       if (response.data.success) {
         orders.value = response.data.orders
         pagination.value = response.data.pagination
-        console.log(orders.value, pagination.value)
-        if (response.data.success) {
-          statusStore.pushMessage({
-            title: `訂單取得成功`,
-            style: 'success',
-          })
-        }
       } else {
         console.log('訂單取得失敗:', response.data.message)
       }
@@ -40,81 +33,119 @@ export default defineStore('orderStore', () => {
     }
   }
 
-  // -----------------
-
-  //新增/變更函式
-  const updateProduct = async (item) => {
-    let api = `${APIurl}api/${PATHurl}/admin/product`
-    let httpMethod = 'post'
-    let msg = '新增'
-    if (item.id) {
-      api = `${api}/${item.id}`
-      httpMethod = 'put'
-      msg = '修改'
-    }
+  const deleteOrder = async (id) => {
+    const url = `${APIurl}api/${PATHurl}/admin/order/${id}`
+    statusStore.isLoading = true
     try {
-      const response = await axios[httpMethod](api, { data: item })
-
+      const response = await axios.delete(url)
       if (response.data.success) {
         statusStore.pushMessage({
-          title: `${item.title}${msg}成功`,
+          title: `訂單刪除成功`,
           style: 'success',
         })
         return true
-      } else {
-        statusStore.pushMessage({
-          title: `產品${msg}失敗`,
-          style: 'danger',
-          content: response.data.message.join('.'),
-        })
-        return false
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
+        const contentMsg = Array.isArray(error.response?.data?.message)
+          ? error.response.data.message.join('.')
+          : error.message || '未知錯誤'
         statusStore.pushMessage({
-          title: `產品${msg}失敗`,
+          title: `訂單刪除失敗`,
           style: 'danger',
-          content: error.response.data.message.join('.'),
+          content: contentMsg,
         })
-        return false
+        return null
       } else {
         statusStore.pushMessage({
-          title: `產品${msg}失敗`,
+          title: `訂單刪除伺服器失敗`,
           style: 'danger',
-          content: error.message.join('.'),
+          content: error.message,
         })
+        return null
       }
-      return false
+    } finally {
+      await getOrders()
+      statusStore.isLoading = false
     }
   }
+
+  // -----------------
+
+  //新增/變更函式
+  // const updateProduct = async (item) => {
+  //   let api = `${APIurl}api/${PATHurl}/admin/product`
+  //   let httpMethod = 'post'
+  //   let msg = '新增'
+  //   if (item.id) {
+  //     api = `${api}/${item.id}`
+  //     httpMethod = 'put'
+  //     msg = '修改'
+  //   }
+  //   try {
+  //     const response = await axios[httpMethod](api, { data: item })
+
+  //     if (response.data.success) {
+  //       statusStore.pushMessage({
+  //         title: `${item.title}${msg}成功`,
+  //         style: 'success',
+  //       })
+  //       return true
+  //     } else {
+  //       statusStore.pushMessage({
+  //         title: `產品${msg}失敗`,
+  //         style: 'danger',
+  //         content: response.data.message.join('.'),
+  //       })
+  //       return false
+  //     }
+  //   } catch (error) {
+  //     if (error.response && error.response.status === 400) {
+  //       statusStore.pushMessage({
+  //         title: `產品${msg}失敗`,
+  //         style: 'danger',
+  //         content: error.response.data.message.join('.'),
+  //       })
+  //       return false
+  //     } else {
+  //       statusStore.pushMessage({
+  //         title: `產品${msg}失敗`,
+  //         style: 'danger',
+  //         content: error.message.join('.'),
+  //       })
+  //     }
+  //     return false
+  //   }
+  // }
 
   // -----------------
 
   // 處理檔案上傳的方法
-  const uploadFile = async (formData) => {
-    const url = `${APIurl}api/${PATHurl}/admin/upload`
-    try {
-      const response = await axios.post(url, formData)
-      if (response.data.success) {
-        console.log('上傳圖片成功')
-        return response.data.imageUrl
-      } else {
-        console.log('上傳圖片失敗:', response.data.message)
-        return null
-      }
-    } catch (error) {
-      console.log('上傳圖片伺服器失敗:', error)
-      return null
-    }
-  }
+  // const uploadFile = async (formData) => {
+  //   const url = `${APIurl}api/${PATHurl}/admin/upload`
+  //   try {
+  //     const response = await axios.post(url, formData)
+  //     if (response.data.success) {
+  //       console.log('上傳圖片成功')
+  //       return response.data.imageUrl
+  //     } else {
+  //       console.log('上傳圖片失敗:', response.data.message)
+  //       return null
+  //     }
+  //   } catch (error) {
+  //     console.log('上傳圖片伺服器失敗:', error)
+  //     return null
+  //   }
+  // }
 
   // -----------------
 
   return {
     orders,
     getOrders,
-    updateProduct,
-    uploadFile,
+    // updateProduct,
+    // uploadFile,
     pagination,
+    deleteOrder,
   }
 })
