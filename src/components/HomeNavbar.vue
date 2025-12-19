@@ -34,7 +34,7 @@ onMounted(() => {
     <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
       <div class="container-fluid">
         <!-- 首頁 -->
-        <router-link class="navbar-brand" to="/">獅子鄉</router-link>
+        <router-link class="navbar-brand" to="/">獅子鄉聯合行銷網</router-link>
 
         <!-- 切換模式按鈕 -->
         <div class="d-flex ms-auto me-2 order-lg-last">

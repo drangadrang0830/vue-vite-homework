@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-body">
+  <div class="bg-body-secondary">
     <router-view></router-view>
   </div>
 </template>
@@ -7,7 +7,6 @@
 <style lang="scss">
 @import "./assets/all";
 </style>
-<style></style>
 
 <style>
 body {

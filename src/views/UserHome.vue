@@ -3,7 +3,7 @@
     <div class="position-relative">
       <div class="parallax-section"></div>
       <div class="position-absolute top-50 start-0 translate-middle-y w-100">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center w-100">
           <div class="col-8 col-lg-4">
             <img src="../assets/home-bannerText.png" class="img-fluid" alt="">
           </div>
@@ -35,10 +35,10 @@
               </p>
             </div>
             <div class="col-12 col-md-4">
-              <div class="card border-0">
+              <div class="card border-0 bg-body-secondary">
                 <img src="../assets/mango.png" class="card-img-top png-outline" alt="...">
                 <div class="card-body">
-                  <p class="card-text fs-6 d-none d-lg-block">本鄉吉祥物-芒蘇蘇</p>
+                  <p class="card-text fs-6 text-center">本鄉吉祥物-芒蘇蘇</p>
                 </div>
               </div>
             </div>
@@ -96,11 +96,27 @@
         </div>
       </div>
 
-      <div class="row justify-content-center my-5">
-        <div class="col-12 col-lg-10">
-          <h2 class="text-center mb-4">活動剪影</h2>
-          <HomeCarousel />
+    </div>
+
+    <div class="home-wood py-4">
+      <div class="container">
+        <div class="row justify-content-center my-5">
+          <div class="col-12 col-lg-11">
+            <h2 class="text-center mb-4 text-white fw-bold"><i class="bi bi-images"></i>活動剪影</h2>
+            <HomeCarousel />
+          </div>
         </div>
+        <div class="row justify-content-center my-5">
+          <div class="col-12 col-lg-11">
+            <h2 class="text-center mb-4 text-white fw-bold"><i class="bi bi-pin-angle"></i>位置資訊</h2>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3568.9500458571756!2d120.70512507102235!3d22.20181767443413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3471c5f0c53844a1%3A0x4e83d0f4a6db7df1!2z5bGP5p2x57ij542F5a2Q6YSJ5YWs5omA!5e1!3m2!1szh-TW!2stw!4v1766126518551!5m2!1szh-TW!2stw"
+              height="450" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade" class="w-100 rounded-3">
+            </iframe>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -132,7 +148,13 @@
   /* 這個屬性可以幫助針對中日韓文字進行更好的間隔處理 */
   text-justify: inter-ideograph;
 }
+
+.home-wood {
+  background-image: url('../assets/home-wood.jpg');
+  background-size: cover;
+}
 </style>
+
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
@@ -140,7 +162,7 @@ import HomeCarousel from '../components/HomeCarousel.vue'
 
 const scrollY = ref(0)
 const handleScroll = () => {
-  scrollY.value = window.scrollY // 取得目前捲動距離
+  scrollY.value = window.scrollY
 }
 
 onMounted(() => window.addEventListener('scroll', handleScroll))

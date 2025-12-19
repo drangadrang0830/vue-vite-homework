@@ -16,7 +16,7 @@ const carouselItems = ref([
 
 <template>
   <!-- 使用 Bootstrap 5 的 Carousel 結構 -->
-  <div id="homeCarousel" class="carousel slide carousel-fade my-5" data-bs-ride="carousel">
+  <div id="homeCarousel" class="carousel slide carousel-fade my-5 border-body" data-bs-ride="carousel">
     <!-- 指示標籤 -->
     <div class="carousel-indicators">
       <button v-for="(item, index) in carouselItems" :key="'btn-' + item.id" type="button"
@@ -25,7 +25,7 @@ const carouselItems = ref([
     </div>
 
     <!-- 輪播內容 -->
-    <div class="carousel-inner shadow-lg rounded">
+    <div class="carousel-inner shadow-lg">
       <div v-for="(item, index) in carouselItems" :key="item.id" class="carousel-item" :class="{ active: index === 0 }"
         data-bs-interval="3000">
         <img :src="item.src" class="d-block w-100 object-fit-cover" style="height: 450px;" :alt="item.alt">
@@ -55,5 +55,19 @@ const carouselItems = ref([
 .carousel-caption {
   padding: 1rem;
   bottom: 2rem;
+}
+
+.carousel {
+  border-style: solid;
+  border-width: 15px;
+  /* border-color 建議設為透明或與背景同色，以避免 border-image 載入失敗時的視覺衝突 */
+  /*   邊框的影像來源 */
+  border-image: url(../assets/home-carousel-border.png) 33.33% round;
+
+  border-image-width: 1;
+  /*   邊框的影像寬度 */
+
+  /* 防止背景顏色超出 border-image */
+  background-clip: padding-box;
 }
 </style>
