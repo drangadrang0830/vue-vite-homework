@@ -2,7 +2,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import useApiStore from '@/stores/apiStore'
 
 // 實體化路徑
-import HomeView from '../views/HomeView.vue'
+import UserLayout from '../views/UserLayout.vue'
+import UserHome from '../views/UserHome.vue'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import UserboardView from '../views/UserboardView.vue'
@@ -15,7 +16,31 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: HomeView,
+      component: UserLayout,
+      children: [
+        {
+          path: '',
+          component: UserHome,
+        },
+        {
+          path: 'user',
+          component: UserboardView,
+          children: [
+            {
+              path: 'product/:productId',
+              component: UserProductView,
+            },
+            {
+              path: 'cart',
+              component: UserCartView,
+            },
+            {
+              path: 'checkout/:orderId',
+              component: UserCheckOut,
+            },
+          ],
+        },
+      ],
     },
     {
       path: '/loginview',
@@ -37,24 +62,6 @@ const router = createRouter({
         {
           path: 'couponview',
           component: () => import('../views/CouponView.vue'),
-        },
-      ],
-    },
-    {
-      path: '/user',
-      component: UserboardView,
-      children: [
-        {
-          path: 'product/:productId',
-          component: UserProductView,
-        },
-        {
-          path: 'cart',
-          component: UserCartView,
-        },
-        {
-          path: 'checkout/:orderId',
-          component: UserCheckOut,
         },
       ],
     },
