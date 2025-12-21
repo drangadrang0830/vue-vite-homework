@@ -30,8 +30,8 @@ const carouselItems = ref([
         data-bs-interval="3000">
         <img :src="item.src" class="d-block w-100 object-fit-cover" style="height: 450px;" :alt="item.alt">
         <div class="carousel-caption d-none d-md-block bg-body text-body bg-opacity-50 rounded">
-          <h5>{{ item.alt }}</h5>
-          <p>{{ item.caption }}</p>
+          <h5 class="m-0 h4">{{ item.alt }}</h5>
+          <p class="m-0 h5">{{ item.caption }}</p>
         </div>
       </div>
     </div>

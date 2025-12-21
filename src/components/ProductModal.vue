@@ -94,7 +94,7 @@ const uploadFiles = async (event) => {
     filesInput.value.value = '';
 
   } catch (error) {
-    console.error("多圖上傳失敗:", error);
+    console.error("上傳失敗:", error);
     filesInput.value.value = '';
   }
 };
@@ -212,8 +212,8 @@ defineExpose({
                 </div>
                 <div class="mb-3">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" :true-value="1" :false-value="0" id="is_enabled"
-                      v-model="tempProduct.is_enabled">
+                    <input class="form-check-input" type="checkbox" rows="7" :true-value="1" :false-value="0"
+                      id="is_enabled" v-model="tempProduct.is_enabled">
                     <label class="form-check-label" for="is_enabled">
                       是否啟用
                     </label>

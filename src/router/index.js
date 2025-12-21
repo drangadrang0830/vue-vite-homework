@@ -10,6 +10,7 @@ import UserboardView from '../views/UserboardView.vue'
 import UserProductView from '../views/UserProductView.vue'
 import UserCartView from '../views/UserCartView.vue'
 import UserCheckOut from '../views/UserCheckout.vue'
+import UserAttractions from '../views/UserAttractions.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,10 @@ const router = createRouter({
         {
           path: '',
           component: UserHome,
+        },
+        {
+          path: 'Attractions',
+          component: UserAttractions,
         },
         {
           path: 'user',
