@@ -52,11 +52,21 @@ onMounted(() => {
     0 0 10px #42b883,
     0 0 15px #42b883;
 }
+
+.navbar-brand:active,
+.navbar-brand:focus,
+.nav-link:active,
+.nav-link:focus {
+  text-shadow: 0 0 5px #fff,
+    0 0 5px #00BCD4,
+    0 0 10px #00BCD4;
+}
 </style>
 
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top" ref="navbarRef">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top border-bottom border-2 border-success-subtle"
+      ref="navbarRef">
       <div class="container-fluid">
         <router-link class="navbar-brand link-body-emphasis" to="/">獅子鄉聯合行銷網</router-link>
         <div class="d-flex ms-auto me-2 order-lg-last">
@@ -73,7 +83,7 @@ onMounted(() => {
         </button>
 
         <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }" id="navbarNavDropdown">
-          <ul class="navbar-nav w-100 text-center">
+          <ul class="navbar-nav text-center">
             <li class="nav-item">
               <router-link class="nav-link link-body-emphasis" to="/Attractions"
                 @click="isNavOpen = false">景點介紹</router-link>

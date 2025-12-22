@@ -77,8 +77,9 @@ const borderColor = (num) => {
 }
 
 .preserve-newline {
+  text-align: justify;
+  text-justify: inter-character;
   white-space: pre-line;
-  /* 保留換行符號，但自動折行 */
 }
 </style>
 
@@ -96,7 +97,7 @@ const borderColor = (num) => {
           </div>
           <div class="col-md-5">
             <h4>{{ item.title }}</h4>
-            <p class="preserve-newline">{{ item.content }}</p>
+            <p class="preserve-newline justify-text">{{ item.content }}</p>
           </div>
           <div class="col-md-3 map-container align-self-center">
             <div class="aspect-ratio-box">

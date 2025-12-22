@@ -50,7 +50,7 @@ const getImgUrl = (path) => {
 
 .text-aligned {
   text-align: justify;
-  text-justify: inter-ideograph;
+  text-justify: inter-character;
 }
 
 .home-wood {
@@ -101,7 +101,7 @@ const getImgUrl = (path) => {
         <div class="col-12 col-md-6 text-center text-md-start">
           <h3 class="d-inline-block border-bottom border-primary border-3">{{ item.title }}</h3>
           <br class="d-none d-lg-block">
-          <p class="fs-5 text-start" style="white-space: pre-line !important;">
+          <p class="fs-5 text-start text-aligned" style="white-space: pre-line !important;">
             {{ item.content }}
           </p>
         </div>

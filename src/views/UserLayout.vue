@@ -22,7 +22,8 @@ import Navbar from '../components/HomeNavbar.vue'
               <router-link class="link-primary text-body mx-3" to="/">
                 <i class="bi bi-instagram"></i>
               </router-link>
-              <div class="vr mx-3"></div>
+              <div class="vr mx-3 d-lg-inline-block d-none"></div>
+              <hr class="d-lg-none">
               <a href="tel:+886987654321" class="link-primary text-body mx-3">
                 <i class="bi bi-telephone-fill"></i>
               </a>
