@@ -13,10 +13,9 @@ const filesInput = ref(null);
 //modal控制區
 onMounted(() => {
   if (modal.value) {
-    bsModal.value = new Modal(modal.value)
-    modal.value.addEventListener('hide.bs.modal', handleModalHide);
+    bsModal.value = new Modal(modal.value);
   }
-})
+});
 
 const openModal = (item = {}) => {
   // 淺拷貝傳入的產品資料
@@ -26,18 +25,11 @@ const openModal = (item = {}) => {
     tempProduct.value.imagesUrl = [];
   }
 
-  bsModal.value.toggle();
+  bsModal.value.show();
 }
-
-const handleModalHide = () => {
-  document.activeElement.blur();
-  // 在 Modal 確定隱藏後，才通知父元件更新資料
-  emit('update-complete');
-};
 
 onUnmounted(() => {
   if (modal.value && bsModal.value) {
-    modal.value.removeEventListener('hide.bs.modal', handleModalHide);
     bsModal.value.dispose();
   }
 });
@@ -53,9 +45,12 @@ const tempProduct = ref({
 
 // 呼叫通知父層關閉modal
 const submitProduct = async () => {
-  await productsStore.updateProduct(tempProduct.value);
-  bsModal.value.hide();
-}
+  const success = await productsStore.updateProduct(tempProduct.value);
+  if (success) {
+    emit('update-complete');
+    bsModal.value.hide();
+  }
+};
 
 // -----------------
 
