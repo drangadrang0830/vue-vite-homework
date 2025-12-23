@@ -68,7 +68,10 @@ onMounted(() => {
     <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top border-bottom border-2 border-success-subtle"
       ref="navbarRef">
       <div class="container-fluid">
-        <router-link class="navbar-brand link-body-emphasis" to="/">獅子鄉聯合行銷網</router-link>
+        <router-link class="navbar-brand link-body-emphasis" to="/">
+          <img src="../../public/favicon.png" alt="Logo" width="25" height="24" class="d-inline-block align-text-top">
+          獅子鄉聯合行銷網
+        </router-link>
         <div class="d-flex ms-auto me-2 order-lg-last">
           <button class="btn btn-sm btn-outline-secondary border-0" @click="toggleTheme" title="切換深淺色">
             <span v-if="theme === 'dark'">🌞</span>
@@ -89,7 +92,7 @@ onMounted(() => {
                 @click="isNavOpen = false">景點介紹</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link link-body-emphasis" to="/user/cart"
+              <router-link class="nav-link link-body-emphasis" to="/products"
                 @click="isNavOpen = false">農業特產</router-link>
             </li>
             <!-- 作業版才有 正式應移除 -->

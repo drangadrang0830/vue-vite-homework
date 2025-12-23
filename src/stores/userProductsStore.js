@@ -5,37 +5,48 @@ import useStatusStore from './statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
-//Setup Store 設定式寫法
+
 export default defineStore('userProducts', () => {
   const products = ref([])
-
-  const pagination = ref({})
-
   const product = ref({})
+  const categories = ref([])
 
   //取得產品資訊
-  const getProducts = async (page = 1) => {
+  const getProducts = async () => {
+    const filterString = '農特產品'
+    const title = `產品讀取`
+    const url = `${APIurl}api/${PATHurl}/products/all`
     const statusStore = useStatusStore()
-    const getProductsUrl = `${APIurl}api/${PATHurl}/products/?page=${page}`
     statusStore.isLoading = true
-
     try {
-      const response = await axios.get(getProductsUrl)
-      if (response.data.success) {
-        products.value = response.data.products
-        pagination.value = response.data.pagination
-      } else {
-        statusStore.pushMessage({
-          title: `產品取得失敗`,
-          style: 'danger',
-          content: response.data.message,
-        })
-      }
+      const response = await axios.get(url)
+      const productsList = response.data.products || []
+      products.value = productsList.filter((item) => item.category?.includes(filterString))
+
+      console.log(products.value)
+      const categoryCounts = products.value.reduce((acc, currentItem) => {
+        const categoryName = currentItem.category
+        if (categoryName) {
+          acc[categoryName] = (acc[categoryName] || 0) + 1
+        }
+        return acc
+      }, {})
+      const uniqueCategoriesArray = Object.keys(categoryCounts).map((name) => {
+        return {
+          name: name,
+          count: categoryCounts[name]
+        }
+      })
+      categories.value = [
+        { name: '全部商品', count: products.value.length },
+        ...uniqueCategoriesArray
+      ]
     } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
-        title: `產品取得伺服器失敗`,
+        title: `${title}失敗`,
         style: 'danger',
-        content: error.message,
+        content: errorMsg
       })
     } finally {
       statusStore.isLoading = false
@@ -57,14 +68,14 @@ export default defineStore('userProducts', () => {
         statusStore.pushMessage({
           title: `介紹讀取失敗`,
           style: 'danger',
-          content: response.data.message,
+          content: response.data.message
         })
       }
     } catch (error) {
       statusStore.pushMessage({
         title: `介紹讀取伺服器失敗`,
         style: 'danger',
-        content: error.message,
+        content: error.message
       })
     } finally {
       statusStore.isLoading = false
@@ -82,7 +93,7 @@ export default defineStore('userProducts', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `圖片上傳成功`,
-          style: 'success',
+          style: 'success'
         })
         return response.data.imageUrl
       } else {
@@ -92,7 +103,7 @@ export default defineStore('userProducts', () => {
         statusStore.pushMessage({
           title: `圖片上傳失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
         return null
       }
@@ -100,7 +111,7 @@ export default defineStore('userProducts', () => {
       statusStore.pushMessage({
         title: `圖片上傳伺服器失敗`,
         style: 'danger',
-        content: error.message,
+        content: error.message
       })
       return null
     }
@@ -111,9 +122,9 @@ export default defineStore('userProducts', () => {
   return {
     products,
     getProducts,
+    categories,
     uploadFile,
-    pagination,
     descriptionProduct,
-    product,
+    product
   }
 })

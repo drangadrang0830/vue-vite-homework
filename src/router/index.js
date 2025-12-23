@@ -4,11 +4,13 @@ import useApiStore from '@/stores/apiStore'
 // 實體化路徑
 import UserLayout from '../views/UserLayout.vue'
 import UserHome from '../views/UserHome.vue'
+import UserProductsView from '../views/UserProductsView.vue'
+import UserProductView from '../views/UserProductDescriptionView.vue'
+
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import UserboardView from '../views/UserboardView.vue'
-import UserProductView from '../views/UserProductView.vue'
-import UserCartView from '../views/UserCartView.vue'
+
 import UserCheckOut from '../views/UserCheckout.vue'
 import UserAttractions from '../views/UserAttractions.vue'
 
@@ -21,35 +23,35 @@ const router = createRouter({
       children: [
         {
           path: '',
-          component: UserHome,
+          component: UserHome
         },
         {
           path: 'Attractions',
-          component: UserAttractions,
+          component: UserAttractions
+        },
+        {
+          path: 'products',
+          component: UserProductsView
+        },
+        {
+          path: 'product/:productId',
+          component: UserProductView
         },
         {
           path: 'user',
           component: UserboardView,
           children: [
             {
-              path: 'product/:productId',
-              component: UserProductView,
-            },
-            {
-              path: 'cart',
-              component: UserCartView,
-            },
-            {
               path: 'checkout/:orderId',
-              component: UserCheckOut,
-            },
-          ],
-        },
-      ],
+              component: UserCheckOut
+            }
+          ]
+        }
+      ]
     },
     {
       path: '/loginview',
-      component: LoginView,
+      component: LoginView
     },
     {
       path: '/dashboardview',
@@ -58,19 +60,19 @@ const router = createRouter({
       children: [
         {
           path: 'productsview',
-          component: () => import('../views/ProductsView.vue'),
+          component: () => import('../views/ProductsView.vue')
         },
         {
           path: 'ordersview',
-          component: () => import('../views/OrdersView.vue'),
+          component: () => import('../views/OrdersView.vue')
         },
         {
           path: 'couponview',
-          component: () => import('../views/CouponView.vue'),
-        },
-      ],
-    },
-  ],
+          component: () => import('../views/CouponView.vue')
+        }
+      ]
+    }
+  ]
 })
 
 // 路由表 (修改後)

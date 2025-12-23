@@ -1,65 +1,151 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import useStatusStore from '../stores/statusStore'
-import useUserProducts from '../stores/userProducts'
+import useUserProducts from '../stores/userProductsStore'
 import useUserCartStore from '../stores/userCartStore'
-import useUserOrder from '../stores/userOrder'
-import SharedPagination from '../components/SharedPagination.vue'
-import UserCart from '../components/UserCart.vue'
+
 
 const statusStore = useStatusStore()
 const userProducts = useUserProducts()
 const userCartStore = useUserCartStore()
-const userOrder = useUserOrder()
-
 const router = useRouter()
 
-const form = ref({
-  user: {
-    name: '',
-    email: '',
-    tel: '',
-    address: '',
-  },
-  message: ''
-})
 
-const onSubmit = async () => {
-  const orderId = await userOrder.submitOrder(form.value)
-  if (orderId) {
-    router.push(`/user/checkout/${orderId}`)
-    form.value.user = {}
-  }
-}
 
-const isPhone = (value) => { //電話驗證函式
-  const phoneNumber = /^(09)[0-9]{8}$/
-  return phoneNumber.test(value) ? true : '需要正確的電話號碼'
-}
+//-------------------購物車
+// import useUserOrder from '../stores/userOrder'
+// import UserCart from '../components/UserCart.vue'
+// const userOrder = useUserOrder()
+
+//-------------------表單
+
+// const form = ref({
+//   user: {
+//     name: '',
+//     email: '',
+//     tel: '',
+//     address: '',
+//   },
+//   message: ''
+// })
+
+// const onSubmit = async () => {
+//   const orderId = await userOrder.submitOrder(form.value)
+//   if (orderId) {
+//     router.push(`/user/checkout/${orderId}`)
+//     form.value.user = {}
+//   }
+// }
+
+// const isPhone = (value) => { //電話驗證函式
+//   const phoneNumber = /^(09)[0-9]{8}$/
+//   return phoneNumber.test(value) ? true : '需要正確的電話號碼'
+// }
+
+//-------------------------
+
+const useCategory = ref('全部商品')
+
 
 // 創建時讀取產品資訊
-onMounted(() => {
-  userProducts.getProducts();
+onMounted(async () => {
+  await userProducts.getProducts(useCategory);
+
+})
+
+const filterData = (category) => {
+  useCategory.value = category
+}
+
+const filterList = computed(() => {
+  if (useCategory.value === '全部商品') {
+    return userProducts.products
+  }
+  return userProducts.products.filter((item) => item.category?.includes(useCategory.value))
 })
 
 const getProduct = (id) => {
-  router.push(`/user/product/${id}`)
+  router.push(`/product/${id}`)
 }
-
-const handlePageChange = (page) => {
-  userProducts.getProducts(page);
-};
-
-
 </script>
+
+<style scoped>
+.card {
+  cursor: pointer;
+}
+</style>
 
 <template>
   <div>
     <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
+
     <div class="container">
-      <div class="row mt4 justify-content-center pb-5">
-        <div class="col-md-7">
+      <div class="row py-3 sticky-top z-2" style="top: var(--nav-height);">
+        <div class="col">
+          <!-- 選單 -->
+          <div class="dropdown d-inline-block position-relative">
+            <button class="btn btn-outline-dark bg-info dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              選擇顯示類別
+            </button>
+            <ul class="dropdown-menu">
+              <li v-for="(category, index) in userProducts.categories" :key="index">
+                <a class="dropdown-item d-flex justify-content-between align-items-center"
+                  :class="{ active: category.name === useCategory }" href="#"
+                  @click.prevent="filterData(category.name)">
+                  {{ category.name.replace('農特產品-', '') }}
+                  <span class="badge rounded-pill bg-danger ms-3">{{ category.count }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 範例 -->
+      <div class="row row-cols-lg-5 row-cols-md-2 row-cols-1 gx-3 gy-4 mb-3">
+
+        <div class="col" v-for="product in filterList" :key="product.id">
+          <div class="card h-100" @click.prevent="getProduct(product.id)">
+            <img :src="product.imagesUrl[0]" class="card-img-top" alt="圖片顯示失敗" style="height: 150px;">
+            <div class="card-body text-center d-flex flex-column justify-content-between">
+              <h5 class="card-title border-bottom pb-3">{{ product.title }}</h5>
+              <div>
+                <p class="my-0" :class="product.origin_price !== product.price
+                  ? 'text-decoration-line-through fs-6'
+                  : 'fs-5'">
+                  <span v-if="product.origin_price !== product.price">原價</span>
+                  <span v-else>售價</span>
+                  {{ $filters.currency(product.origin_price) }}元
+                </p>
+                <div v-if="product.origin_price !== product.price">
+                  <p class="fs-5 text-danger my-0 fw-bold">現在只要{{ $filters.currency(product.price) }}元!!</p>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer p-0">
+              <button class="btn btn-success btn-sm rounded-top-0 w-100"
+                :disabled="statusStore.loadingItem === product.id"
+                @click.prevent.stop="userCartStore.addCart(product.id)">
+                <div v-if="statusStore.loadingItem === product.id">
+                  <div class="spinner-grow spinner-grow-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <span>稍待片刻</span>
+                </div>
+                <span v-else>加入購物車</span>
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+
+      <!-- 廢棄 表格顯示 -->
+      <!-- <div class="row">
+        <div class="col-md-12">
           <table class="table mt-4 align-middle table-hover">
             <thead>
               <tr>
@@ -76,7 +162,7 @@ const handlePageChange = (page) => {
                     :style="{ backgroundImage: `url(${item.imagesUrl[0]})` }"></div>
                 </td>
                 <td class="text-center"><a href="#" class="text-dark" @click.prevent="getProduct(item.id)">{{ item.title
-                    }}</a></td>
+                }}</a></td>
                 <td class="text-center">
                   <p class="text-decoration-line-through h5" v-if="!item.price">原價{{
                     $filters.currency(item.origin_price) }}元</p>
@@ -103,11 +189,12 @@ const handlePageChange = (page) => {
               </tr>
             </tbody>
           </table>
-          <SharedPagination v-if="userProducts.pagination.total_pages > 1" :pages="userProducts.pagination"
-            @emit-pages="handlePageChange">
-          </SharedPagination>
         </div>
+
+
+        購物車
         <UserCart></UserCart>
+        表單
         <div class="col-6 post mt-4" v-if="userCartStore.cartData.carts?.length > 0">
           <v-form v-slot="{ errors }" @submit="onSubmit">
 
@@ -155,7 +242,7 @@ const handlePageChange = (page) => {
             </div>
           </v-form>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

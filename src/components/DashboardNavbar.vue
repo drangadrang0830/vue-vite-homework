@@ -48,7 +48,7 @@ const handleLogout = async () => {
               <a class="nav-link" href="#" @click.prevent="handleLogout" @click="isNavOpen = false">登出</a>
             </li>
             <li class="nav-item ms-auto">
-              <router-link class="nav-link" to="/user/cart" @click="isNavOpen = false">購物車</router-link>
+              <router-link class="nav-link" to="/user/products" @click="isNavOpen = false">購物車</router-link>
             </li>
           </ul>
         </div>

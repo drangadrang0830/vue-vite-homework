@@ -23,7 +23,6 @@ onMounted(async () => {
     attractionsImgs.value = attractionsList.filter(item =>
       targets.includes(item.category)
     );
-    console.log(attractionsImgs.value)
   } catch (error) {
     const errorMsg = error.response?.data?.message || error.message
     statusStore.pushMessage({
