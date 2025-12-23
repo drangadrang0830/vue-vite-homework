@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+
 import useStatusStore from '../stores/statusStore'
 import useUserProductsStore from '../stores/userProductsStore'
 import useUserCartStore from '../stores/userCartStore'
 import useUserFavoriteStore from '../stores/userFavoriteStore'
-
+import SharedPagination from '../components/SharedPagination.vue'
 
 const statusStore = useStatusStore()
 const userProductsStore = useUserProductsStore()
@@ -15,20 +16,48 @@ const router = useRouter()
 
 const useCategory = ref('全部商品')
 
-// 創建時讀取產品資訊
+const currentPage = ref(1)
+const pageSize = 12
+
+//資料預處理
 onMounted(async () => {
   await userProductsStore.getAllProducts();
 })
 
 const filterData = (category) => {
   useCategory.value = category
+  currentPage.value = 1
 }
 
-const filterList = computed(() => {
+const filteredList = computed(() => {
   if (useCategory.value === '全部商品') return userProductsStore.farmProducts
   return userProductsStore.farmProducts.filter(item => item.category?.includes(useCategory.value))
 })
 
+//分頁功能
+const pagedList = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  const end = start + pageSize
+  return filteredList.value.slice(start, end)
+})
+
+const paginationInfo = computed(() => {
+  const total = Math.ceil(filteredList.value.length / pageSize) || 1
+  return {
+    total_pages: total,
+    current_page: currentPage.value,
+    has_pre: currentPage.value > 1,
+    has_next: currentPage.value < total,
+    category: useCategory.value
+  }
+})
+
+const changePage = (page) => {
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+//轉往介紹頁
 const getProduct = (id) => {
   router.push(`/product/${id}`)
 }
@@ -48,6 +77,15 @@ const getProduct = (id) => {
 .card-badgeImgWarp {
   top: 1%;
   right: 2%;
+}
+
+.zoomable-img {
+  transition: transform 0.3s ease;
+
+}
+
+.main-image:hover .zoomable-img {
+  transform: scale(1.2);
 }
 </style>
 
@@ -77,15 +115,17 @@ const getProduct = (id) => {
         </div>
       </div>
 
-      <div class="row row-cols-lg-5 row-cols-md-3 row-cols-1 gx-3 gy-4 mb-3 p-4">
-        <div class="col" v-for="product in filterList" :key="product.id">
+      <div class="row row-cols-lg-4 row-cols-md-3 row-cols-1 gx-3 gy-4 mb-3 p-4">
+        <div class="col" v-for="product in pagedList" :key="product.id">
           <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
             <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light"></div>
             <div class="card-badgeImgWarp position-absolute z-2" @click.stop="userFavoriteStore.toggleFavorite(product)"
               style="cursor: pointer;">
               <i :class="userFavoriteStore.isFavorite(product.id) ? 'bi bi-heart-fill text-danger' : 'bi bi-heart'"></i>
             </div>
-            <img :src="product.imagesUrl[0]" class="card-img-top" alt="圖片顯示失敗" style="height: 150px;">
+            <div class="ratio ratio-4x3 overflow-hidden main-image">
+              <img :src="product.imagesUrl[0]" class="card-img-top object-fit-cover zoomable-img" alt="圖片顯示失敗">
+            </div>
             <div class="card-body text-center d-flex flex-column justify-content-between">
               <h5 class="card-title border-bottom pb-3">{{ product.title }}</h5>
               <div>
@@ -116,6 +156,10 @@ const getProduct = (id) => {
             </div>
           </div>
         </div>
+      </div>
+      <div class="d-flex justify-content-center py-4">
+        <!-- 封存v-if="productsStore.pagination.total_pages" -->
+        <SharedPagination :pages="paginationInfo" @emit-pages="changePage"></SharedPagination>
       </div>
     </div>
   </div>
