@@ -20,6 +20,7 @@
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
+    "default-passive-events": "^4.0.0",
     "mitt": "^3.0.1",
     "pinia": "^3.0.4",
     "vee-validate": "^4.15.1",

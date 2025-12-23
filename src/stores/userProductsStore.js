@@ -7,55 +7,54 @@ const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
 export default defineStore('userProducts', () => {
-  const products = ref([])
+  const allProducts = ref([]) // 原始總資料
+  const homeData = ref([]) // 給首頁用
+  const attractionData = ref([]) // 給景點用
+  const farmProducts = ref([]) // 給農特產品用
+  const categories = ref([]) // 農特產品分類選單
   const product = ref({})
-  const categories = ref([])
+
   let isFetching = false
 
   //取得產品資訊
-  const getProducts = async () => {
-    if (products.value.length > 0 || isFetching) {
-      return
-    }
+  const getAllProducts = async () => {
+    if (allProducts.value.length > 0 || isFetching) return
+
     isFetching = true
-    const filterString = '農特產品'
-    const title = `產品讀取`
     const url = `${APIurl}api/${PATHurl}/products/all`
     const statusStore = useStatusStore()
     statusStore.isLoading = true
     try {
       const response = await axios.get(url)
-      const productsList = response.data.products || []
-      products.value = productsList.filter((item) => item.category?.includes(filterString))
-      updateCategories()
+      const data = response.data.products || []
+      allProducts.value = data
+
+      homeData.value = data.filter((item) => item.category === '首頁')
+
+      const attractionTargets = ['美食饗宴', '夜宿地點', '熱門景點', '歲時祭儀']
+      attractionData.value = data.filter((item) => attractionTargets.includes(item.category))
+
+      farmProducts.value = data.filter((item) => item.category?.includes('農特產品'))
+      updateFarmCategories()
     } catch (error) {
       const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: `${title}失敗`,
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.pushMessage({ title: '資料讀取失敗', style: 'danger', content: errorMsg })
     } finally {
       statusStore.isLoading = false
       isFetching = false
     }
   }
 
-  const updateCategories = () => {
-    const categoryCounts = products.value.reduce((acc, currentItem) => {
-      const categoryName = currentItem.category
-      if (categoryName) acc[categoryName] = (acc[categoryName] || 0) + 1
+  const updateFarmCategories = () => {
+    const categoryCounts = farmProducts.value.reduce((acc, item) => {
+      const name = item.category
+      if (name) acc[name] = (acc[name] || 0) + 1
       return acc
     }, {})
 
-    const uniqueCategoriesArray = Object.keys(categoryCounts).map((name) => ({
-      name,
-      count: categoryCounts[name]
-    }))
-
     categories.value = [
-      { name: '全部商品', count: products.value.length },
-      ...uniqueCategoriesArray
+      { name: '全部商品', count: farmProducts.value.length },
+      ...Object.keys(categoryCounts).map((name) => ({ name, count: categoryCounts[name] }))
     ]
   }
 
@@ -121,11 +120,13 @@ export default defineStore('userProducts', () => {
   // -----------------
 
   return {
-    products,
-    getProducts,
+    getAllProducts,
+    homeData,
+    attractionData,
+    farmProducts,
     categories,
-    uploadFile,
     descriptionProduct,
+    uploadFile,
     product
   }
 })

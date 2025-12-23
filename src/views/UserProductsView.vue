@@ -2,16 +2,14 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import useStatusStore from '../stores/statusStore'
-import useUserProducts from '../stores/userProductsStore'
+import useUserProductsStore from '../stores/userProductsStore'
 import useUserCartStore from '../stores/userCartStore'
 
 
 const statusStore = useStatusStore()
-const userProducts = useUserProducts()
+const userProductsStore = useUserProductsStore()
 const userCartStore = useUserCartStore()
 const router = useRouter()
-
-
 
 //-------------------購物車
 // import useUserOrder from '../stores/userOrder'
@@ -47,10 +45,10 @@ const router = useRouter()
 
 const useCategory = ref('全部商品')
 
-
 // 創建時讀取產品資訊
 onMounted(async () => {
-  await userProducts.getProducts();
+  await userProductsStore.getAllProducts();
+  // 模板改用 userProductsStore.farmProducts (或計算後的 filterList)
 })
 
 const filterData = (category) => {
@@ -58,10 +56,8 @@ const filterData = (category) => {
 }
 
 const filterList = computed(() => {
-  if (useCategory.value === '全部商品') {
-    return userProducts.products
-  }
-  return userProducts.products.filter((item) => item.category?.includes(useCategory.value))
+  if (useCategory.value === '全部商品') return userProductsStore.farmProducts
+  return userProductsStore.farmProducts.filter(item => item.category?.includes(useCategory.value))
 })
 
 const getProduct = (id) => {
@@ -99,7 +95,7 @@ const getProduct = (id) => {
               選擇顯示類別
             </button>
             <ul class="dropdown-menu">
-              <li v-for="(category, index) in userProducts.categories" :key="index">
+              <li v-for="(category, index) in userProductsStore.categories" :key="index">
                 <a class="dropdown-item d-flex justify-content-between align-items-center"
                   :class="{ active: category.name === useCategory }" href="#"
                   @click.prevent="filterData(category.name)">

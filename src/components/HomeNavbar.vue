@@ -69,7 +69,7 @@ onMounted(() => {
       ref="navbarRef">
       <div class="container-fluid">
         <router-link class="navbar-brand link-body-emphasis" to="/">
-          <img src="../../public/favicon.png" alt="Logo" width="25" height="24" class="d-inline-block align-text-top">
+          <img src="/favicon.png" alt="Logo" width="25" height="24" class="d-inline-block align-text-top">
           獅子鄉聯合行銷網
         </router-link>
         <div class="d-flex ms-auto me-2 order-lg-last">

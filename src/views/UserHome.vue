@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import HomeCarousel from '../components/HomeCarousel.vue'
-import useUserHomeStore from '../stores/userHomeStore'
+import useUserProductsStore from '../stores/userProductsStore'
 
-const userHomeStore = useUserHomeStore()
+const userProductsStore = useUserProductsStore()
 
 const scrollY = ref(0)
 const handleScroll = () => {
@@ -13,9 +13,9 @@ const handleScroll = () => {
 onMounted(() => window.addEventListener('scroll', handleScroll))
 onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 
-// 創建時讀取首頁資訊
-onMounted(() => {
-  userHomeStore.getUserHomeData('首頁');
+
+onMounted(async () => {
+  await userProductsStore.getAllProducts();
 })
 
 //路徑轉換
@@ -79,7 +79,7 @@ const getImgUrl = (path) => {
       </div>
 
       <div class="row justify-content-md-center align-items-center mb-4 my-lg-5"
-        :class="{ 'flex-md-row-reverse': index % 2 !== 0 }" v-for="(item, index) in userHomeStore.userHomeData"
+        :class="{ 'flex-md-row-reverse': index % 2 !== 0 }" v-for="(item, index) in userProductsStore.homeData"
         :key="item.title">
         <div class="col-md-5 position-relative">
           <img :src="getImgUrl(item.imagesUrl[0])" :alt="item.title" class="img-fluid img-thumbnail mb-2">

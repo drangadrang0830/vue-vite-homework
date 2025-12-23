@@ -26,7 +26,7 @@ const onHide = () => {
 
 <template>
   <div class="product-gallery">
-    <div class="main-image overflow-hidden" @click="showLightbox(0)">
+    <div class="main-image overflow-hidden" @click.prevent="showLightbox(0)">
       <img :src="props.imgList[0] || 'via.placeholder.com'" class="img-fluid object-fit-cover zoomable-img rounded-4" />
     </div>
     <vue-easy-lightbox :visible="visibleRef" :imgs="props.imgList" :index="indexRef" @hide="onHide" />
