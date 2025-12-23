@@ -32,7 +32,7 @@ const getImageClass = (key) => {
 
 const addCartToUser = async () => {
   await userCartStore.addCart(productId)
-  router.push(`/user/cart`)
+  router.push(`/products`)
 }
 
 </script>

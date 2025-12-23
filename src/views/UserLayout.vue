@@ -1,6 +1,7 @@
 <script setup>
 import useStatusStore from '../stores/statusStore'
 import Navbar from '../components/HomeNavbar.vue'
+import ToastMessages from '../components/ToastMessages.vue';
 
 const statusStore = useStatusStore()
 
@@ -8,6 +9,7 @@ const statusStore = useStatusStore()
 
 <template>
   <div>
+    <ToastMessages></ToastMessages>
     <Navbar></Navbar>
     <main style="margin-top: var(--nav-height, 70px);"></main>
     <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
