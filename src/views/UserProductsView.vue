@@ -4,51 +4,20 @@ import { useRouter } from 'vue-router'
 import useStatusStore from '../stores/statusStore'
 import useUserProductsStore from '../stores/userProductsStore'
 import useUserCartStore from '../stores/userCartStore'
+import useUserFavoriteStore from '../stores/userFavoriteStore'
 
 
 const statusStore = useStatusStore()
 const userProductsStore = useUserProductsStore()
 const userCartStore = useUserCartStore()
+const userFavoriteStore = useUserFavoriteStore()
 const router = useRouter()
-
-//-------------------購物車
-// import useUserOrder from '../stores/userOrder'
-// import UserCart from '../components/UserCart.vue'
-// const userOrder = useUserOrder()
-
-//-------------------表單
-
-// const form = ref({
-//   user: {
-//     name: '',
-//     email: '',
-//     tel: '',
-//     address: '',
-//   },
-//   message: ''
-// })
-
-// const onSubmit = async () => {
-//   const orderId = await userOrder.submitOrder(form.value)
-//   if (orderId) {
-//     router.push(`/user/checkout/${orderId}`)
-//     form.value.user = {}
-//   }
-// }
-
-// const isPhone = (value) => { //電話驗證函式
-//   const phoneNumber = /^(09)[0-9]{8}$/
-//   return phoneNumber.test(value) ? true : '需要正確的電話號碼'
-// }
-
-//-------------------------
 
 const useCategory = ref('全部商品')
 
 // 創建時讀取產品資訊
 onMounted(async () => {
   await userProductsStore.getAllProducts();
-  // 模板改用 userProductsStore.farmProducts (或計算後的 filterList)
 })
 
 const filterData = (category) => {
@@ -89,7 +58,7 @@ const getProduct = (id) => {
     <div class="container">
       <div class="row py-3 sticky-top z-2" style="top: var(--nav-height);">
         <div class="col">
-          <!-- 選單 -->
+
           <div class="dropdown d-inline-block position-relative">
             <button class="btn btn-outline-dark bg-info dropdown-toggle" type="button" data-bs-toggle="dropdown">
               選擇顯示類別
@@ -108,14 +77,13 @@ const getProduct = (id) => {
         </div>
       </div>
 
-      <div class="row row-cols-lg-5 row-cols-md-2 row-cols-1 gx-3 gy-4 mb-3">
+      <div class="row row-cols-lg-5 row-cols-md-3 row-cols-1 gx-3 gy-4 mb-3 p-4">
         <div class="col" v-for="product in filterList" :key="product.id">
           <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
-            <!-- 封存@click.stop="toggleFavorite(product.id)" -->
             <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light"></div>
-            <div class="card-badgeImgWarp position-absolute z-2">
-              <i class="bi bi-heart"></i>
-              <!-- <i class="bi bi-heart-fill text-danger"></i> -->
+            <div class="card-badgeImgWarp position-absolute z-2" @click.stop="userFavoriteStore.toggleFavorite(product)"
+              style="cursor: pointer;">
+              <i :class="userFavoriteStore.isFavorite(product.id) ? 'bi bi-heart-fill text-danger' : 'bi bi-heart'"></i>
             </div>
             <img :src="product.imagesUrl[0]" class="card-img-top" alt="圖片顯示失敗" style="height: 150px;">
             <div class="card-body text-center d-flex flex-column justify-content-between">
@@ -149,58 +117,6 @@ const getProduct = (id) => {
           </div>
         </div>
       </div>
-
-      <!-- 購物車
-        <UserCart></UserCart>
-        表單
-        <div class="col-6 post mt-4" v-if="userCartStore.cartData.carts?.length > 0">
-          <v-form v-slot="{ errors }" @submit="onSubmit">
-
-            <div class="mb-3">
-              <label for="name" class="form-label">收件人姓名</label>
-              <v-field id="name" name="姓名" type="text" class="form-control" :class="{ 'is-invalid': errors['姓名'] }"
-                placeholder="請輸入姓名" rules="alpha_dash|required" v-model="form.user.name"></v-field>
-              <error-message name="姓名" class="invalid-feedback"></error-message>
-            </div>
-
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <v-field id="email" name="email" type="email" class="form-control"
-                :class="{ 'is-invalid': errors['email'] }" placeholder="請輸入 Email" rules="email|required"
-                v-model="form.user.email"></v-field>
-              <error-message name="email" class="invalid-feedback"></error-message>
-            </div>
-
-            <div class="mb-3">
-              <label for="phone" class="form-label">收件人電話</label>
-              <v-field id="phone" name="電話" type="text" class="form-control" :class="{ 'is-invalid': errors['電話'] }"
-                placeholder="請輸入電話" :rules="isPhone" v-model="form.user.tel"></v-field>
-              <error-message name="電話" class="invalid-feedback"></error-message>
-            </div>
-
-            <div class="mb-3">
-              <label for="address" class="form-label">收件人地址</label>
-              <v-field id="address" name="地址" type="text" class="form-control" :class="{ 'is-invalid': errors['地址'] }"
-                placeholder="請輸入地址" rules="required" v-model="form.user.address"></v-field>
-              <error-message name="地址" class="invalid-feedback"></error-message>
-            </div>
-
-            <div class="mb-3">
-              <label for="message" class="form-label">留言</label>
-              <v-field id="message" name="留言" as="textarea" class="form-control" :class="{ 'is-invalid': errors['留言'] }"
-                placeholder="請輸入留言內容" v-model="form.message" rules="max:200" rows="3"></v-field>
-              <error-message name="留言" class="invalid-feedback"></error-message>
-            </div>
-
-            <div class="text-end">
-              <button class="btn btn-primary " type="submit" :disabled="statusStore.isLoading">
-                <span v-if="statusStore.isLoading" class="spinner-border spinner-border-sm"></span>
-                送出訂單
-              </button>
-            </div>
-          </v-form>
-        </div>
-      </div>  -->
     </div>
   </div>
 </template>

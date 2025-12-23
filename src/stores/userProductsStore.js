@@ -16,7 +16,7 @@ export default defineStore('userProducts', () => {
 
   let isFetching = false
 
-  //取得產品資訊
+  //取得所有產品資訊
   const getAllProducts = async () => {
     if (allProducts.value.length > 0 || isFetching) return
 
@@ -38,7 +38,7 @@ export default defineStore('userProducts', () => {
       updateFarmCategories()
     } catch (error) {
       const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({ title: '資料讀取失敗', style: 'danger', content: errorMsg })
+      statusStore.pushMessage({ title: '所有產品資訊讀取失敗', style: 'danger', content: errorMsg })
     } finally {
       statusStore.isLoading = false
       isFetching = false
@@ -62,7 +62,6 @@ export default defineStore('userProducts', () => {
   const descriptionProduct = async (id) => {
     product.value = {}
     const statusStore = useStatusStore()
-    const title = `產品說明讀取`
     const url = `${APIurl}api/${PATHurl}/product/${id}`
     statusStore.isLoading = true
     try {
@@ -73,47 +72,12 @@ export default defineStore('userProducts', () => {
     } catch (error) {
       const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
-        title: `${title}失敗`,
+        title: '產品說明讀取失敗',
         style: 'danger',
         content: errorMsg
       })
     } finally {
       statusStore.isLoading = false
-    }
-  }
-
-  // -----------------
-
-  // 處理檔案上傳的方法
-  const uploadFile = async (formData) => {
-    const statusStore = useStatusStore()
-    const uploadFileUrl = `${APIurl}api/${PATHurl}/admin/upload`
-    try {
-      const response = await axios.post(uploadFileUrl, formData)
-      if (response.data.success) {
-        statusStore.pushMessage({
-          title: `圖片上傳成功`,
-          style: 'success'
-        })
-        return response.data.imageUrl
-      } else {
-        const contentMsg = Array.isArray(response.data.message)
-          ? response.data.message.join('.')
-          : response.data.message
-        statusStore.pushMessage({
-          title: `圖片上傳失敗`,
-          style: 'danger',
-          content: contentMsg
-        })
-        return null
-      }
-    } catch (error) {
-      statusStore.pushMessage({
-        title: `圖片上傳伺服器失敗`,
-        style: 'danger',
-        content: error.message
-      })
-      return null
     }
   }
 
@@ -126,7 +90,6 @@ export default defineStore('userProducts', () => {
     farmProducts,
     categories,
     descriptionProduct,
-    uploadFile,
     product
   }
 })

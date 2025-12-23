@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import useStatusStore from './statusStore'
@@ -16,7 +16,7 @@ export default defineStore('userCartStore', () => {
     const addCartUrl = `${APIurl}api/${PATHurl}/cart`
     const cart = {
       product_id: id,
-      qty: 1,
+      qty: 1
     }
 
     try {
@@ -24,24 +24,17 @@ export default defineStore('userCartStore', () => {
       if (response.data.success) {
         getCart()
         statusStore.pushMessage({
-          title: `購物車加入成功`,
-          style: 'success',
+          title: `已新增至購物車`,
+          style: 'success'
         })
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        statusStore.pushMessage({
-          title: `購物車加入失敗`,
-          style: 'danger',
-          content: error.data.message,
-        })
-      } else {
-        statusStore.pushMessage({
-          title: `購物車加入伺服器失敗`,
-          style: 'danger',
-          content: error.message,
-        })
-      }
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '購物車新增失敗',
+        style: 'danger',
+        content: errorMsg
+      })
     } finally {
       statusStore.loadingItem = ''
     }
@@ -58,23 +51,21 @@ export default defineStore('userCartStore', () => {
         cartData.value = response.data.data
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        statusStore.pushMessage({
-          title: `購物車讀取失敗`,
-          style: 'danger',
-          content: error.data.message,
-        })
-      } else {
-        statusStore.pushMessage({
-          title: `購物車讀取伺服器失敗`,
-          style: 'danger',
-          content: error.message,
-        })
-      }
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '購物車讀取失敗',
+        style: 'danger',
+        content: errorMsg
+      })
     } finally {
       statusStore.isLoading = false
     }
   }
+
+  // -------------以下尚未調整
+  const cartTotalQuantity = computed(() => {
+    return cartData.value.carts?.length || 0
+  })
 
   //變更購物車品項
   const updateCart = async (item) => {
@@ -87,7 +78,7 @@ export default defineStore('userCartStore', () => {
     }
     const cart = {
       product_id: item.product_id,
-      qty: item.qty,
+      qty: item.qty
     }
     const updateCartUrl = `${APIurl}api/${PATHurl}/cart/${item.id}`
     try {
@@ -103,13 +94,13 @@ export default defineStore('userCartStore', () => {
         statusStore.pushMessage({
           title: `商品變更失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
       } else {
         statusStore.pushMessage({
           title: `商品變更伺服器失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message
         })
       }
     } finally {
@@ -125,7 +116,7 @@ export default defineStore('userCartStore', () => {
     statusStore.loadingItem = item.id
     const cart = {
       product_id: item.product_id,
-      qty: item.qty,
+      qty: item.qty
     }
     const deleteCartUrl = `${APIurl}api/${PATHurl}/cart/${item.id}`
     try {
@@ -141,13 +132,13 @@ export default defineStore('userCartStore', () => {
         statusStore.pushMessage({
           title: `商品刪除失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
       } else {
         statusStore.pushMessage({
           title: `商品刪除伺服器失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message
         })
       }
     } finally {
@@ -161,7 +152,7 @@ export default defineStore('userCartStore', () => {
     const statusStore = useStatusStore()
     statusStore.isLoading = true
     const data = {
-      code,
+      code
     }
     const deleteCartUrl = `${APIurl}api/${PATHurl}/coupon`
     try {
@@ -174,13 +165,13 @@ export default defineStore('userCartStore', () => {
         statusStore.pushMessage({
           title: `優惠劵使用失敗`,
           style: 'danger',
-          content: error.response.data.message,
+          content: error.response.data.message
         })
       } else {
         statusStore.pushMessage({
           title: `優惠劵使用伺服器失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message
         })
       }
     } finally {
@@ -192,8 +183,10 @@ export default defineStore('userCartStore', () => {
     addCart,
     getCart,
     cartData,
+    cartTotalQuantity,
+
     updateCart,
     removeCartItem,
-    useCoupon,
+    useCoupon
   }
 })

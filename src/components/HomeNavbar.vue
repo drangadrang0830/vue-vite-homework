@@ -1,9 +1,11 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import useUserCartStore from '../stores/userCartStore'
-
+import useUserFavoriteStore from '../stores/userFavoriteStore'
 
 const userCartStore = useUserCartStore()
+const userFavoriteStore = useUserFavoriteStore()
+
 // NAVBAR控制
 const isNavOpen = ref(false)
 
@@ -70,10 +72,14 @@ onMounted(() => {
     0 0 10px #00BCD4;
 }
 
+.router-link-exact-active .badge {
+  text-shadow: none;
+}
+
 .location-setting {
-  top: -15%;
-  left: 90%;
-  font-size: 10px;
+  top: -17%;
+  left: 95%;
+  font-size: 0.6rem;
 }
 </style>
 
@@ -112,10 +118,18 @@ onMounted(() => {
             <li class="nav-item">
               <router-link class="nav-link link-body-emphasis  mx-3" to="/cart" @click="isNavOpen = false">
                 <span class="position-relative">購物車
-                  <span class="position-absolute location-setting badge rounded-pill bg-danger">999</span>
+                  <span class="position-absolute location-setting badge rounded-pill bg-danger"
+                    v-if="userCartStore.cartData.carts">{{ userCartStore.cartTotalQuantity }}</span>
                 </span>
               </router-link>
-
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link link-body-emphasis  mx-3" to="/favorite" @click="isNavOpen = false">
+                <span class="position-relative">我的最愛
+                  <span class="position-absolute location-setting badge rounded-pill bg-danger"
+                    v-if="userFavoriteStore.favorites">{{ userFavoriteStore.favorites.length }}</span>
+                </span>
+              </router-link>
             </li>
             <!-- 作業版才有 正式應移除 -->
             <li class="nav-item ">

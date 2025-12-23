@@ -22,18 +22,13 @@ export default defineStore('productsStore', () => {
       if (response.data.success) {
         products.value = response.data.products
         pagination.value = response.data.pagination
-      } else {
-        statusStore.pushMessage({
-          title: `產品取得失敗`,
-          style: 'danger',
-          content: response.data.message,
-        })
       }
     } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
-        title: `產品取得伺服器失敗`,
+        title: '產品資訊讀取失敗',
         style: 'danger',
-        content: error.message.join('.'),
+        content: errorMsg
       })
     } finally {
       statusStore.isLoading = false
@@ -59,7 +54,7 @@ export default defineStore('productsStore', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `${item.title}${msg}成功`,
-          style: 'success',
+          style: 'success'
         })
         return true
       } else {
@@ -69,7 +64,7 @@ export default defineStore('productsStore', () => {
         statusStore.pushMessage({
           title: `產品${msg}失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
         return false
       }
@@ -81,14 +76,14 @@ export default defineStore('productsStore', () => {
         statusStore.pushMessage({
           title: `產品${msg}失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
         return false
       } else {
         statusStore.pushMessage({
           title: `產品${msg}伺服器失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message
         })
       }
       return false
@@ -105,7 +100,7 @@ export default defineStore('productsStore', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `成功刪除${item.title}`,
-          style: 'success',
+          style: 'success'
         })
         getProducts()
         return true
@@ -114,7 +109,7 @@ export default defineStore('productsStore', () => {
       statusStore.pushMessage({
         title: `帳號登出伺服器失敗`,
         style: 'danger',
-        content: error.message,
+        content: error.message
       })
       return false
     } finally {
@@ -132,7 +127,7 @@ export default defineStore('productsStore', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `圖片上傳成功`,
-          style: 'success',
+          style: 'success'
         })
         return response.data.imageUrl
       } else {
@@ -142,7 +137,7 @@ export default defineStore('productsStore', () => {
         statusStore.pushMessage({
           title: `圖片上傳失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
         return null
       }
@@ -150,7 +145,7 @@ export default defineStore('productsStore', () => {
       statusStore.pushMessage({
         title: `圖片上傳伺服器失敗`,
         style: 'danger',
-        content: error.message,
+        content: error.message
       })
       return null
     }
@@ -164,6 +159,6 @@ export default defineStore('productsStore', () => {
     updateProduct,
     uploadFile,
     pagination,
-    deleteProduct,
+    deleteProduct
   }
 })
