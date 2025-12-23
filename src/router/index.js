@@ -6,6 +6,7 @@ import UserLayout from '../views/UserLayout.vue'
 import UserHome from '../views/UserHome.vue'
 import UserProductsView from '../views/UserProductsView.vue'
 import UserProductView from '../views/UserProductDescriptionView.vue'
+import UserCartView from '../views/UserCartView.vue'
 
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
@@ -36,6 +37,10 @@ const router = createRouter({
         {
           path: 'product/:productId',
           component: UserProductView
+        },
+        {
+          path: 'cart',
+          component: UserCartView
         },
         {
           path: 'user',

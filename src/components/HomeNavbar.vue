@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import useUserCartStore from '../stores/userCartStore'
 
+
+const userCartStore = useUserCartStore()
 // NAVBAR控制
 const isNavOpen = ref(false)
 
@@ -43,6 +46,11 @@ const toggleTheme = () => {
 onMounted(() => {
   document.documentElement.setAttribute('data-bs-theme', theme.value)
 })
+// --------------------------------
+//互動資料
+onMounted(() => {
+  userCartStore.getCart()
+})
 </script>
 
 <style scoped>
@@ -60,6 +68,12 @@ onMounted(() => {
   text-shadow: 0 0 5px #fff,
     0 0 5px #00BCD4,
     0 0 10px #00BCD4;
+}
+
+.location-setting {
+  top: -15%;
+  left: 90%;
+  font-size: 10px;
 }
 </style>
 
@@ -88,16 +102,24 @@ onMounted(() => {
         <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }" id="navbarNavDropdown">
           <ul class="navbar-nav text-center">
             <li class="nav-item">
-              <router-link class="nav-link link-body-emphasis" to="/Attractions"
+              <router-link class="nav-link link-body-emphasis mx-3" to="/Attractions"
                 @click="isNavOpen = false">景點介紹</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link link-body-emphasis" to="/products"
+              <router-link class="nav-link link-body-emphasis mx-3" to="/products"
                 @click="isNavOpen = false">農業特產</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link link-body-emphasis  mx-3" to="/cart" @click="isNavOpen = false">
+                <span class="position-relative">購物車
+                  <span class="position-absolute location-setting badge rounded-pill bg-danger">999</span>
+                </span>
+              </router-link>
+
             </li>
             <!-- 作業版才有 正式應移除 -->
             <li class="nav-item ">
-              <router-link class="nav-link link-body-emphasis" to="/loginview"
+              <router-link class="nav-link link-body-emphasis mx-3" to="/loginview"
                 @click="isNavOpen = false">後台登入</router-link>
             </li>
           </ul>
