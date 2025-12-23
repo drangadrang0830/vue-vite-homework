@@ -1,11 +1,16 @@
 <script setup>
+import useStatusStore from '../stores/statusStore'
 import Navbar from '../components/HomeNavbar.vue'
+
+const statusStore = useStatusStore()
+
 </script>
 
 <template>
   <div>
     <Navbar></Navbar>
     <main style="margin-top: var(--nav-height, 70px);"></main>
+    <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
     <router-view></router-view>
     <div class="footer  bg-info-subtle">
       <div class="container py-4">

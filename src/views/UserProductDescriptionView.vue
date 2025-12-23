@@ -3,12 +3,10 @@ import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import useUserProducts from '../stores/userProductsStore'
 import useUserCartStore from '../stores/userCartStore'
-import useStatusStore from '../stores/statusStore'
 
 const route = useRoute()
 const userProducts = useUserProducts()
 const userCartStore = useUserCartStore()
-const statusStore = useStatusStore()
 
 const productId = route.params.productId;
 
@@ -44,10 +42,6 @@ const addCartToUser = async () => {
 </style>
 
 <template>
-  <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
-
-
-
   <div class="container" v-if="userProducts.product.id">
     <nav aria-label="breadcrumb" class="pt-2">
       <ol class="breadcrumb">

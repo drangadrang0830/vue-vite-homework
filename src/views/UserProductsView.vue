@@ -50,8 +50,7 @@ const useCategory = ref('全部商品')
 
 // 創建時讀取產品資訊
 onMounted(async () => {
-  await userProducts.getProducts(useCategory);
-
+  await userProducts.getProducts();
 })
 
 const filterData = (category) => {
@@ -73,6 +72,17 @@ const getProduct = (id) => {
 <style scoped>
 .card {
   cursor: pointer;
+}
+
+.card-badgeBg {
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.card-badgeImgWarp {
+  top: 1%;
+  right: 2%;
 }
 </style>
 
@@ -102,11 +112,15 @@ const getProduct = (id) => {
         </div>
       </div>
 
-      <!-- 範例 -->
       <div class="row row-cols-lg-5 row-cols-md-2 row-cols-1 gx-3 gy-4 mb-3">
-
         <div class="col" v-for="product in filterList" :key="product.id">
-          <div class="card h-100" @click.prevent="getProduct(product.id)">
+          <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
+            <!-- 封存@click.stop="toggleFavorite(product.id)" -->
+            <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light"></div>
+            <div class="card-badgeImgWarp position-absolute z-2">
+              <i class="bi bi-heart"></i>
+              <!-- <i class="bi bi-heart-fill text-danger"></i> -->
+            </div>
             <img :src="product.imagesUrl[0]" class="card-img-top" alt="圖片顯示失敗" style="height: 150px;">
             <div class="card-body text-center d-flex flex-column justify-content-between">
               <h5 class="card-title border-bottom pb-3">{{ product.title }}</h5>
@@ -137,62 +151,10 @@ const getProduct = (id) => {
               </button>
             </div>
           </div>
-
-
         </div>
       </div>
 
-
-      <!-- 廢棄 表格顯示 -->
-      <!-- <div class="row">
-        <div class="col-md-12">
-          <table class="table mt-4 align-middle table-hover">
-            <thead>
-              <tr>
-                <th class="text-center">圖片</th>
-                <th class="text-center">商品名稱</th>
-                <th class="text-center">價格</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="table-group-divider">
-              <tr v-for="item in userProducts.products" :key="item.id">
-                <td style="width: 150px;">
-                  <div style="height: 100px; background-size: cover; background-position: center"
-                    :style="{ backgroundImage: `url(${item.imagesUrl[0]})` }"></div>
-                </td>
-                <td class="text-center"><a href="#" class="text-dark" @click.prevent="getProduct(item.id)">{{ item.title
-                }}</a></td>
-                <td class="text-center">
-                  <p class="text-decoration-line-through h5" v-if="!item.price">原價{{
-                    $filters.currency(item.origin_price) }}元</p>
-                  <div v-else>
-                    <p class="text-decoration-line-through h6 ">原價{{ $filters.currency(item.origin_price) }}元</p>
-                    <p class="fs-4 h5" v-if="item.price">現在只要{{ $filters.currency(item.price) }}元!!</p>
-                  </div>
-                </td>
-                <td>
-                  <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-secondary btn-sm" @click="getProduct(item.id)">查看更多</button>
-                    <button class="btn btn-outline-danger btn-sm" :disabled="statusStore.loadingItem === item.id"
-                      @click="userCartStore.addCart(item.id)">
-                      <div v-if="statusStore.loadingItem === item.id">
-                        <div class="spinner-grow spinner-grow-sm" role="status">
-                          <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <span>稍待片刻</span>
-                      </div>
-                      <span v-else>加入購物車</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-
-        購物車
+      <!-- 購物車
         <UserCart></UserCart>
         表單
         <div class="col-6 post mt-4" v-if="userCartStore.cartData.carts?.length > 0">
@@ -242,7 +204,7 @@ const getProduct = (id) => {
             </div>
           </v-form>
         </div>
-      </div> -->
+      </div>  -->
     </div>
   </div>
 </template>

@@ -2,11 +2,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import HomeCarousel from '../components/HomeCarousel.vue'
 import useUserHomeStore from '../stores/userHomeStore'
-import useStatusStore from '../stores/statusStore'
-
 
 const userHomeStore = useUserHomeStore()
-const statusStore = useStatusStore()
 
 const scrollY = ref(0)
 const handleScroll = () => {
@@ -61,7 +58,6 @@ const getImgUrl = (path) => {
 
 <template>
   <div>
-    <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
     <div class="position-relative">
       <div class="parallax-section"></div>
       <div class="position-absolute top-50 start-0 translate-middle-y w-100">

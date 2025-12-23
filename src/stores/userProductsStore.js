@@ -10,9 +10,14 @@ export default defineStore('userProducts', () => {
   const products = ref([])
   const product = ref({})
   const categories = ref([])
+  let isFetching = false
 
   //取得產品資訊
   const getProducts = async () => {
+    if (products.value.length > 0 || isFetching) {
+      return
+    }
+    isFetching = true
     const filterString = '農特產品'
     const title = `產品讀取`
     const url = `${APIurl}api/${PATHurl}/products/all`
@@ -22,25 +27,7 @@ export default defineStore('userProducts', () => {
       const response = await axios.get(url)
       const productsList = response.data.products || []
       products.value = productsList.filter((item) => item.category?.includes(filterString))
-
-      console.log(products.value)
-      const categoryCounts = products.value.reduce((acc, currentItem) => {
-        const categoryName = currentItem.category
-        if (categoryName) {
-          acc[categoryName] = (acc[categoryName] || 0) + 1
-        }
-        return acc
-      }, {})
-      const uniqueCategoriesArray = Object.keys(categoryCounts).map((name) => {
-        return {
-          name: name,
-          count: categoryCounts[name]
-        }
-      })
-      categories.value = [
-        { name: '全部商品', count: products.value.length },
-        ...uniqueCategoriesArray
-      ]
+      updateCategories()
     } catch (error) {
       const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
@@ -50,32 +37,46 @@ export default defineStore('userProducts', () => {
       })
     } finally {
       statusStore.isLoading = false
+      isFetching = false
     }
+  }
+
+  const updateCategories = () => {
+    const categoryCounts = products.value.reduce((acc, currentItem) => {
+      const categoryName = currentItem.category
+      if (categoryName) acc[categoryName] = (acc[categoryName] || 0) + 1
+      return acc
+    }, {})
+
+    const uniqueCategoriesArray = Object.keys(categoryCounts).map((name) => ({
+      name,
+      count: categoryCounts[name]
+    }))
+
+    categories.value = [
+      { name: '全部商品', count: products.value.length },
+      ...uniqueCategoriesArray
+    ]
   }
 
   //取得單一產品說明
   const descriptionProduct = async (id) => {
     product.value = {}
     const statusStore = useStatusStore()
-    const descriptionProductUrl = `${APIurl}api/${PATHurl}/product/${id}`
+    const title = `產品說明讀取`
+    const url = `${APIurl}api/${PATHurl}/product/${id}`
     statusStore.isLoading = true
-
     try {
-      const response = await axios.get(descriptionProductUrl)
+      const response = await axios.get(url)
       if (response.data.success) {
         product.value = response.data.product
-      } else {
-        statusStore.pushMessage({
-          title: `介紹讀取失敗`,
-          style: 'danger',
-          content: response.data.message
-        })
       }
     } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
-        title: `介紹讀取伺服器失敗`,
+        title: `${title}失敗`,
         style: 'danger',
-        content: error.message
+        content: errorMsg
       })
     } finally {
       statusStore.isLoading = false
