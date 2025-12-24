@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import useStatusStore from './statusStore'
-import useUserCartStore from '../stores/userCartStore'
+import useUserCartStore from './userCartStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
@@ -18,7 +18,7 @@ export default defineStore('userOrder', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `已建立訂單`,
-          style: 'success',
+          style: 'success'
         })
         userCartStore.getCart()
         return response.data.orderId
@@ -31,14 +31,14 @@ export default defineStore('userOrder', () => {
         statusStore.pushMessage({
           title: `訂單提交失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
         return null
       } else {
         statusStore.pushMessage({
           title: `訂單提交伺服器失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message
         })
         return null
       }
@@ -65,14 +65,14 @@ export default defineStore('userOrder', () => {
         statusStore.pushMessage({
           title: `訂單訊息接收失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
         return null
       } else {
         statusStore.pushMessage({
           title: `訂單訊息接收伺服器失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message
         })
         return null
       }
@@ -91,7 +91,7 @@ export default defineStore('userOrder', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `付款完成`,
-          style: 'success',
+          style: 'success'
         })
         return true
       }
@@ -103,14 +103,14 @@ export default defineStore('userOrder', () => {
         statusStore.pushMessage({
           title: `付款失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
         return false
       } else {
         statusStore.pushMessage({
           title: `付款伺服器失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message
         })
         return false
       }
@@ -122,6 +122,6 @@ export default defineStore('userOrder', () => {
   return {
     submitOrder,
     getIdOrder,
-    payOrder,
+    payOrder
   }
 })

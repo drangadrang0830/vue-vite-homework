@@ -106,7 +106,7 @@ onMounted(() => {
         <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }" id="navbarNavDropdown">
           <ul class="navbar-nav text-center">
             <li class="nav-item">
-              <router-link class="nav-link link-body-emphasis mx-3" to="/Attractions"
+              <router-link class="nav-link link-body-emphasis mx-3" to="/attractions"
                 @click="isNavOpen = false">景點介紹</router-link>
             </li>
             <li class="nav-item">

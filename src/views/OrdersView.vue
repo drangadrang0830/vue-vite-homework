@@ -4,7 +4,7 @@ import OrderModal from '../components/OrderModal.vue'
 import DeleteOrderModal from '../components/DeleteOrderModal.vue';
 import useStatusStore from '../stores/statusStore'
 import useOrderStore from '../stores/orderStore'
-import useUserOrder from '../stores/userOrder'
+import useUserOrder from '../stores/userOrderStore'
 import SharedPagination from '../components/SharedPagination.vue'
 
 // const modal = ref(null);

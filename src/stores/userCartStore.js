@@ -9,18 +9,23 @@ const PATHurl = import.meta.env.VITE_APP_PATH
 export default defineStore('userCartStore', () => {
   const cartData = ref({})
 
+  //購物車數量回傳
+  const cartTotalQuantity = computed(() => {
+    return cartData.value.carts?.length || 0
+  })
+
   //新增購物車函式
   const addCart = async (id) => {
     const statusStore = useStatusStore()
     statusStore.loadingItem = id
-    const addCartUrl = `${APIurl}api/${PATHurl}/cart`
+    const url = `${APIurl}api/${PATHurl}/cart`
     const cart = {
       product_id: id,
       qty: 1
     }
 
     try {
-      const response = await axios.post(addCartUrl, { data: cart })
+      const response = await axios.post(url, { data: cart })
       if (response.data.success) {
         getCart()
         statusStore.pushMessage({
@@ -44,9 +49,9 @@ export default defineStore('userCartStore', () => {
   const getCart = async () => {
     const statusStore = useStatusStore()
     statusStore.isLoading = true
-    const getCartUrl = `${APIurl}api/${PATHurl}/cart`
+    const url = `${APIurl}api/${PATHurl}/cart`
     try {
-      const response = await axios.get(getCartUrl)
+      const response = await axios.get(url)
       if (response.data.success) {
         cartData.value = response.data.data
       }
@@ -62,10 +67,34 @@ export default defineStore('userCartStore', () => {
     }
   }
 
-  // -------------以下尚未調整
-  const cartTotalQuantity = computed(() => {
-    return cartData.value.carts?.length || 0
-  })
+  //使用優惠劵
+  const useCoupon = async (code) => {
+    const statusStore = useStatusStore()
+    statusStore.isLoading = true
+    const data = {
+      code
+    }
+    const url = `${APIurl}api/${PATHurl}/coupon`
+    try {
+      const response = await axios.post(url, { data })
+      if (response.data.success) {
+        getCart()
+        statusStore.pushMessage({
+          title: `優惠劵使用成功`,
+          style: 'success'
+        })
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '優惠劵使用失敗',
+        style: 'danger',
+        content: errorMsg
+      })
+    } finally {
+      statusStore.isLoading = false
+    }
+  }
 
   //變更購物車品項
   const updateCart = async (item) => {
@@ -80,29 +109,19 @@ export default defineStore('userCartStore', () => {
       product_id: item.product_id,
       qty: item.qty
     }
-    const updateCartUrl = `${APIurl}api/${PATHurl}/cart/${item.id}`
+    const url = `${APIurl}api/${PATHurl}/cart/${item.id}`
     try {
-      const response = await axios.put(updateCartUrl, { data: cart })
+      const response = await axios.put(url, { data: cart })
       if (response.data.success) {
         getCart()
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        const contentMsg = Array.isArray(error.response?.data?.message)
-          ? error.response.data.message.join('.')
-          : error.message || '未知錯誤'
-        statusStore.pushMessage({
-          title: `商品變更失敗`,
-          style: 'danger',
-          content: contentMsg
-        })
-      } else {
-        statusStore.pushMessage({
-          title: `商品變更伺服器失敗`,
-          style: 'danger',
-          content: error.message
-        })
-      }
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '變更該項商品失敗',
+        style: 'danger',
+        content: errorMsg
+      })
     } finally {
       statusStore.loadingItem = ''
       statusStore.isLoading = false
@@ -125,49 +144,14 @@ export default defineStore('userCartStore', () => {
         getCart()
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        const contentMsg = Array.isArray(error.response?.data?.message)
-          ? error.response.data.message.join('.')
-          : error.message || '未知錯誤'
-        statusStore.pushMessage({
-          title: `商品刪除失敗`,
-          style: 'danger',
-          content: contentMsg
-        })
-      } else {
-        statusStore.pushMessage({
-          title: `商品刪除伺服器失敗`,
-          style: 'danger',
-          content: error.message
-        })
-      }
-    } finally {
-      statusStore.loadingItem = ''
-      statusStore.isLoading = false
-    }
-  }
-
-  //使用優惠劵
-  const useCoupon = async (code) => {
-    const statusStore = useStatusStore()
-    statusStore.isLoading = true
-    const data = {
-      code
-    }
-    const deleteCartUrl = `${APIurl}api/${PATHurl}/coupon`
-    try {
-      const response = await axios.post(deleteCartUrl, { data })
-      if (response.data.success) {
-        getCart()
-      }
-    } catch (error) {
       const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
-        title: '產品說明讀取失敗',
+        title: '刪除商品失敗',
         style: 'danger',
         content: errorMsg
       })
     } finally {
+      statusStore.loadingItem = ''
       statusStore.isLoading = false
     }
   }
@@ -177,7 +161,6 @@ export default defineStore('userCartStore', () => {
     getCart,
     cartData,
     cartTotalQuantity,
-
     updateCart,
     removeCartItem,
     useCoupon

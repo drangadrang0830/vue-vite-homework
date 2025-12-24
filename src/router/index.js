@@ -9,6 +9,7 @@ import UserProductView from '../views/UserProductDescriptionView.vue'
 import UserCartView from '../views/UserCartView.vue'
 import UserFavoriteView from '../views/UserFavoriteView.vue'
 import UserProgress from '@/views/UserProgress.vue'
+import UserOrder from '@/views/UserOrder.vue'
 
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
@@ -30,7 +31,7 @@ const router = createRouter({
           component: UserHome
         },
         {
-          path: 'Attractions',
+          path: 'attractions',
           component: UserAttractions
         },
         {
@@ -48,6 +49,10 @@ const router = createRouter({
             {
               path: 'cart',
               component: UserCartView
+            },
+            {
+              path: 'order',
+              component: UserOrder
             },
             {
               path: 'favorite',

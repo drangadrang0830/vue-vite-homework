@@ -57,14 +57,16 @@ const statusStore = useStatusStore()
 const steps = [
   { title: '選擇商品', icon: 'bi-bag' },
   { title: '確認購物', icon: 'bi-cart-check' },
-  { title: '填寫資料', icon: 'bi-card-list' },
+  { title: '填寫資料', icon: 'bi-pencil-square' },
+  { title: '確認訂單', icon: 'bi-card-list' },
   { title: '完成下訂', icon: 'bi-check-circle' }
 ]
 
 const currentStep = computed(() => {
-  if (statusStore.isOrderCompleted) return 3
+  if (statusStore.isOrderCompleted) return 4
   const path = route.path
-  if (path.includes('/checkout')) return 2
+  if (path.includes('/checkout')) return 3
+  if (path.includes('/order')) return 2
   if (path.includes('/cart')) return 1
   return 0
 })
