@@ -63,7 +63,6 @@ const getProduct = (id) => {
 }
 //
 onMounted(() => {
-  // 回到商品區時，清除結帳完成狀態
   statusStore.resetOrderProgress()
 })
 </script>
@@ -96,13 +95,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <LoadingOverlay :active="statusStore.isLoading" />
     <div class="row py-3 sticky-top z-2" style="top: var(--nav-height);">
       <div class="col">
-
         <div class="dropdown d-inline-block position-relative">
-          <button class="btn btn-outline-dark bg-info dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            選擇顯示類別
+          <button class="btn btn-primary dropdown-toggle border-3" type="button" data-bs-toggle="dropdown">
+            {{ useCategory === '' ? '選擇顯示類別' : useCategory.replace('農特產品-', '') }}
           </button>
           <ul class="dropdown-menu">
             <li v-for="(category, index) in userProductsStore.categories" :key="index">
@@ -117,7 +114,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-1 gx-3 gy-4 mb-3 p-4">
+    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-2 gx-3 gy-4 mb-3 py-4">
       <div class="col" v-for="product in pagedList" :key="product.id">
         <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
           <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light"></div>

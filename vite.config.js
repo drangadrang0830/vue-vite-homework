@@ -9,15 +9,15 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
   },
   css: {
     preprocessorOptions: {
       scss: {
         // 設定 quietDeps 為 true，會抑制 node_modules 目錄中的所有警告
-        quietDeps: true,
-      },
-    },
-  },
+        quietDeps: true
+      }
+    }
+  }
 })

@@ -1,10 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import useUserCartStore from '../stores/userCartStore'
-import useUserFavoriteStore from '../stores/userFavoriteStore'
 
 const userCartStore = useUserCartStore()
-const userFavoriteStore = useUserFavoriteStore()
 
 // NAVBAR控制
 const isNavOpen = ref(false)
@@ -116,21 +114,19 @@ onMounted(() => {
                 @click="isNavOpen = false">農業特產</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link link-body-emphasis  mx-3" to="/products/cart" @click="isNavOpen = false">
+              <router-link class="nav-link link-body-emphasis mx-3" to="/products/favorite" @click="isNavOpen = false">
+                我的最愛
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link link-body-emphasis mx-3" to="/products/cart" @click="isNavOpen = false">
                 <span class="position-relative">購物車
                   <span class="position-absolute location-setting badge rounded-pill bg-danger"
                     v-if="userCartStore.cartData.carts">{{ userCartStore.cartTotalQuantity }}</span>
                 </span>
               </router-link>
             </li>
-            <li class="nav-item">
-              <router-link class="nav-link link-body-emphasis  mx-3" to="/products/favorite" @click="isNavOpen = false">
-                <span class="position-relative">我的最愛
-                  <span class="position-absolute location-setting badge rounded-pill bg-danger"
-                    v-if="userFavoriteStore.favorites">{{ userFavoriteStore.favorites.length }}</span>
-                </span>
-              </router-link>
-            </li>
+
             <!-- 作業版才有 正式應移除 -->
             <li class="nav-item ">
               <router-link class="nav-link link-body-emphasis mx-3" to="/loginview"
