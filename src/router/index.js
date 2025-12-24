@@ -8,6 +8,7 @@ import UserProductsView from '../views/UserProductsView.vue'
 import UserProductView from '../views/UserProductDescriptionView.vue'
 import UserCartView from '../views/UserCartView.vue'
 import UserFavoriteView from '../views/UserFavoriteView.vue'
+import UserProgress from '@/views/UserProgress.vue'
 
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
@@ -20,6 +21,7 @@ const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      //用戶端
       path: '/',
       component: UserLayout,
       children: [
@@ -33,29 +35,35 @@ const router = createRouter({
         },
         {
           path: 'products',
-          component: UserProductsView
-        },
-        {
-          path: 'product/:productId',
-          component: UserProductView
-        },
-        {
-          path: 'cart',
-          component: UserCartView
-        },
-        {
-          path: 'favorite',
-          component: UserFavoriteView
-        },
-        {
-          path: 'user',
-          component: UserboardView,
+          component: UserProgress,
           children: [
+            {
+              path: '',
+              component: UserProductsView
+            },
+            {
+              path: 'product/:productId',
+              component: UserProductView
+            },
+            {
+              path: 'cart',
+              component: UserCartView
+            },
+            {
+              path: 'favorite',
+              component: UserFavoriteView
+            },
             {
               path: 'checkout/:orderId',
               component: UserCheckOut
             }
           ]
+        },
+
+        {
+          path: 'user',
+          component: UserboardView,
+          children: []
         }
       ]
     },
@@ -81,21 +89,26 @@ const router = createRouter({
           component: () => import('../views/CouponView.vue')
         }
       ]
+    },
+    //重新導向回首頁
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/'
     }
   ]
 })
 
-// 路由表 (修改後)
+// 路由守衛
 router.beforeEach(async (to, from, next) => {
   const apiStore = useApiStore()
 
   if (to.meta.requiresAuth) {
-    const isAuthenticated = await apiStore.getToken() // 取得回傳的布林值
+    const isAuthenticated = await apiStore.getToken()
 
     if (isAuthenticated) {
-      next() // 驗證成功，放行
+      next()
     } else {
-      next('/loginview') // 驗證失敗，導向登入頁
+      next('/loginview')
     }
   } else {
     next()
