@@ -161,19 +161,12 @@ export default defineStore('userCartStore', () => {
         getCart()
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        statusStore.pushMessage({
-          title: `優惠劵使用失敗`,
-          style: 'danger',
-          content: error.response.data.message
-        })
-      } else {
-        statusStore.pushMessage({
-          title: `優惠劵使用伺服器失敗`,
-          style: 'danger',
-          content: error.message
-        })
-      }
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '產品說明讀取失敗',
+        style: 'danger',
+        content: errorMsg
+      })
     } finally {
       statusStore.isLoading = false
     }
