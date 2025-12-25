@@ -10,7 +10,6 @@ import UserCart from '../views/UserCartView.vue'
 import UserFavorite from '../views/UserFavoriteView.vue'
 import UserProgress from '@/views/UserProgress.vue'
 import UserOrder from '@/views/UserOrderView.vue'
-import UserOrderSearch from '@/views/UserOrderSearchView.vue'
 
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
@@ -58,10 +57,6 @@ const router = createRouter({
             {
               path: 'order',
               component: UserOrder
-            },
-            {
-              path: 'ordersearch',
-              component: UserOrderSearch
             },
             {
               path: 'checkout/:orderId',
