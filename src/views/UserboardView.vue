@@ -16,7 +16,7 @@ const toggleNav = () => {
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <router-link class="navbar-brand" to="/user">
-          <img src="../../public/favicon2.ico" alt="" width="25" height="30"
+          <img src="../../public/favicon.png" alt="" width="25" height="30"
             class="d-inline-block align-text-top">獅子鄉聯合行銷網</router-link>
 
         <button class="navbar-toggler" type="button" @click="toggleNav" :aria-expanded="isNavOpen ? 'true' : 'false'"

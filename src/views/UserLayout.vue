@@ -1,6 +1,6 @@
 <script setup>
 import useStatusStore from '../stores/statusStore'
-import Navbar from '../components/HomeNavbar.vue'
+import Navbar from '../components/UserNavbar.vue'
 import ToastMessages from '../components/ToastMessages.vue';
 
 const statusStore = useStatusStore()
