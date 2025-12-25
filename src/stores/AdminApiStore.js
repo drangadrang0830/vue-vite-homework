@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import useStatusStore from '../stores/statusStore'
+import useStatusStore from './statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 
@@ -23,7 +23,7 @@ export default defineStore('apiStore', () => {
         statusStore.pushMessage({
           title: `帳號登入失敗`,
           style: 'danger',
-          content: response.data.message,
+          content: response.data.message
         })
         statusStore.isLoading = true
         return false
@@ -32,7 +32,7 @@ export default defineStore('apiStore', () => {
       statusStore.pushMessage({
         title: `帳號登入伺服器失敗`,
         style: 'danger',
-        content: error.message,
+        content: error.message
       })
       statusStore.isLoading = true
       return false
@@ -74,7 +74,7 @@ export default defineStore('apiStore', () => {
       statusStore.pushMessage({
         title: `帳號登出伺服器失敗`,
         style: 'danger',
-        content: error.message,
+        content: error.message
       })
       return false
     }
@@ -84,7 +84,7 @@ export default defineStore('apiStore', () => {
   return {
     login,
     getToken,
-    logout,
+    logout
     // token // 如果有定義狀態，也要返回
   }
 })

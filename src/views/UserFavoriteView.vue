@@ -105,7 +105,7 @@ const getProduct = (id) => {
       </div>
     </div>
 
-    <div class="text-center mt-4 p-4 bg-white rounded-4 shadow-sm" v-else>
+    <div class="text-center mt-4 p-4 bg-body text-body rounded-4 shadow-sm" v-else>
       <h5>您的收藏是空的</h5>
       <router-link class="btn btn-primary mt-3" to="/products">前往選購商品</router-link>
     </div>

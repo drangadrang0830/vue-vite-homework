@@ -161,7 +161,7 @@ const useCouponButton = async () => {
       </div>
 
     </div>
-    <div v-else class="text-center p-4 bg-white rounded-4 shadow-sm">
+    <div v-else class="text-center p-4 bg-body text-body rounded-4 shadow-sm">
       <h5>您的購物車是空的</h5>
       <router-link class="btn btn-primary mt-3" to="/products">前往選購商品</router-link>
     </div>

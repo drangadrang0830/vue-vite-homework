@@ -1,11 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-
-import useApiStore from '@/stores/apiStore';
-import useStatusStore from '../stores/statusStore'
 import { useRouter } from 'vue-router'
+import useAdminApiStore from '@/stores/AdminApiStore';
+import useStatusStore from '../stores/statusStore'
 
-const apiStore = useApiStore()
+const AdminApiStore = useAdminApiStore()
 const statusStore = useStatusStore()
 const router = useRouter()
 const user = ref(
@@ -16,7 +15,7 @@ const user = ref(
 )
 
 const clearInput = async () => {
-  const loginSuccess = await apiStore.login(user.value.username, user.value.password);
+  const loginSuccess = await AdminApiStore.login(user.value.username, user.value.password);
 
   if (loginSuccess) {
     router.push('/dashboardview/productsview')
@@ -28,10 +27,16 @@ const clearInput = async () => {
 
 </script>
 
+<style scoped>
+:deep(body) {
+
+  padding-top: 0 !important;
+}
+</style>
+
 <template>
   <div class="container mt-5">
     <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
-    <!-- 送出實質型商店的 login函式-->
     <form class="row justify-content-center" @submit.prevent="clearInput">
       <div class="col-md-6">
         <h1 class="h3 mb-3 font-weight-normal">請先登入</h1>
@@ -45,8 +50,8 @@ const clearInput = async () => {
           <input type="password" id="inputPassword" class="form-control" placeholder="Password" required
             v-model="user.password" autocomplete="off" @keyup.enter="clearInput" />
         </div>
+
         <div class="text-end mt-4">
-          <!-- 這是送出按鈕 不是普通按鈕 -->
           <button class="btn btn-lg btn-primary btn-block" type="submit">登入</button>
         </div>
       </div>

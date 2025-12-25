@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue';//test
 import { useRouter } from 'vue-router'
-import useApiStore from '../stores/apiStore'
+import useAdminApiStore from '../stores/AdminApiStore'
 
-const apiStore = useApiStore()
+const AdminApiStore = useAdminApiStore()
 const router = useRouter();
 const isNavOpen = ref(false);//test
 
@@ -12,11 +12,11 @@ const toggleNav = () => { //test
 };
 
 const handleLogout = async () => {
-  // 呼叫 apiStore 的登出方法（它現在應該只負責清除後端 session 和 cookie）
-  const logoutSuccess = await apiStore.logout();
+  // 呼叫 AdminApiStore 的登出方法（它現在應該只負責清除後端 session 和 cookie）
+  const logoutSuccess = await AdminApiStore.logout();
 
   if (logoutSuccess || !logoutSuccess) { // 即使後端登出失敗，前端也應該強制跳轉回登入頁
-    router.push('/loginview');
+    router.push('/login');
   }
 }
 

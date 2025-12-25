@@ -82,19 +82,3 @@ const progressWidth = computed(() => {
   filter: invert(100%);
 }
 </style>
-
-<!-- 結帳完成頁面加註
-<script setup>
-import useApiStore from '@/stores/statusStore'
-
-const statusStore = useApiStore()
-
-const submitOrder = async () => {
-  // ... axios 串接邏輯 ...
-  const res = await axios.post(api, orderForm)
-  if (res.data.success) {
-    // 成功後更新 Pinia，進度條會自動跳到 Step 3
-    statusStore.setOrderCompleted(true)
-  }
-}
-</script> -->

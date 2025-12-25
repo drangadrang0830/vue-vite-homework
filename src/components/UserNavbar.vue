@@ -128,7 +128,7 @@ onMounted(() => {
             </li>
             <!-- 作業版才有 正式應移除 -->
             <li class="nav-item ">
-              <router-link class="nav-link link-body-emphasis mx-3" to="/loginview"
+              <router-link class="nav-link link-body-emphasis mx-3" to="/login"
                 @click="isNavOpen = false">後台登入</router-link>
             </li>
           </ul>
