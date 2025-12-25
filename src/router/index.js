@@ -13,7 +13,6 @@ import UserOrder from '@/views/UserOrderView.vue'
 
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
-import UserboardView from '../views/UserboardView.vue'
 
 import UserCheckOut from '../views/UserCheckoutView.vue'
 import UserAttractions from '../views/UserAttractions.vue'
@@ -70,12 +69,6 @@ const router = createRouter({
               }
             }
           ]
-        },
-
-        {
-          path: 'user',
-          component: UserboardView,
-          children: []
         }
       ]
     },
