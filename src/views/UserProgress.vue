@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container my-4">
+    <div class="container my-4 pt-5">
       <div class="px-5 pt-2 pb-5">
         <div class="position-relative">
           <div class="progress" style="height: 10px;">
