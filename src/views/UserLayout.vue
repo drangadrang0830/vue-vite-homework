@@ -8,7 +8,7 @@ const statusStore = useStatusStore()
 </script>
 
 <template>
-  <div>
+  <div class="bg-body-secondary">
     <ToastMessages></ToastMessages>
     <Navbar></Navbar>
     <main style="margin-top: var(--nav-height, 70px);"></main>
