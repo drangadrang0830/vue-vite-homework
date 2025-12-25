@@ -22,6 +22,7 @@ const pageSize = 12
 //資料預處理
 onMounted(async () => {
   await userProductsStore.getAllProducts();
+  statusStore.resetOrderProgress()
 })
 
 const filterData = (category) => {
@@ -85,17 +86,23 @@ onMounted(() => {
 
 .zoomable-img {
   transition: transform 0.3s ease;
-
 }
 
 .main-image:hover .zoomable-img {
   transform: scale(1.2);
 }
+
+.custom-ribbon {
+  width: 150px;
+  transform: translate(-37%, 4%) rotate(-45deg);
+  font-size: 0.8rem;
+  pointer-events: none;
+}
 </style>
 
 <template>
-  <div>
-    <div class="row py-3 sticky-top z-2" style="top: var(--nav-height);">
+  <div class="container my-4">
+    <div class="row py-3 sticky-top" style="top: var(--nav-height);">
       <div class="col">
         <div class="dropdown d-inline-block position-relative">
           <button class="btn btn-primary dropdown-toggle border-3" type="button" data-bs-toggle="dropdown">
@@ -117,6 +124,17 @@ onMounted(() => {
     <div class="row row-cols-lg-4 row-cols-md-3 row-cols-2 gx-3 gy-4 mb-3 py-4">
       <div class="col" v-for="product in pagedList" :key="product.id">
         <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
+
+          <div
+            class="custom-ribbon ard-badgeBg bg-danger text-white text-center py-1 fw-bold shadow-sm position-absolute top-0 start-0 z-1"
+            v-if="product.origin_price !== product.price">
+            <div class="bg-warning py-1">
+              <div class="bg-danger">
+                特價
+              </div>
+            </div>
+          </div>
+
           <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light"></div>
           <div class="card-badgeImgWarp position-absolute z-2" @click.stop="userFavoriteStore.toggleFavorite(product)"
             style="cursor: pointer;">

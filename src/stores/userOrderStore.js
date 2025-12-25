@@ -6,7 +6,7 @@ import useUserCartStore from './userCartStore'
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
-export default defineStore('userOrder', () => {
+export default defineStore('userOrderStore', () => {
   //送出訂單
   const submitOrder = async (data) => {
     const statusStore = useStatusStore()
@@ -24,24 +24,13 @@ export default defineStore('userOrder', () => {
         return response.data.orderId
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        const contentMsg = Array.isArray(error.response?.data?.message)
-          ? error.response.data.message.join('.')
-          : error.message || '未知錯誤'
-        statusStore.pushMessage({
-          title: `訂單提交失敗`,
-          style: 'danger',
-          content: contentMsg
-        })
-        return null
-      } else {
-        statusStore.pushMessage({
-          title: `訂單提交伺服器失敗`,
-          style: 'danger',
-          content: error.message
-        })
-        return null
-      }
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '建立訂單失敗',
+        style: 'danger',
+        content: errorMsg
+      })
+      return null
     } finally {
       statusStore.isLoading = false
     }
@@ -58,24 +47,13 @@ export default defineStore('userOrder', () => {
         return response.data
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        const contentMsg = Array.isArray(error.response?.data?.message)
-          ? error.response.data.message.join('.')
-          : error.message || '未知錯誤'
-        statusStore.pushMessage({
-          title: `訂單訊息接收失敗`,
-          style: 'danger',
-          content: contentMsg
-        })
-        return null
-      } else {
-        statusStore.pushMessage({
-          title: `訂單訊息接收伺服器失敗`,
-          style: 'danger',
-          content: error.message
-        })
-        return null
-      }
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '取得訂單資料失敗',
+        style: 'danger',
+        content: errorMsg
+      })
+      return null
     } finally {
       statusStore.isLoading = false
     }
@@ -96,24 +74,13 @@ export default defineStore('userOrder', () => {
         return true
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        const contentMsg = Array.isArray(error.response?.data?.message)
-          ? error.response.data.message.join('.')
-          : error.message || '未知錯誤'
-        statusStore.pushMessage({
-          title: `付款失敗`,
-          style: 'danger',
-          content: contentMsg
-        })
-        return false
-      } else {
-        statusStore.pushMessage({
-          title: `付款伺服器失敗`,
-          style: 'danger',
-          content: error.message
-        })
-        return false
-      }
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '結帳失敗',
+        style: 'danger',
+        content: errorMsg
+      })
+      return false
     } finally {
       statusStore.isLoading = false
     }

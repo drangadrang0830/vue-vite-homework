@@ -27,7 +27,6 @@ export default defineStore('statusStore', () => {
   //進度條
   const isOrderCompleted = ref(false)
 
-  // Actions
   const setOrderCompleted = (status) => {
     isOrderCompleted.value = status
   }

@@ -40,7 +40,7 @@ const addCartToUser = async () => {
 <style scoped></style>
 
 <template>
-  <div v-if="product.id">
+  <div class="container my-4" v-if="product.id">
     <nav aria-label="breadcrumb" class="pt-2">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">

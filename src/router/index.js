@@ -3,19 +3,20 @@ import useApiStore from '@/stores/apiStore'
 
 // 實體化路徑
 import UserLayout from '../views/UserLayout.vue'
-import UserHome from '../views/UserHome.vue'
-import UserProductsView from '../views/UserProductsView.vue'
-import UserProductView from '../views/UserProductDescriptionView.vue'
-import UserCartView from '../views/UserCartView.vue'
-import UserFavoriteView from '../views/UserFavoriteView.vue'
+import UserHome from '../views/UserHomeView.vue'
+import UserProducts from '../views/UserProductsView.vue'
+import UserProduct from '../views/UserProductDescriptionView.vue'
+import UserCart from '../views/UserCartView.vue'
+import UserFavorite from '../views/UserFavoriteView.vue'
 import UserProgress from '@/views/UserProgress.vue'
-import UserOrder from '@/views/UserOrder.vue'
+import UserOrder from '@/views/UserOrderView.vue'
+import UserOrderSearch from '@/views/UserOrderSearchView.vue'
 
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import UserboardView from '../views/UserboardView.vue'
 
-import UserCheckOut from '../views/UserCheckout.vue'
+import UserCheckOut from '../views/UserCheckoutView.vue'
 import UserAttractions from '../views/UserAttractions.vue'
 
 const router = createRouter({
@@ -40,27 +41,38 @@ const router = createRouter({
           children: [
             {
               path: '',
-              component: UserProductsView
+              component: UserProducts
             },
             {
               path: 'product/:productId',
-              component: UserProductView
+              component: UserProduct
+            },
+            {
+              path: 'favorite',
+              component: UserFavorite
             },
             {
               path: 'cart',
-              component: UserCartView
+              component: UserCart
             },
             {
               path: 'order',
               component: UserOrder
             },
             {
-              path: 'favorite',
-              component: UserFavoriteView
+              path: 'ordersearch',
+              component: UserOrderSearch
             },
             {
               path: 'checkout/:orderId',
-              component: UserCheckOut
+              component: UserCheckOut,
+              beforeEnter: (to, from, next) => {
+                if (from.path === '/products/order') {
+                  next()
+                } else {
+                  next('/products')
+                }
+              }
             }
           ]
         },

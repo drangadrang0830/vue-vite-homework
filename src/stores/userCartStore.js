@@ -113,6 +113,10 @@ export default defineStore('userCartStore', () => {
     try {
       const response = await axios.put(url, { data: cart })
       if (response.data.success) {
+        statusStore.pushMessage({
+          title: `${item.product.title}數量變更`,
+          style: 'success'
+        })
         getCart()
       }
     } catch (error) {
@@ -141,6 +145,10 @@ export default defineStore('userCartStore', () => {
     try {
       const response = await axios.delete(deleteCartUrl, { data: cart })
       if (response.data.success) {
+        statusStore.pushMessage({
+          title: `${item.product.title}已移除`,
+          style: 'success'
+        })
         getCart()
       }
     } catch (error) {

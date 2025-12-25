@@ -122,7 +122,7 @@ onMounted(() => {
               <router-link class="nav-link link-body-emphasis mx-3" to="/products/cart" @click="isNavOpen = false">
                 <span class="position-relative">購物車
                   <span class="position-absolute location-setting badge rounded-pill bg-danger"
-                    v-if="userCartStore.cartData.carts">{{ userCartStore.cartTotalQuantity }}</span>
+                    v-if="userCartStore.cartTotalQuantity > 0">{{ userCartStore.cartTotalQuantity }}</span>
                 </span>
               </router-link>
             </li>
