@@ -12,7 +12,6 @@ const handleModalHide = () => {
   if (document.activeElement) {
     document.activeElement.blur();
   }
-  console.log('Modal 已經隱藏。可以在這裡觸發其他事件或清理資料。');
 };
 
 // 2. 在 onMounted 中實體化 Modal

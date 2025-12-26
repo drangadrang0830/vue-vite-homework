@@ -11,9 +11,10 @@ import UserFavorite from '../views/UserFavoriteView.vue'
 import UserProgress from '@/views/UserProgress.vue'
 import UserOrder from '@/views/UserOrderView.vue'
 import AdminLogin from '../views/AdminLogin.vue'
+import AdminLayout from '../views/AdminLayout.vue'
+import AdminProductsView from '../views/AdminProductsView.vue'
 
 import DashboardView from '../views/DashboardView.vue'
-
 import UserCheckOut from '../views/UserCheckoutView.vue'
 import UserAttractions from '../views/UserAttractions.vue'
 
@@ -77,14 +78,21 @@ const router = createRouter({
       component: AdminLogin
     },
     {
+      path: '/admin',
+      component: AdminLayout,
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: '',
+          component: AdminProductsView
+        }
+      ]
+    },
+    {
       path: '/dashboardview',
       component: DashboardView,
       meta: { requiresAuth: true },
       children: [
-        {
-          path: 'productsview',
-          component: () => import('../views/ProductsView.vue')
-        },
         {
           path: 'ordersview',
           component: () => import('../views/OrdersView.vue')

@@ -1,54 +1,50 @@
 <!-- DeleteProductModal.vue -->
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, shallowRef } from 'vue';
 import Modal from 'bootstrap/js/dist/modal';
-import useProductsStore from '../stores/productsStore';
+import useAdminProductsStore from '../stores/AdminProductsStore'
 
-const productsStore = useProductsStore();
+const AdminProductsStore = useAdminProductsStore();
 
 const modal = ref(null);
-const bsModal = ref(null);
-const tempProduct = ref({}); // 用於儲存即將刪除的產品資訊
+const bsModal = shallowRef(null)
+const tempProduct = ref({});
 
+//MODAL控制
 onMounted(() => {
   if (modal.value) {
     bsModal.value = new Modal(modal.value);
-    // 監聽 Bootstrap 的 hide.bs.modal 事件
     modal.value.addEventListener('hide.bs.modal', handleModalHide);
   }
 });
 
 onUnmounted(() => {
-  if (modal.value && bsModal.value) { // 確保移除監聽器
+  if (modal.value && bsModal.value) {
     modal.value.removeEventListener('hide.bs.modal', handleModalHide);
     bsModal.value.dispose();
   }
 });
 
-// 新增此函式：在 Modal 隱藏前，讓當前焦點元素失去焦點
-const handleModalHide = () => {
-  document.activeElement.blur();
-};
-
-// 開啟 Modal，並接收要刪除的產品資料
+//開啟時接收
 const openModal = (item) => {
   tempProduct.value = { ...item };
   bsModal.value.show();
 };
 
-// 執行刪除動作
-const confirmDelete = async () => {
-  // 呼叫 Pinia Store 中的 deleteProduct 函式
-  const success = await productsStore.deleteProduct(tempProduct.value);
+//關閉前隱藏
+const handleModalHide = () => {
+  document.activeElement.blur();
+};
 
+// 刪除產品
+const confirmDelete = async () => {
+  const success = await AdminProductsStore.deleteProduct(tempProduct.value);
   if (success) {
-    // 刪除成功後關閉 Modal
     bsModal.value.hide();
-    // 註：因為 deleteProduct 內部已經呼叫了 getProducts()，所以這裡不需要 emit 事件
   }
 };
 
-// 將 openModal 函式暴露給父元件 ProductsView.vue 使用
+// 暴露
 defineExpose({
   openModal,
 });

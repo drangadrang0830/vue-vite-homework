@@ -4,35 +4,27 @@ import useStatusStore from './statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 
-//Setup Store 設定式寫法
-export default defineStore('apiStore', () => {
-  //登入 方法
+export default defineStore('AdminApiStore', () => {
+  //登入
   const login = async (username, password) => {
     const statusStore = useStatusStore()
-    const loginUrl = `${APIurl}admin/signin`
+    const url = `${APIurl}admin/signin`
 
     try {
       statusStore.isLoading = true
-      const response = await axios.post(loginUrl, { username, password })
+      const response = await axios.post(url, { username, password })
       if (response.data.success) {
         const { token, expired } = response.data
         document.cookie = `hexToken=${token}; expires=${new Date(expired)}; path=/`
         statusStore.isLoading = true
         return true
-      } else {
-        statusStore.pushMessage({
-          title: `帳號登入失敗`,
-          style: 'danger',
-          content: response.data.message
-        })
-        statusStore.isLoading = true
-        return false
       }
     } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
-        title: `帳號登入伺服器失敗`,
+        title: '登入失敗',
         style: 'danger',
-        content: error.message
+        content: errorMsg
       })
       statusStore.isLoading = true
       return false
@@ -42,49 +34,57 @@ export default defineStore('apiStore', () => {
   // 確認 方法
   const getToken = async () => {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')
+    const statusStore = useStatusStore()
 
     if (token) {
       axios.defaults.headers.common.Authorization = token
-      const tokenUrl = `${APIurl}api/user/check`
+      const url = `${APIurl}api/user/check`
       try {
-        const response = await axios.post(tokenUrl)
-        return response.data.success // 只回傳 true/false
+        const response = await axios.post(url)
+        return response.data.success
       } catch (error) {
-        console.log('登入失敗回應:', error.message)
-        return false // 失敗回傳 false
+        const errorMsg = error.response?.data?.message || error.message
+        statusStore.pushMessage({
+          title: '身分認證失敗',
+          style: 'danger',
+          content: errorMsg
+        })
+        return false
       }
     } else {
-      console.log('Cookie 中沒有找到 Token')
-      return false // 沒有 token 就回傳 false
+      statusStore.pushMessage({
+        title: '缺乏token',
+        style: 'danger',
+        content: '請重新登入'
+      })
+      return false
     }
   }
 
   //登出 方法
   const logout = async () => {
     const statusStore = useStatusStore()
-    const logoutUrl = `${APIurl}logout`
+    const url = `${APIurl}logout`
 
     try {
-      const response = await axios.post(logoutUrl)
+      const response = await axios.post(url)
       if (response.data.success) {
         return true
       }
     } catch (error) {
-      console.log('登出失敗回應:', error.message)
+      const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
-        title: `帳號登出伺服器失敗`,
+        title: '登出失敗',
         style: 'danger',
-        content: error.message
+        content: errorMsg
       })
       return false
     }
   }
 
-  // 最後返回所有 state, actions, getters 供外部使用
   return {
     login,
     getToken,
     logout
-    // token // 如果有定義狀態，也要返回
   }
 })

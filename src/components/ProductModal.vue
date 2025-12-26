@@ -1,41 +1,45 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, shallowRef } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
-import useProductsStore from '../stores/productsStore'
+import useAdminProductsStore from '../stores/AdminProductsStore'
 
-//DOM元素
+
 const modal = ref(null)
-//操作實體
-const bsModal = ref(null)
-// 用於多圖上傳 input 的 ref
+const bsModal = shallowRef(null)
 const filesInput = ref(null);
 
-//modal控制區
+//modal控制
 onMounted(() => {
   if (modal.value) {
     bsModal.value = new Modal(modal.value);
+    modal.value.addEventListener('hide.bs.modal', handleModalHide);
   }
 });
 
-const openModal = (item = {}) => {
-  // 淺拷貝傳入的產品資料
-  tempProduct.value = { ...item };
-
-  if (!tempProduct.value.imagesUrl) {
-    tempProduct.value.imagesUrl = [];
-  }
-
-  bsModal.value.show();
-}
-
 onUnmounted(() => {
   if (modal.value && bsModal.value) {
+    modal.value.removeEventListener('hide.bs.modal', handleModalHide);
     bsModal.value.dispose();
   }
 });
 
-// -----------------
-const productsStore = useProductsStore();
+//關閉前隱藏
+const handleModalHide = () => {
+  document.activeElement.blur();
+};
+
+//開啟時接收
+const openModal = (item = {}) => {
+  tempProduct.value = JSON.parse(JSON.stringify(item))
+
+  if (!tempProduct.value.imagesUrl) {
+    tempProduct.value.imagesUrl = [];
+  }
+  bsModal.value.show();
+}
+
+// 變更資料
+const AdminProductsStore = useAdminProductsStore();
 
 const emit = defineEmits(['update-complete'])
 
@@ -43,9 +47,8 @@ const tempProduct = ref({
   imagesUrl: [],
 });
 
-// 呼叫通知父層關閉modal
 const submitProduct = async () => {
-  const success = await productsStore.updateProduct(tempProduct.value);
+  const success = await AdminProductsStore.updateProduct(tempProduct.value);
   if (success) {
     emit('update-complete');
     bsModal.value.hide();
@@ -54,29 +57,30 @@ const submitProduct = async () => {
 
 // -----------------
 
-// 添加一個計算屬性或方法來檢查是否達到上限
+// 多張圖片上傳
 const MAX_IMAGES = 5;
+const isUpload = ref(false)
 
-// 添加新的方法來處理多張圖片上傳
+
 const uploadFiles = async (event) => {
   const uploadedFiles = event.target.files;
   if (uploadedFiles.length === 0) return;
 
-  // 檢查當前加上新上傳的圖片總數是否超過限制
   const currentTotal = tempProduct.value.imagesUrl.length;
   const potentialTotal = currentTotal + uploadedFiles.length;
 
   if (potentialTotal > MAX_IMAGES) {
     alert(`圖片總數不能超過 ${MAX_IMAGES} 張。您已上傳 ${currentTotal} 張。`);
-    filesInput.value.value = ''; // 清空 input file
+    filesInput.value.value = '';
     return;
   }
 
+  isUpload.value = true
+
   const uploadPromises = Array.from(uploadedFiles).map(file => {
-    // ... (原有的 formData 建立和 store 呼叫)
     const formData = new FormData();
     formData.append('file-to-upload', file);
-    return productsStore.uploadFile(formData);
+    return AdminProductsStore.uploadFile(formData);
   });
 
   try {
@@ -87,10 +91,11 @@ const uploadFiles = async (event) => {
       }
     });
     filesInput.value.value = '';
-
   } catch (error) {
     console.error("上傳失敗:", error);
     filesInput.value.value = '';
+  } finally {
+    isUpload.value = false
   }
 };
 
@@ -104,41 +109,34 @@ defineExpose({
 
 <template>
   <div>
-    <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
       ref="modal">
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
             <h5 class="modal-title" id="exampleModalLabel">
-              <span>新增產品</span>
+              <span>{{ tempProduct.id ? '編輯產品' : '新增產品' }}</span>
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-sm-3">
-                <!-- 移除原有的 "上傳產品圖片 (最多 5 張)" 標題 -->
-
+              <div class="col-sm-3 mb-4">
                 <div class="mb-3">
-                  <!-- 只有上傳按鈕，沒有網址輸入框 -->
-                  <label for="customFiles" class="btn btn-outline-secondary w-100 mb-0">
-                    選擇圖片檔案上傳
+                  <label for="customFiles" class="btn btn-outline-secondary w-100 mb-0"
+                    :class="{ 'disabled': isUpload }">
+                    <span v-if="isUpload" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    {{ isUpload ? '上傳中...' : '選擇圖片檔案上傳' }}
                   </label>
-                  <!-- 隱藏實際的檔案選擇 input，並支援多選 -->
                   <input type="file" id="customFiles" class="form-control d-none" multiple
-                    accept="image/jpeg, image/png" @change="uploadFiles" ref="filesInput">
+                    accept="image/jpeg, image/png" @change="uploadFiles" ref="filesInput" :disabled="isUpload">
                 </div>
 
-                <!-- 顯示圖片區域 -->
                 <div class="row">
-                  <!-- 使用 v-for 迴圈來顯示 imagesUrl 陣列中的所有圖片 -->
                   <template v-for="(imgUrl, key) in tempProduct.imagesUrl" :key="key">
                     <div :class="{ 'col-12': key === 0, 'col-6': key > 0 }" class="mb-3">
-                      <!-- 使用 card 類別 -->
                       <div class="card h-100">
-                        <!-- 圖片使用 card-img-top，並強制統一高度與 object-fit -->
-                        <img :src="imgUrl" class="card-img-top" :alt="'產品圖片 ' + (key + 1)"
+                        <img :src="imgUrl" class="card-img-top object-fit-cover" :alt="'產品圖片 ' + (key + 1)"
                           :style="{ height: key === 0 ? '180px' : '90px' }">
                         <div class="list-group list-group-flush mt-auto">
                           <button type="button"

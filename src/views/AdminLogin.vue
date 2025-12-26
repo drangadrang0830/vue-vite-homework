@@ -19,7 +19,7 @@ const isPasswordVisible = ref(false)
 const handleLogin = async () => {
   const loginSuccess = await AdminApiStore.login(user.value.username, user.value.password)
   if (loginSuccess) {
-    router.push('/dashboardview/productsview')
+    router.push('/admin')
   } else {
     user.value.password = ''
   }
@@ -47,7 +47,7 @@ const handleLogin = async () => {
             <div class="input-group has-validation">
               <v-field id="inputPassword" name="登入密碼" :type="isPasswordVisible ? 'text' : 'password'"
                 class="form-control rounded-end-0" :class="{ 'is-invalid': errors['登入密碼'] }" rules="required"
-                v-model="user.password" />
+                v-model="user.password" autocomplete="current-password" />
               <button class="btn btn-outline-secondary" type="button" @click="isPasswordVisible = !isPasswordVisible">
                 <i :class="isPasswordVisible ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </button>

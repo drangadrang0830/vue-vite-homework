@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import useStatusStore from '../stores/statusStore'
-import useProductsStore from '../stores/productsStore'
+import useProductsStore from '../stores/AdminProductsStore'
 import ProductModal from '../components/ProductModal.vue'
 import DeleteProductModal from '../components/DeleteProductModal.vue'
 import SharedPagination from '../components/SharedPagination.vue'
@@ -12,27 +12,23 @@ const productsStore = useProductsStore()
 const productModal = ref(null);
 const deleteModal = ref(null);
 
-// 創建時讀取產品資訊
 onMounted(() => {
   productsStore.getProducts();
 })
 
-//新增按鈕：開啟新增 Modal
+//Modal控制
 const openNewProductModal = () => {
   productModal.value.openModal();
 }
 
-//編輯按鈕：開啟編輯 Modal
 const openEditProductModal = (item) => {
   productModal.value.openModal(item);
 }
 
-//刪除按鈕：開啟刪除確認 Modal
 const openDeleteProductModal = (item) => {
   deleteModal.value.openModal(item);
 }
 
-//按鈕後續處理(emit事件處理函式)
 const handleUpdateComplete = () => {
   productsStore.getProducts();
 }
@@ -53,17 +49,17 @@ const handlePageChange = (page) => {
     <table class="table mt-4">
       <thead>
         <tr class="text-center">
-          <th width="15%">分類</th>
+          <th width="15%" class="d-none d-md-table-cell">分類</th>
           <th width="35%">產品名稱</th>
           <th width="5%">原價</th>
           <th width="5%">售價</th>
-          <th width="20%">是否啟用</th>
+          <th width="20%"><span class="d-none d-md-inline">是否</span>啟用<span class="d-inline d-md-none">?</span></th>
           <th width="20%">編輯</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="productsStore.products.length > 0">
         <tr v-for="item in productsStore.products" :key="item.id">
-          <td class="text-center">{{ item.category }}</td>
+          <td class="text-center d-none d-md-table-cell">{{ item.category }}</td>
           <td class="text-center">{{ item.title }}</td>
           <td class="text-end">
             {{ $filters.currency(item.origin_price) }}
@@ -81,6 +77,11 @@ const handlePageChange = (page) => {
               <button class="btn btn-outline-danger btn-sm" @click="openDeleteProductModal(item)">刪除</button>
             </div>
           </td>
+        </tr>
+      </tbody>
+      <tbody v-else>
+        <tr>
+          <td colspan="6" class="text-center py-5 text-muted">目前沒有產品資料</td>
         </tr>
       </tbody>
     </table>

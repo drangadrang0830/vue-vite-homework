@@ -36,6 +36,9 @@ const handleLogout = async () => {
         <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }" id="navbarNavDropdown">
           <ul class="navbar-nav w-100">
             <li class="nav-item">
+              <router-link class="nav-link" to="/admin" @click="isNavOpen = false">文章</router-link>
+            </li>
+            <li class="nav-item">
               <router-link class="nav-link" to="/dashboardview/productsview" @click="isNavOpen = false">產品</router-link>
             </li>
             <li class="nav-item">
