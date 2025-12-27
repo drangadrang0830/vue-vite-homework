@@ -4,7 +4,7 @@ import useStatusStore from './statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 
-export default defineStore('AdminApiStore', () => {
+export default defineStore('adminApiStore', () => {
   //登入
   const login = async (username, password) => {
     const statusStore = useStatusStore()

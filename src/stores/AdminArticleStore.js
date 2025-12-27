@@ -6,7 +6,7 @@ import useStatusStore from './statusStore'
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
-export default defineStore('AdminArticleStore', () => {
+export default defineStore('adminArticleStore', () => {
   const articles = ref([])
 
   const article = ref({
