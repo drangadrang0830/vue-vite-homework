@@ -1,23 +1,24 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import useAdminApiStore from '@/stores/AdminApiStore'
+import useAdminApiStore from '@/stores/adminApiStore'
 
 // 實體化路徑
 import UserLayout from '../views/UserLayout.vue'
 import UserHome from '../views/UserHomeView.vue'
+import UserAttractions from '../views/UserAttractions.vue'
+import UserProgress from '@/views/UserProgress.vue'
 import UserProducts from '../views/UserProductsView.vue'
 import UserProduct from '../views/UserProductDescriptionView.vue'
-import UserCart from '../views/UserCartView.vue'
 import UserFavorite from '../views/UserFavoriteView.vue'
-import UserProgress from '@/views/UserProgress.vue'
+import UserCart from '../views/UserCartView.vue'
 import UserOrder from '@/views/UserOrderView.vue'
+import UserCheckOut from '../views/UserCheckoutView.vue'
 import AdminLogin from '../views/AdminLogin.vue'
 import AdminLayout from '../views/AdminLayout.vue'
 import AdminProductsView from '../views/AdminProductsView.vue'
 import AdminArticleView from '../views/AdminArticleView.vue'
+import AdminOrdersView from '../views/AdminOrdersView.vue'
 
 import DashboardView from '../views/DashboardView.vue'
-import UserCheckOut from '../views/UserCheckoutView.vue'
-import UserAttractions from '../views/UserAttractions.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -90,6 +91,10 @@ const router = createRouter({
         {
           path: 'article',
           component: AdminArticleView
+        },
+        {
+          path: 'orders',
+          component: AdminOrdersView
         }
       ]
     },
@@ -98,10 +103,6 @@ const router = createRouter({
       component: DashboardView,
       meta: { requiresAuth: true },
       children: [
-        {
-          path: 'ordersview',
-          component: () => import('../views/OrdersView.vue')
-        },
         {
           path: 'couponview',
           component: () => import('../views/CouponView.vue')
@@ -118,10 +119,10 @@ const router = createRouter({
 
 // 路由守衛
 router.beforeEach(async (to, from, next) => {
-  const AdminApiStore = useAdminApiStore()
+  const adminApiStore = useAdminApiStore()
 
   if (to.meta.requiresAuth) {
-    const isAuthenticated = await AdminApiStore.getToken()
+    const isAuthenticated = await adminApiStore.getToken()
 
     if (isAuthenticated) {
       next()

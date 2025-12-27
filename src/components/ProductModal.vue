@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, shallowRef } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
-import useAdminProductsStore from '../stores/AdminProductsStore'
+import useAdminProductsStore from '../stores/adminProductsStore'
 
 
 const modal = ref(null)
@@ -39,7 +39,7 @@ const openModal = (item = {}) => {
 }
 
 // 變更資料
-const AdminProductsStore = useAdminProductsStore();
+const adminProductsStore = useAdminProductsStore();
 
 const emit = defineEmits(['update-complete'])
 
@@ -48,7 +48,7 @@ const tempProduct = ref({
 });
 
 const submitProduct = async () => {
-  const success = await AdminProductsStore.updateProduct(tempProduct.value);
+  const success = await adminProductsStore.updateProduct(tempProduct.value);
   if (success) {
     emit('update-complete');
     bsModal.value.hide();
@@ -80,7 +80,7 @@ const uploadFiles = async (event) => {
   const uploadPromises = Array.from(uploadedFiles).map(file => {
     const formData = new FormData();
     formData.append('file-to-upload', file);
-    return AdminProductsStore.uploadFile(formData);
+    return adminProductsStore.uploadFile(formData);
   });
 
   try {

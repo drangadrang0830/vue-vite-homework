@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import useAdminApiStore from '../stores/AdminApiStore';
+import useAdminApiStore from '../stores/adminApiStore';
 
-const AdminApiStore = useAdminApiStore();
+const adminApiStore = useAdminApiStore();
 const router = useRouter();
 
 const isNavOpen = ref(false);
@@ -12,13 +12,13 @@ const toggleNav = () => { isNavOpen.value = !isNavOpen.value; };
 const menuItems = ref([
   { name: '產品管理', path: '/admin', icon: 'bi-box-seam' },
   { name: '文章管理', path: '/admin/article', icon: 'bi-journal-text' },
-  { name: '訂單列表', path: '/dashboardview/ordersview', icon: 'bi-receipt' },
+  { name: '訂單列表', path: '/admin/orders', icon: 'bi-receipt' },
   { name: '優惠券', path: '/dashboardview/couponview', icon: 'bi-ticket-perforated' },
 ]);
 
 const handleLogout = async () => {
   isNavOpen.value = false;
-  await AdminApiStore.logout();
+  await adminApiStore.logout();
   router.push('/login');
 };
 </script>

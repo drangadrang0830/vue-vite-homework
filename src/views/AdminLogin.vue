@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'
-import useAdminApiStore from '@/stores/AdminApiStore';
+import useAdminApiStore from '@/stores/adminApiStore';
 import useStatusStore from '../stores/statusStore'
 
-const AdminApiStore = useAdminApiStore()
+const adminApiStore = useAdminApiStore()
 const statusStore = useStatusStore()
 const router = useRouter()
 const user = ref(
@@ -17,7 +17,7 @@ const user = ref(
 const isPasswordVisible = ref(false)
 
 const handleLogin = async () => {
-  const loginSuccess = await AdminApiStore.login(user.value.username, user.value.password)
+  const loginSuccess = await adminApiStore.login(user.value.username, user.value.password)
   if (loginSuccess) {
     router.push('/admin')
   } else {

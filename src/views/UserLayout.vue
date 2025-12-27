@@ -9,8 +9,6 @@ const statusStore = useStatusStore()
 
 <template>
   <div class="bg-body-secondary">
-    <ToastMessages></ToastMessages>
-    <Navbar></Navbar>
     <main style="margin-top: var(--nav-height, 70px);"></main>
     <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
     <router-view></router-view>
@@ -47,5 +45,7 @@ const statusStore = useStatusStore()
         </div>
       </div>
     </div>
+    <ToastMessages></ToastMessages>
+    <Navbar></Navbar>
   </div>
 </template>

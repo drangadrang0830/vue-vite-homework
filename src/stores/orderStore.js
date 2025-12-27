@@ -6,8 +6,6 @@ import useStatusStore from './statusStore'
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
-const statusStore = useStatusStore()
-//Setup Store 設定式寫法
 export default defineStore('orderStore', () => {
   const orders = ref([])
 
@@ -15,11 +13,12 @@ export default defineStore('orderStore', () => {
 
   //取得產品資訊
   const getOrders = async (page = 1) => {
-    const getUrl = `${APIurl}api/${PATHurl}/admin/orders/?page=${page}`
+    const statusStore = useStatusStore()
+    const url = `${APIurl}api/${PATHurl}/admin/orders/?page=${page}`
     statusStore.isLoading = true
 
     try {
-      const response = await axios.get(getUrl)
+      const response = await axios.get(url)
       if (response.data.success) {
         orders.value = response.data.orders
         pagination.value = response.data.pagination
@@ -34,6 +33,7 @@ export default defineStore('orderStore', () => {
   }
 
   const deleteOrder = async (id) => {
+    const statusStore = useStatusStore()
     const url = `${APIurl}api/${PATHurl}/admin/order/${id}`
     statusStore.isLoading = true
     try {
@@ -41,7 +41,7 @@ export default defineStore('orderStore', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `訂單刪除成功`,
-          style: 'success',
+          style: 'success'
         })
         return true
       }
@@ -53,14 +53,14 @@ export default defineStore('orderStore', () => {
         statusStore.pushMessage({
           title: `訂單刪除失敗`,
           style: 'danger',
-          content: contentMsg,
+          content: contentMsg
         })
         return null
       } else {
         statusStore.pushMessage({
           title: `訂單刪除伺服器失敗`,
           style: 'danger',
-          content: error.message,
+          content: error.message
         })
         return null
       }
@@ -70,82 +70,10 @@ export default defineStore('orderStore', () => {
     }
   }
 
-  // -----------------
-
-  //新增/變更函式
-  // const updateProduct = async (item) => {
-  //   let api = `${APIurl}api/${PATHurl}/admin/product`
-  //   let httpMethod = 'post'
-  //   let msg = '新增'
-  //   if (item.id) {
-  //     api = `${api}/${item.id}`
-  //     httpMethod = 'put'
-  //     msg = '修改'
-  //   }
-  //   try {
-  //     const response = await axios[httpMethod](api, { data: item })
-
-  //     if (response.data.success) {
-  //       statusStore.pushMessage({
-  //         title: `${item.title}${msg}成功`,
-  //         style: 'success',
-  //       })
-  //       return true
-  //     } else {
-  //       statusStore.pushMessage({
-  //         title: `產品${msg}失敗`,
-  //         style: 'danger',
-  //         content: response.data.message.join('.'),
-  //       })
-  //       return false
-  //     }
-  //   } catch (error) {
-  //     if (error.response && error.response.status === 400) {
-  //       statusStore.pushMessage({
-  //         title: `產品${msg}失敗`,
-  //         style: 'danger',
-  //         content: error.response.data.message.join('.'),
-  //       })
-  //       return false
-  //     } else {
-  //       statusStore.pushMessage({
-  //         title: `產品${msg}失敗`,
-  //         style: 'danger',
-  //         content: error.message.join('.'),
-  //       })
-  //     }
-  //     return false
-  //   }
-  // }
-
-  // -----------------
-
-  // 處理檔案上傳的方法
-  // const uploadFile = async (formData) => {
-  //   const url = `${APIurl}api/${PATHurl}/admin/upload`
-  //   try {
-  //     const response = await axios.post(url, formData)
-  //     if (response.data.success) {
-  //       console.log('上傳圖片成功')
-  //       return response.data.imageUrl
-  //     } else {
-  //       console.log('上傳圖片失敗:', response.data.message)
-  //       return null
-  //     }
-  //   } catch (error) {
-  //     console.log('上傳圖片伺服器失敗:', error)
-  //     return null
-  //   }
-  // }
-
-  // -----------------
-
   return {
     orders,
     getOrders,
-    // updateProduct,
-    // uploadFile,
     pagination,
-    deleteOrder,
+    deleteOrder
   }
 })

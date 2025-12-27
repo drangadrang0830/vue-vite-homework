@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted, onUnmounted, shallowRef } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
-import useAdminArticleStore from '../stores/AdminArticleStore'
-import useAdminProductsStore from '../stores/AdminProductsStore'
+import useAdminArticleStore from '../stores/adminArticleStore'
+import useAdminProductsStore from '../stores/adminProductsStore'
 
-const AdminArticleStore = useAdminArticleStore();
-const AdminProductsStore = useAdminProductsStore();
+const adminArticleStore = useAdminArticleStore();
+const adminProductsStore = useAdminProductsStore();
 
 
 //手動觸發 圖片input
@@ -52,9 +52,9 @@ const handleModalHide = () => {
 // 開啟時接收資料
 const openModal = async (id) => {
   if (id) {
-    await AdminArticleStore.getArticle(id)
+    await adminArticleStore.getArticle(id)
     // 使用深拷貝
-    tempArticle.value = JSON.parse(JSON.stringify(AdminArticleStore.article))
+    tempArticle.value = JSON.parse(JSON.stringify(adminArticleStore.article))
   } else {
     // 若無 ID 則清空資料
     tempArticle.value = {
@@ -101,7 +101,7 @@ const uploadImage = async (files) => {
 
   try {
     // 3. 調用產品 Pinia 的上傳方法
-    const imageUrl = await AdminProductsStore.uploadFile(formData);
+    const imageUrl = await adminProductsStore.uploadFile(formData);
     if (imageUrl) {
       tempArticle.value.image = imageUrl; // 上傳成功，自動填入網址
     }
@@ -120,7 +120,7 @@ const handleDrop = (e) => uploadImage(e.dataTransfer.files);
 const emit = defineEmits(['update-complete'])
 
 const submitArticle = async () => {
-  const success = await AdminArticleStore.updateArticle(tempArticle.value);
+  const success = await adminArticleStore.updateArticle(tempArticle.value);
 
   if (success) {
     emit('update-complete');

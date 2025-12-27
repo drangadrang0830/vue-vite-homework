@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import useProductsStore from '../stores/AdminProductsStore'
+import useProductsStore from '../stores/adminProductsStore'
 import ProductModal from '../components/ProductModal.vue'
 import SharedPagination from '../components/SharedPagination.vue'
 import AdminDeleteModal from '../components/AdminDeleteModal.vue'
@@ -48,7 +48,36 @@ const handlePageChange = (page) => {
     <div class="text-end m-3">
       <button class="btn btn-primary" type="button" @click="openNewProductModal()">新增商品</button>
     </div>
-    <table class="table mt-4">
+
+    <div class="container-fluid d-lg-none p-0 my-4">
+      <div class="row g-2" v-if="productsStore.products.length > 0">
+        <div class="col-6" v-for="product in productsStore.products" :key="product.id">
+          <div class="card h-100 shadow-sm border-0">
+
+
+            <div class="card-body p-2 d-flex flex-column">
+
+              <h6 class="card-title text-truncate fw-bold mb-1" :title="product.title">{{ product.title }}</h6>
+              <p class="small text-muted mb-1">
+                {{ product.category }} | <span :class="product.is_enabled ? 'text-success' : 'text-muted'">{{
+                  product.is_enabled ? '已啟用' : '未啟用' }}</span>
+              </p>
+
+              <p class="small text-muted mb-1">
+                原價{{ $filters.currency(product.origin_price) }} | 售價{{ $filters.currency(product.price) }}
+              </p>
+
+              <div class="mt-auto d-grid gap-1">
+                <button class="btn btn-sm btn-outline-primary py-1" @click="openEditProductModal(product)">編輯</button>
+                <button class="btn btn-sm btn-outline-danger py-1" @click="openDeleteProduct(product)">刪除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="table my-4 d-none d-lg-table">
       <thead>
         <tr class="text-center">
           <th width="15%" class="d-none d-md-table-cell">分類</th>
@@ -60,23 +89,23 @@ const handlePageChange = (page) => {
         </tr>
       </thead>
       <tbody v-if="productsStore.products.length > 0">
-        <tr v-for="item in productsStore.products" :key="item.id">
-          <td class="text-center d-none d-md-table-cell">{{ item.category }}</td>
-          <td class="text-center">{{ item.title }}</td>
+        <tr v-for="product in productsStore.products" :key="product.id">
+          <td class="text-center d-none d-md-table-cell">{{ product.category }}</td>
+          <td class="text-center">{{ product.title }}</td>
           <td class="text-end">
-            {{ $filters.currency(item.origin_price) }}
+            {{ $filters.currency(product.origin_price) }}
           </td>
           <td class="text-end">
-            {{ $filters.currency(item.price) }}
+            {{ $filters.currency(product.price) }}
           </td>
           <td class="text-center">
-            <span class="text-success" v-if="item.is_enabled">已啟用</span>
+            <span class="text-success" v-if="product.is_enabled">已啟用</span>
             <span class="text-muted" v-else>未啟用</span>
           </td>
           <td class="text-center">
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openEditProductModal(item)">編輯</button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDeleteProduct(item)">刪除</button>
+              <button class="btn btn-outline-primary btn-sm" @click="openEditProductModal(product)">編輯</button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDeleteProduct(product)">刪除</button>
             </div>
           </td>
         </tr>
@@ -87,10 +116,10 @@ const handlePageChange = (page) => {
         </tr>
       </tbody>
     </table>
+
     <SharedPagination v-if="productsStore.pagination.total_pages" :pages="productsStore.pagination"
-      @emit-pages="handlePageChange">
-    </SharedPagination>
-    <ProductModal ref="productModal" @update-complete="handleUpdateComplete"></ProductModal>
+      @emit-pages="handlePageChange" />
+    <ProductModal ref="productModal" @update-complete="handleUpdateComplete" />
     <AdminDeleteModal ref="deleteModal" />
   </div>
 </template>
