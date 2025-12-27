@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted, shallowRef } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
-import useAdminArticleStore from '../stores/adminArticleStore'
-import useAdminProductsStore from '../stores/adminProductsStore'
+import useAdminArticleStore from '../stores/CadminArticleStore'
+import useAdminProductsStore from '../stores/CadminProductsStore'
 
 const adminArticleStore = useAdminArticleStore();
 const adminProductsStore = useAdminProductsStore();

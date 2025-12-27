@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import useProductsStore from '../stores/adminProductsStore'
+import useProductsStore from '../stores/CadminProductsStore'
 import ProductModal from '../components/ProductModal.vue'
 import SharedPagination from '../components/SharedPagination.vue'
 import AdminDeleteModal from '../components/AdminDeleteModal.vue'

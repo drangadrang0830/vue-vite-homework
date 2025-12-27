@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, shallowRef } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
-import useAdminProductsStore from '../stores/adminProductsStore'
+import useAdminProductsStore from '../stores/CadminProductsStore'
 
 
 const modal = ref(null)
