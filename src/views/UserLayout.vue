@@ -10,7 +10,7 @@ const statusStore = useStatusStore()
 <template>
   <div class="bg-body-secondary">
     <main style="margin-top: var(--nav-height, 70px);"></main>
-    <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
+    <LoadingOverlay :active="statusStore.isLoading" :z-index="1070" />
     <router-view></router-view>
     <div class="footer  bg-info-subtle">
       <div class="container py-4">

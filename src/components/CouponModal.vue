@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import Modal from 'bootstrap/js/dist/modal';
-import useCouponStore from '../stores/couponStore';
+import useAdminCouponStore from '../stores/adminCouponStore';
 
-const couponStore = useCouponStore();
+const adminCouponStore = useAdminCouponStore();
 
 const modal = ref(null);
 const bsModal = ref(null);
@@ -60,9 +60,9 @@ const submitCoupon = async () => {
   let success = false;
   try {
     if (isNew.value) {
-      success = await couponStore.addCoupon(tempCoupon.value);
+      success = await adminCouponStore.addCoupon(tempCoupon.value);
     } else {
-      success = await couponStore.updateCoupon(tempCoupon.value);
+      success = await adminCouponStore.updateCoupon(tempCoupon.value);
     }
 
     if (success) {

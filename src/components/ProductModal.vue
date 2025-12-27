@@ -111,16 +111,19 @@ defineExpose({
   <div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
       ref="modal">
-      <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-dialog modal-fullscreen-md-down modal-xl" role="document">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
+
             <h5 class="modal-title" id="exampleModalLabel">
               <span>{{ tempProduct.id ? '編輯產品' : '新增產品' }}</span>
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-theme="dark" data-bs-dismiss="modal"
+              aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="row">
+
               <div class="col-sm-3 mb-4">
                 <div class="mb-3">
                   <label for="customFiles" class="btn btn-outline-secondary w-100 mb-0"
@@ -168,24 +171,24 @@ defineExpose({
                 </div>
 
                 <div class="row gx-2">
-                  <div class="mb-3 col-md-6">
+                  <div class="mb-3 col-6">
                     <label for="category" class="form-label">分類</label>
                     <input type="text" class="form-control" id="category" placeholder="請輸入分類"
                       v-model="tempProduct.category">
                   </div>
-                  <div class="mb-3 col-md-6">
+                  <div class="mb-3 col-6">
                     <label for="price" class="form-label">單位</label>
                     <input type="text" class="form-control" id="unit" placeholder="請輸入單位" v-model="tempProduct.unit">
                   </div>
                 </div>
 
                 <div class="row gx-2">
-                  <div class="mb-3 col-md-6">
+                  <div class="mb-3 col-6">
                     <label for="origin_price" class="form-label">原價</label>
                     <input type="number" class="form-control" id="origin_price" placeholder="請輸入原價"
                       v-model="tempProduct.origin_price">
                   </div>
-                  <div class="mb-3 col-md-6">
+                  <div class="mb-3 col-6">
                     <label for="price" class="form-label">售價</label>
                     <input type="number" class="form-control" id="price" placeholder="請輸入售價"
                       v-model="tempProduct.price">
@@ -195,12 +198,12 @@ defineExpose({
 
                 <div class="mb-3">
                   <label for="description" class="form-label">產品描述</label>
-                  <textarea type="text" class="form-control" id="description" placeholder="請輸入產品描述"
+                  <textarea type="text" class="form-control" id="description" placeholder="請輸入產品描述" rows="2"
                     v-model="tempProduct.description"></textarea>
                 </div>
                 <div class="mb-3">
                   <label for="content" class="form-label">說明內容</label>
-                  <textarea type="text" class="form-control" id="content" placeholder="請輸入產品說明內容"
+                  <textarea type="text" class="form-control" id="content" placeholder="請輸入產品說明內容" rows="4"
                     v-model="tempProduct.content"></textarea>
                 </div>
                 <div class="mb-3">

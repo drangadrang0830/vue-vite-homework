@@ -61,6 +61,6 @@ const handleLogin = async () => {
       </div>
     </div>
 
-    <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
+    <LoadingOverlay :active="statusStore.isLoading" :z-index="1070" />
   </div>
 </template>

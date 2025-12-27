@@ -49,6 +49,6 @@ const statusStore = useStatusStore()
       </div>
     </div>
     <ToastMessages />
-    <LoadingOverlay :active="statusStore.isLoading" />
+    <LoadingOverlay :active="statusStore.isLoading" :z-index="1070" />
   </div>
 </template>

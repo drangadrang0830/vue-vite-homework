@@ -1,18 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import useCouponStore from '../stores/couponStore'
+import useAdminCouponStore from '../stores/adminCouponStore';
 import CouponModal from '../components/CouponModal.vue'
 import SharedPagination from '../components/SharedPagination.vue'
 import AdminDeleteModal from '../components/AdminDeleteModal.vue'
 
-const couponStore = useCouponStore()
+const adminCouponStore = useAdminCouponStore()
 
 const couponModal = ref(null);
 const deleteModal = ref(null);
 
 // 創建時讀取產品資訊
 onMounted(() => {
-  couponStore.getCoupon();
+  adminCouponStore.getCoupon();
 })
 
 //新增按鈕
@@ -27,13 +27,13 @@ const openEditCouponModal = (item) => {
 
 const openDeleteCoupon = (coupon) => {
   deleteModal.value.openModal(coupon, async (target) => {
-    const success = await couponStore.removeCoupon(target);
-    if (success) couponStore.getCoupon();
+    const success = await adminCouponStore.removeCoupon(target);
+    if (success) adminCouponStore.getCoupon();
   });
 };
 
 const handlePageChange = (page) => {
-  couponStore.getCoupon(page);
+  adminCouponStore.getCoupon(page);
 };
 
 </script>
@@ -44,8 +44,8 @@ const handlePageChange = (page) => {
       <button class="btn btn-primary" type="button" @click="openNewCouponModal()">新增優惠劵</button>
     </div>
     <div class="container-fluid d-lg-none p-0 my-4">
-      <div class="row g-3" v-if="couponStore.couponData.coupons?.length > 0">
-        <div class="col-6" v-for="coupon in couponStore.couponData.coupons" :key="coupon.id">
+      <div class="row g-3" v-if="adminCouponStore.couponData.coupons?.length > 0">
+        <div class="col-6" v-for="coupon in adminCouponStore.couponData.coupons" :key="coupon.id">
           <div class="card h-100 shadow-sm border-0">
             <div class="card-body p-3 d-flex flex-column">
               <div class="mb-2">
@@ -104,7 +104,7 @@ const handlePageChange = (page) => {
         </tr>
       </thead>
       <tbody>
-        <tr class="text-center" v-for="coupon in couponStore.couponData.coupons" :key="coupon.id">
+        <tr class="text-center" v-for="coupon in adminCouponStore.couponData.coupons" :key="coupon.id">
           <td>{{ coupon.title }}</td>
           <td>{{ coupon.percent }}</td>
           <td>{{ $filters.date(coupon.due_date) }}</td>
@@ -121,7 +121,7 @@ const handlePageChange = (page) => {
         </tr>
       </tbody>
     </table>
-    <SharedPagination v-if="couponStore.couponData.pagination > 1" :pages="couponStore.couponData.pagination"
+    <SharedPagination v-if="adminCouponStore.couponData.pagination > 1" :pages="adminCouponStore.couponData.pagination"
       @emit-pages="handlePageChange"></SharedPagination>
     <AdminDeleteModal ref="deleteModal" />
     <CouponModal ref="couponModal"></CouponModal>

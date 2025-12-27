@@ -32,21 +32,17 @@ const closeModal = () => {
 onMounted(() => {
   if (modalRef.value) {
     bsModalInstance.value = new Modal(modalRef.value);
-    // 在綁定時使用具名函數
     modalRef.value.addEventListener('hide.bs.modal', handleModalHide);
   }
 });
 
 onUnmounted(() => {
-  // *** 確保在移除監聽器前，檢查 modalRef.value 是否存在 ***
   if (modalRef.value && bsModalInstance.value) {
-    // 移除時使用相同的具名函數實例
     modalRef.value.removeEventListener('hide.bs.modal', handleModalHide);
     bsModalInstance.value.dispose();
   }
 });
 
-// 暴露方法給父元件
 defineExpose({
   openModal,
   closeModal,

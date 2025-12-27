@@ -23,7 +23,6 @@ export default defineStore('adminOrderStore', () => {
         orders.value = response.data.orders
         pagination.value = response.data.pagination
       }
-      console.log(response.data)
     } catch (error) {
       const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({

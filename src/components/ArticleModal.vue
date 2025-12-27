@@ -84,9 +84,12 @@ const removeTag = (index) => {
   tempArticle.value.tag.splice(index, 1);
 };
 
-// 2. 核心上傳函式 (支援點擊與拖曳)
+//上傳圖片
+const handleFileChange = (e) => uploadImage(e.target.files);
+const handleDrop = (e) => uploadImage(e.dataTransfer.files);
+
 const uploadImage = async (files) => {
-  const file = files[0]; // 取得第一張圖
+  const file = files[0];
   if (!file) return;
 
   // 格式過濾
@@ -100,7 +103,6 @@ const uploadImage = async (files) => {
   formData.append('file-to-upload', file);
 
   try {
-    // 3. 調用產品 Pinia 的上傳方法
     const imageUrl = await adminProductsStore.uploadFile(formData);
     if (imageUrl) {
       tempArticle.value.image = imageUrl; // 上傳成功，自動填入網址
@@ -112,10 +114,6 @@ const uploadImage = async (files) => {
     if (fileInput.value) fileInput.value.value = ''; // 清除 input 讓下次可選同張圖
   }
 };
-
-// 4. 事件觸發器
-const handleFileChange = (e) => uploadImage(e.target.files);
-const handleDrop = (e) => uploadImage(e.dataTransfer.files);
 
 const emit = defineEmits(['update-complete'])
 
@@ -139,11 +137,11 @@ defineExpose({
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title">
-            <!-- 根據有無 ID 判斷是新增還是編輯 -->
+
+            <!-- 標題 -->
             <span>{{ tempArticle.id ? '編輯文章' : '新增文章' }}</span>
           </h5>
-          <!-- 修正後的按鈕位置 -->
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-theme="dark" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="row">

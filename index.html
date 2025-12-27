@@ -1,22 +1,116 @@
 <!doctype html>
-<html lang="">
+<html lang="zh-Hant-TW">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.png" />
+    <!-- SEO 基本優化 -->
+    <title>獅子鄉聯合行銷網</title>
+    <meta name="description" content="專為獅子鄉的遊客與鄉民打造的平台，提供旅遊與商業情報" />
+    <link rel="canonical" href="https://drangadrang0830.github.io/vue-vite-homework/" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
 
-    <!-- 引用字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
+
+    <!-- 社群分享 OG -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="獅子鄉聯合行銷網" />
+    <meta property="og:title" content="獅子鄉聯合行銷網 - 探索南排灣文化之美" />
+    <meta
+      property="og:description"
+      content="專為獅子鄉的遊客與鄉民打造的平台，提供旅遊與商業情報"
+    />
+    <meta
+      property="og:image"
+      content="https://drangadrang0830.github.io/vue-vite-homework/GoldenLion.png"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://drangadrang0830.github.io/vue-vite-homework/GoldenLion.png"
+    />
+
+    <style>
+      .initial-loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #ffffff;
+      }
+
+      /* 關鍵容器：讓內部的絕對定位元件跟隨此區域 */
+      .loader-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* 獅子樣式：你可以依照需求調整寬度 */
+      .main-lion {
+        width: 70%;
+        height: auto;
+        display: block;
+        animation: pulse 3s infinite;
+      }
+
+      /* 左上角重疊圖案樣式 */
+      .overlay-icon {
+        position: absolute;
+        /* 調整這兩個數值來精確控制重疊位置 */
+        top: 0; /* 距離獅子頂部 10px */
+        left: 0; /* 距離獅子左側 10px */
+
+        width: 150px; /* 覆蓋圖案的大小 */
+        height: auto;
+
+        /* 初始狀態與動畫設定 */
+        opacity: 0;
+        animation: popIn 0.3s forwards;
+        animation-delay: 1.5s;
+      }
+
+      /* 獅子呼吸燈動畫 */
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* 彈出顯現動畫 */
+      @keyframes popIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="initial-loader">
+        <div class="loader-wrapper">
+          <!-- 1. 底層：獅子 (立即出現並閃爍) -->
+          <img src="GoldenLion.png" alt="Loading" class="main-lion" />
+
+          <!-- 2. 上層：重疊在左上角的圖案 (一秒後立即顯現) -->
+          <img src="mao.png" alt="mao" class="overlay-icon" />
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
