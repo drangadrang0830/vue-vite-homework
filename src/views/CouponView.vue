@@ -2,9 +2,9 @@
 import { ref, onMounted } from 'vue'
 import useStatusStore from '../stores/statusStore'
 import useCouponStore from '../stores/couponStore'
-import DeleteCouponModal from '../components/DeleteCouponModal.vue'
 import CouponModal from '../components/CouponModal.vue'
 import SharedPagination from '../components/SharedPagination.vue'
+import AdminDeleteModal from '../components/AdminDeleteModal.vue'
 
 const statusStore = useStatusStore()
 const couponStore = useCouponStore()
@@ -27,10 +27,12 @@ const openEditCouponModal = (item) => {
   couponModal.value.openModal(item, false);
 }
 
-//刪除按鈕：開啟刪除確認 Modal
-const openDeleteCouponModal = (item) => {
-  deleteModal.value.openModal(item);
-}
+const openDeleteCoupon = (coupon) => {
+  deleteModal.value.openModal(coupon, async (target) => {
+    const success = await couponStore.removeCoupon(target);
+    if (success) couponStore.getCoupon();
+  });
+};
 
 const handlePageChange = (page) => {
   couponStore.getCoupon(page);
@@ -66,7 +68,7 @@ const handlePageChange = (page) => {
           <td>
             <div class="btn-group">
               <button class="btn btn-outline-primary btn-sm" @click="openEditCouponModal(item)">編輯</button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDeleteCouponModal(item)">刪除</button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDeleteCoupon(item)">刪除</button>
             </div>
           </td>
         </tr>
@@ -74,7 +76,7 @@ const handlePageChange = (page) => {
     </table>
     <SharedPagination v-if="couponStore.couponData.pagination" :pages="couponStore.couponData.pagination"
       @emit-pages="handlePageChange"></SharedPagination>
-    <DeleteCouponModal ref="deleteModal"></DeleteCouponModal>
+    <AdminDeleteModal ref="deleteModal" />
     <CouponModal ref="couponModal"></CouponModal>
   </div>
 </template>

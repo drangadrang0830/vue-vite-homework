@@ -11,7 +11,7 @@ const toggleNav = () => { isNavOpen.value = !isNavOpen.value; };
 
 const menuItems = ref([
   { name: '產品管理', path: '/admin', icon: 'bi-box-seam' },
-  { name: '文章管理', path: '/admin', icon: 'bi-journal-text' },
+  { name: '文章管理', path: '/admin/article', icon: 'bi-journal-text' },
   { name: '訂單列表', path: '/dashboardview/ordersview', icon: 'bi-receipt' },
   { name: '優惠券', path: '/dashboardview/couponview', icon: 'bi-ticket-perforated' },
 ]);

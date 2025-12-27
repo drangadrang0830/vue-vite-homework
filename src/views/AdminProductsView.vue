@@ -1,12 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import useStatusStore from '../stores/statusStore'
 import useProductsStore from '../stores/AdminProductsStore'
 import ProductModal from '../components/ProductModal.vue'
-import DeleteProductModal from '../components/DeleteProductModal.vue'
 import SharedPagination from '../components/SharedPagination.vue'
+import AdminDeleteModal from '../components/AdminDeleteModal.vue'
 
-const statusStore = useStatusStore()
 const productsStore = useProductsStore()
 
 const productModal = ref(null);
@@ -25,9 +23,14 @@ const openEditProductModal = (item) => {
   productModal.value.openModal(item);
 }
 
-const openDeleteProductModal = (item) => {
-  deleteModal.value.openModal(item);
-}
+const openDeleteProduct = (item) => {
+  deleteModal.value.openModal(item, async (target) => {
+    const success = await productsStore.deleteProduct(target);
+    if (success) {
+      productsStore.getProducts();
+    }
+  });
+};
 
 const handleUpdateComplete = () => {
   productsStore.getProducts();
@@ -42,7 +45,6 @@ const handlePageChange = (page) => {
 
 <template>
   <div>
-    <LoadingOverlay :active="statusStore.isLoading"></LoadingOverlay>
     <div class="text-end m-3">
       <button class="btn btn-primary" type="button" @click="openNewProductModal()">新增商品</button>
     </div>
@@ -74,7 +76,7 @@ const handlePageChange = (page) => {
           <td class="text-center">
             <div class="btn-group">
               <button class="btn btn-outline-primary btn-sm" @click="openEditProductModal(item)">編輯</button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDeleteProductModal(item)">刪除</button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDeleteProduct(item)">刪除</button>
             </div>
           </td>
         </tr>
@@ -89,6 +91,6 @@ const handlePageChange = (page) => {
       @emit-pages="handlePageChange">
     </SharedPagination>
     <ProductModal ref="productModal" @update-complete="handleUpdateComplete"></ProductModal>
-    <DeleteProductModal ref="deleteModal"></DeleteProductModal>
+    <AdminDeleteModal ref="deleteModal" />
   </div>
 </template>

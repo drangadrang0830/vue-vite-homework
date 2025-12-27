@@ -13,6 +13,7 @@ import UserOrder from '@/views/UserOrderView.vue'
 import AdminLogin from '../views/AdminLogin.vue'
 import AdminLayout from '../views/AdminLayout.vue'
 import AdminProductsView from '../views/AdminProductsView.vue'
+import AdminArticleView from '../views/AdminArticleView.vue'
 
 import DashboardView from '../views/DashboardView.vue'
 import UserCheckOut from '../views/UserCheckoutView.vue'
@@ -85,6 +86,10 @@ const router = createRouter({
         {
           path: '',
           component: AdminProductsView
+        },
+        {
+          path: 'article',
+          component: AdminArticleView
         }
       ]
     },

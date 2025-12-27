@@ -1,20 +1,19 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import OrderModal from '../components/OrderModal.vue'
-import DeleteOrderModal from '../components/DeleteOrderModal.vue';
 import useStatusStore from '../stores/statusStore'
 import useOrderStore from '../stores/orderStore'
 import useUserOrder from '../stores/userOrderStore'
 import SharedPagination from '../components/SharedPagination.vue'
+import AdminDeleteModal from '../components/AdminDeleteModal.vue'
 
 // const modal = ref(null);
 const statusStore = useStatusStore()
 const orderStore = useOrderStore()
 const userOrder = useUserOrder()
 
-// 綁定 Modal 實例，用於呼叫 openModal 方法
 const orderModalRef = ref(null);
-const deleteModalRef = ref(null);
+const deleteModal = ref(null);
 
 // 打開訂單詳情 Modal 的方法
 const openOrderDetailModal = (orderItem) => {
@@ -22,9 +21,21 @@ const openOrderDetailModal = (orderItem) => {
   orderModalRef.value.openModal(orderItem);
 }
 
-const openDeleteModal = (orderId) => {
-  deleteModalRef.value.openModal(orderId);
-}
+// OrdersView.vue 內的建議寫法
+const openDeleteOrder = (order) => {
+  // 手動幫它加一個 title 屬性供 Modal 顯示
+  const displayItem = {
+    ...order,
+    title: `訂單編號: ${order.id.substring(0, 8)} (${order.user.email})`
+  };
+
+  deleteModal.value.openModal(displayItem, async (target) => {
+    const success = await orderStore.deleteOrder(target.id);
+    if (success) {
+      orderStore.getOrders();
+    }
+  });
+};
 
 // 創建時讀取產品資訊
 onMounted(() => {
@@ -85,7 +96,7 @@ const handlePageChange = (page) => {
           <td class="text-center">
             <div class="btn-group">
               <button class="btn btn-outline-primary btn-sm" @click="openOrderDetailModal(item)">檢視</button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDeleteModal(item.id)">刪除</button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDeleteOrder(item)">刪除</button>
             </div>
           </td>
         </tr>
@@ -95,6 +106,6 @@ const handlePageChange = (page) => {
       @emit-pages="handlePageChange">
     </SharedPagination>
     <OrderModal ref="orderModalRef"></OrderModal>
-    <DeleteOrderModal ref="deleteModalRef"></DeleteOrderModal>
+    <AdminDeleteModal ref="deleteModal" />
   </div>
 </template>

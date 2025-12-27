@@ -40,7 +40,7 @@ export default defineStore('AdminProductsStore', () => {
   //取得產品資訊
   const getProducts = async (page = 1) => {
     const statusStore = useStatusStore()
-    const url = `${APIurl}api/${PATHurl}/admin/products/?page=${page}`
+    const url = `${APIurl}api/${PATHurl}/admin/products?page=${page}`
     statusStore.isLoading = true
 
     try {
