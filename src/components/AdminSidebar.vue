@@ -13,7 +13,7 @@ const menuItems = ref([
   { name: '產品管理', path: '/admin', icon: 'bi-box-seam' },
   { name: '文章管理', path: '/admin/article', icon: 'bi-journal-text' },
   { name: '訂單列表', path: '/admin/orders', icon: 'bi-receipt' },
-  { name: '優惠券', path: '/dashboardview/couponview', icon: 'bi-ticket-perforated' },
+  { name: '優惠券', path: '/admin/coupon', icon: 'bi-ticket-perforated' },
 ]);
 
 const handleLogout = async () => {

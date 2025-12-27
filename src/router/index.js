@@ -17,8 +17,7 @@ import AdminLayout from '../views/AdminLayout.vue'
 import AdminProductsView from '../views/AdminProductsView.vue'
 import AdminArticleView from '../views/AdminArticleView.vue'
 import AdminOrdersView from '../views/AdminOrdersView.vue'
-
-import DashboardView from '../views/DashboardView.vue'
+import AdminCouponView from '../views/AdminCouponView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -95,17 +94,10 @@ const router = createRouter({
         {
           path: 'orders',
           component: AdminOrdersView
-        }
-      ]
-    },
-    {
-      path: '/dashboardview',
-      component: DashboardView,
-      meta: { requiresAuth: true },
-      children: [
+        },
         {
-          path: 'couponview',
-          component: () => import('../views/CouponView.vue')
+          path: 'coupon',
+          component: AdminCouponView
         }
       ]
     },
