@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';//test
 import { useRouter } from 'vue-router'
-import useAdminApiStore from '../stores/CadminApiStore'
+import useAdminApiStore from '../stores/adminApiStore'
 
 const adminApiStore = useAdminApiStore()
 const router = useRouter();

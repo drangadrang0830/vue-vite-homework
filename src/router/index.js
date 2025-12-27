@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import useAdminApiStore from '../stores/CadminApiStore'
+import useAdminApiStore from '../stores/adminApiStore'
 
 // 實體化路徑
 import UserLayout from '../views/UserLayout.vue'
