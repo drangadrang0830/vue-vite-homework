@@ -77,7 +77,7 @@ const handlePageChange = (page) => {
       </div>
     </div>
 
-    <table class="table my-4 d-none d-lg-table">
+    <table class="table my-4 d-none d-lg-table table-hover">
       <thead>
         <tr class="text-center">
           <th width="15%" class="d-none d-md-table-cell">分類</th>
@@ -117,7 +117,7 @@ const handlePageChange = (page) => {
       </tbody>
     </table>
 
-    <SharedPagination v-if="productsStore.pagination.total_pages" :pages="productsStore.pagination"
+    <SharedPagination v-if="productsStore.pagination.total_pages > 1" :pages="productsStore.pagination"
       @emit-pages="handlePageChange" />
     <ProductModal ref="productModal" @update-complete="handleUpdateComplete" />
     <AdminDeleteModal ref="deleteModal" />

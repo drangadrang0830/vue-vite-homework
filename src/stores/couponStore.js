@@ -20,19 +20,12 @@ export default defineStore('couponStore', () => {
         couponData.value = response.data
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        statusStore.pushMessage({
-          title: `優惠劵讀取失敗`,
-          style: 'danger',
-          content: error.data.message,
-        })
-      } else {
-        statusStore.pushMessage({
-          title: `優惠劵讀取失敗`,
-          style: 'danger',
-          content: error.message,
-        })
-      }
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '優惠劵讀取失敗',
+        style: 'danger',
+        content: errorMsg
+      })
     } finally {
       statusStore.isLoading = false
     }
@@ -48,16 +41,17 @@ export default defineStore('couponStore', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `優惠劵刪除成功`,
-          style: 'success',
+          style: 'success'
         })
         getCoupon()
         return true
       }
     } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message
       statusStore.pushMessage({
-        title: `優惠劵刪除伺服器失敗`,
+        title: '優惠劵刪除失敗',
         style: 'danger',
-        content: error.message,
+        content: errorMsg
       })
       return false
     } finally {
@@ -76,7 +70,7 @@ export default defineStore('couponStore', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `優惠劵新增成功`,
-          style: 'success',
+          style: 'success'
         })
         getCoupon() // 重新整理列表
         return true
@@ -85,7 +79,7 @@ export default defineStore('couponStore', () => {
       statusStore.pushMessage({
         title: `優惠劵新增失敗`,
         style: 'danger',
-        content: error.response?.data?.message || error.message,
+        content: error.response?.data?.message || error.message
       })
       return false
     } finally {
@@ -105,7 +99,7 @@ export default defineStore('couponStore', () => {
       if (response.data.success) {
         statusStore.pushMessage({
           title: `優惠劵更新成功`,
-          style: 'success',
+          style: 'success'
         })
         getCoupon() // 重新整理列表
         return true
@@ -114,7 +108,7 @@ export default defineStore('couponStore', () => {
       statusStore.pushMessage({
         title: `優惠劵更新失敗`,
         style: 'danger',
-        content: error.response?.data?.message || error.message,
+        content: error.response?.data?.message || error.message
       })
       return false
     } finally {
@@ -127,6 +121,6 @@ export default defineStore('couponStore', () => {
     getCoupon,
     removeCoupon,
     addCoupon,
-    updateCoupon,
+    updateCoupon
   }
 })

@@ -6,12 +6,12 @@ import useStatusStore from './statusStore'
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
-export default defineStore('orderStore', () => {
+export default defineStore('adminOrderStore', () => {
   const orders = ref([])
 
   const pagination = ref({})
 
-  //取得產品資訊
+  //取得訂單資訊
   const getOrders = async (page = 1) => {
     const statusStore = useStatusStore()
     const url = `${APIurl}api/${PATHurl}/admin/orders/?page=${page}`
@@ -22,11 +22,15 @@ export default defineStore('orderStore', () => {
       if (response.data.success) {
         orders.value = response.data.orders
         pagination.value = response.data.pagination
-      } else {
-        console.log('訂單取得失敗:', response.data.message)
       }
+      console.log(response.data)
     } catch (error) {
-      console.log('訂單取得伺服器失敗回應:', error.message)
+      const errorMsg = error.response?.data?.message || error.message
+      statusStore.pushMessage({
+        title: '訂單讀取失敗',
+        style: 'danger',
+        content: errorMsg
+      })
     } finally {
       statusStore.isLoading = false
     }
