@@ -13,7 +13,6 @@ const handleScroll = () => {
 onMounted(() => window.addEventListener('scroll', handleScroll))
 onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 
-
 onMounted(async () => {
   await userProductsStore.getAllProducts();
 })
@@ -88,7 +87,7 @@ const getImgUrl = (path) => {
             :class="index % 2 === 0 ? 'start-0' : 'start-100'">
           <div class="position-absolute top-0 translate-middle w-25 z-3 text-center d-none d-lg-block"
             :class="index % 2 === 0 ? 'start-0' : 'start-100'">
-            <router-link class="w-75" to="/">
+            <router-link class="w-75" to="/attractions">
               <img :src="getImgUrl(item.imagesUrl[1])" class="w-75" :alt="item.description">
             </router-link>
           </div>

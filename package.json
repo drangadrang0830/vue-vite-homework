@@ -23,6 +23,7 @@
     "default-passive-events": "^4.0.0",
     "mitt": "^3.0.1",
     "pinia": "^3.0.4",
+    "swiper": "^12.0.3",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.25",
     "vue-axios": "^3.5.2",
