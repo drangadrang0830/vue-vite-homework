@@ -201,12 +201,12 @@ defineExpose({
             <!-- 右側：文章內容 -->
             <div class="col-sm-8">
               <div class="mb-3">
-                <label for="title" class="form-label">標題</label>
+                <label for="title" class="form-label">標題<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="title" v-model="tempArticle.title" placeholder="請輸入標題">
               </div>
 
               <div class="mb-3">
-                <label for="author" class="form-label">作者</label>
+                <label for="author" class="form-label">作者<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="author" v-model="tempArticle.author" placeholder="請輸入作者">
               </div>
 
@@ -219,7 +219,7 @@ defineExpose({
               </div>
 
               <div class="mb-3">
-                <label for="content" class="form-label">文章內容</label>
+                <label for="content" class="form-label">文章內容<span class="text-danger">*</span></label>
                 <textarea class="form-control" id="content" v-model="tempArticle.content" rows="5"
                   placeholder="請輸入文章詳細內容"></textarea>
               </div>

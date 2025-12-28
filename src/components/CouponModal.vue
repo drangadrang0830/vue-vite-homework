@@ -92,25 +92,24 @@ defineExpose({
           <div class="row">
             <div class="col-sm-12">
               <div class="mb-3">
-                <label for="title" class="form-label">標題</label>
+                <label for="title" class="form-label">標題<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="title" v-model="tempCoupon.title" placeholder="請輸入標題">
               </div>
 
               <div class="row gx-2">
                 <div class="mb-3 col-md-6">
-                  <label for="percent" class="form-label">折扣百分比</label>
+                  <label for="percent" class="form-label">折扣百分比<span class="text-danger">*</span></label>
                   <input type="number" class="form-control" id="percent" v-model.number="tempCoupon.percent"
                     placeholder="請輸入折扣百分比 (例如：80 代表八折)">
                 </div>
                 <div class="mb-3 col-md-6">
-                  <label for="due_date" class="form-label">到期日</label>
-                  <!-- 使用 v-model 綁定 YYYY-MM-DD 格式 -->
+                  <label for="due_date" class="form-label">到期日<span class="text-danger">*</span></label>
                   <input type="date" class="form-control" id="due_date" v-model="tempCoupon.due_date">
                 </div>
               </div>
 
               <div class="mb-3">
-                <label for="code" class="form-label">優惠碼</label>
+                <label for="code" class="form-label">優惠碼<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="code" v-model="tempCoupon.code" placeholder="請輸入優惠碼">
               </div>
 

@@ -166,30 +166,30 @@ defineExpose({
               <!-- 右側欄位：產品資訊 (保留不變) -->
               <div class="col-sm-9">
                 <div class="mb-3">
-                  <label for="title" class="form-label">標題</label>
+                  <label for="title" class="form-label">標題<span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="title" placeholder="請輸入標題 " v-model="tempProduct.title">
                 </div>
 
                 <div class="row gx-2">
                   <div class="mb-3 col-6">
-                    <label for="category" class="form-label">分類</label>
+                    <label for="category" class="form-label">分類<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="category" placeholder="請輸入分類"
                       v-model="tempProduct.category">
                   </div>
                   <div class="mb-3 col-6">
-                    <label for="price" class="form-label">單位</label>
+                    <label for="price" class="form-label">單位<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="unit" placeholder="請輸入單位" v-model="tempProduct.unit">
                   </div>
                 </div>
 
                 <div class="row gx-2">
                   <div class="mb-3 col-6">
-                    <label for="origin_price" class="form-label">原價</label>
+                    <label for="origin_price" class="form-label">原價<span class="text-danger">*</span></label>
                     <input type="number" class="form-control" id="origin_price" placeholder="請輸入原價"
                       v-model="tempProduct.origin_price">
                   </div>
                   <div class="mb-3 col-6">
-                    <label for="price" class="form-label">售價</label>
+                    <label for="price" class="form-label">售價<span class="text-danger">*</span></label>
                     <input type="number" class="form-control" id="price" placeholder="請輸入售價"
                       v-model="tempProduct.price">
                   </div>

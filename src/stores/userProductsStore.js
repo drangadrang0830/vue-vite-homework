@@ -45,6 +45,7 @@ export default defineStore('userProducts', () => {
     }
   }
 
+  //農特產品標籤預處理
   const updateFarmCategories = () => {
     const categoryCounts = farmProducts.value.reduce((acc, item) => {
       const name = item.category
