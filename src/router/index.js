@@ -106,7 +106,15 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       redirect: '/'
     }
-  ]
+  ],
+  //過畫面回到最上方
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  }
 })
 
 // 路由守衛

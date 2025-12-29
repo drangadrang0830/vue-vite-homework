@@ -1,5 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+// 匯入新的元件
+import UserCartCarousel from '../components/UserCartCarousel.vue'
 import { useRouter } from 'vue-router'
 import useUserCartStore from '../stores/userCartStore'
 import useStatusStore from '../stores/statusStore'
@@ -7,11 +9,10 @@ import useStatusStore from '../stores/statusStore'
 const userCartStore = useUserCartStore()
 const statusStore = useStatusStore()
 const router = useRouter()
-
 const code = ref('')
 
-onMounted(() => {
-  userCartStore.getCart();
+onMounted(async () => {
+  await userCartStore.getCart()
 })
 
 const toOrder = () => {
@@ -31,6 +32,10 @@ const useCouponButton = async () => {
   code.value = ''
 }
 </script>
+
+
+<style scoped></style>
+
 
 <template>
   <!-- 購物車 -->
@@ -76,7 +81,7 @@ const useCouponButton = async () => {
                       @change="userCartStore.updateCart(item)" :disabled="statusStore.loadingItem === item.id">
                     <div class="input-group-text w-50 text-center d-none d-lg-block">/ {{
                       item.product.unit
-                      }}</div>
+                    }}</div>
                   </div>
                 </td>
 
@@ -165,5 +170,7 @@ const useCouponButton = async () => {
       <h5>您的購物車是空的</h5>
       <router-link class="btn btn-primary mt-3" to="/products">前往選購商品</router-link>
     </div>
+
+    <UserCartCarousel />
   </div>
 </template>

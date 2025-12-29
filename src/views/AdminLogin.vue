@@ -1,12 +1,15 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import useAdminApiStore from '@/stores/adminApiStore';
+import useAdminApiStore from '@/stores/adminApiStore'
 import useStatusStore from '../stores/statusStore'
+import ToastMessages from '../components/ToastMessages.vue'
+import BiteBtn from '../components/BiteBtn.vue'
 
 const adminApiStore = useAdminApiStore()
 const statusStore = useStatusStore()
 const router = useRouter()
+
 const user = ref(
   {
     username: '',
@@ -14,8 +17,10 @@ const user = ref(
   }
 )
 
+//密碼顯示切換
 const isPasswordVisible = ref(false)
 
+//點擊登入按鈕事件
 const handleLogin = async () => {
   const loginSuccess = await adminApiStore.login(user.value.username, user.value.password)
   if (loginSuccess) {
@@ -24,7 +29,6 @@ const handleLogin = async () => {
     user.value.password = ''
   }
 }
-
 </script>
 
 <template>
@@ -39,7 +43,7 @@ const handleLogin = async () => {
             <label for="inputEmail" class="sr-only">Email address</label>
             <v-field id="inputEmail" name="登入信箱" type="email" class="form-control"
               :class="{ 'is-invalid': errors['登入信箱'] }" placeholder="請輸入登入信箱" rules="email|required"
-              v-model="user.username" autofocus autocomplete="on" />
+              v-model.trim="user.username" autofocus autocomplete="on" />
             <error-message name="登入信箱" class="invalid-feedback"></error-message>
           </div>
           <div class="mb-3">
@@ -47,7 +51,7 @@ const handleLogin = async () => {
             <div class="input-group has-validation">
               <v-field id="inputPassword" name="登入密碼" :type="isPasswordVisible ? 'text' : 'password'"
                 class="form-control rounded-end-0" :class="{ 'is-invalid': errors['登入密碼'] }" rules="required"
-                v-model="user.password" autocomplete="current-password" />
+                v-model.trim="user.password" autocomplete="current-password" />
               <button class="btn btn-outline-secondary" type="button" @click="isPasswordVisible = !isPasswordVisible">
                 <i :class="isPasswordVisible ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </button>
@@ -55,12 +59,12 @@ const handleLogin = async () => {
             </div>
           </div>
           <div class="text-end mt-4">
-            <button class="btn btn-lg btn-primary btn-block" type="submit">登入</button>
+            <BiteBtn text="登入" size="lg" type="submit" class="btn btn-primary py-2" />
           </div>
         </v-form>
       </div>
     </div>
-
+    <ToastMessages />
     <LoadingOverlay :active="statusStore.isLoading" :z-index="1070" />
   </div>
 </template>

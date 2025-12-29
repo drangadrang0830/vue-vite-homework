@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
+import Swal from 'sweetalert2'
 import useUserOrder from '../stores/userOrderStore'
 import useStatusStore from '../stores/statusStore'
 
@@ -50,13 +51,26 @@ const onSubmit = async () => {
     if (isPay) {
       statusStore.setOrderCompleted(true)
       await fetchOrder()
-      statusStore.pushMessage({
-        title: '訂單已完成',
-        style: 'success',
-        content: '5秒後將為您跳轉至商品頁面...'
-      });
-      await delay(5000);
-      router.replace('/products')
+
+      const totalAmount = orderDate.value.order.total;
+      if (totalAmount > 1500) {
+        await Swal.fire({
+          title: '感謝您的支持！',
+          text: `本次消費已達感恩大回饋門檻。您的85折優惠碼為ShiziTownship，請妥善收存`,
+          icon: 'success',
+          confirmButtonText: '確定',
+          confirmButtonColor: '#198754'
+        });
+        router.replace('/products');
+      } else {
+        statusStore.pushMessage({
+          title: '訂單已完成',
+          style: 'success',
+          content: '5秒後將為您跳轉至商品頁面...'
+        });
+        await delay(5000);
+        router.replace('/products');
+      }
     }
   } finally {
     isSubmitting.value = false;

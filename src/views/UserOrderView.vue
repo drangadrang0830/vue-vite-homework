@@ -37,7 +37,7 @@ const isPhone = (value) => { //電話驗證函式
 <template>
   <div class="container my-4">
     <div class="row  mt-4">
-      <div class="col-7" v-if="userCartStore.cartData.carts?.length > 0">
+      <div class="col-md-7 my-2" v-if="userCartStore.cartData.carts?.length > 0">
         <v-form v-slot="{ errors }" @submit="onSubmit">
 
           <div class="mb-3">
@@ -86,12 +86,12 @@ const isPhone = (value) => { //電話驗證函式
           </div>
         </v-form>
       </div>
-      <div class="col-5">
+      <div class="col-md-5 my-2">
         <h4 class="text-center"><i class="bi bi-box-seam-fill"></i> 獅子鄉農特產品宅配須知</h4>
         <table class="table bg-transparent" style="--bs-table-bg: transparent;">
           <colgroup>
-            <col style="width: 20%;">
-            <col style="width: 80%;">
+            <col style="width: 25%;">
+            <col style="width: 75%;">
           </colgroup>
 
           <thead>

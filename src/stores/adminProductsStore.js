@@ -83,6 +83,7 @@ export default defineStore('adminProductsStore', () => {
         return true
       }
     } catch (error) {
+      console.log(error)
       const errorMsg = Array.isArray(error.response?.data?.message)
         ? error.response.data.message.join('.')
         : error.response?.data?.message || error.message || '未知錯誤'

@@ -4,7 +4,7 @@ import useUserCartStore from '../stores/userCartStore'
 
 const userCartStore = useUserCartStore()
 
-// NAVBAR控制
+// NAVBAR控制區-----------
 const isNavOpen = ref(false)
 
 const toggleNav = () => {
@@ -79,6 +79,24 @@ onMounted(() => {
   left: 95%;
   font-size: 0.6rem;
 }
+
+.btn-animate-pulse3 {
+  animation: btn-pulse-effect 3s infinite;
+}
+
+@keyframes btn-pulse-effect {
+  0% {
+    box-shadow: 0 0 0 0 rgba(235, 4, 4, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(170, 19, 19, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(54, 12, 12, 0);
+  }
+}
 </style>
 
 <template>
@@ -88,9 +106,12 @@ onMounted(() => {
       <div class="container-fluid">
         <router-link class="navbar-brand link-body-emphasis" to="/">
           <img src="/favicon.png" alt="Logo" width="25" height="24" class="d-inline-block align-text-top">
-          獅子鄉聯合行銷網
+          獅子鄉<span class="d-none d-md-inline">聯合</span>行銷網
         </router-link>
         <div class="d-flex ms-auto me-2 order-lg-last">
+          <a class="btn btn-danger rounded-5 btn-animate-pulse3" href="tel:+886987654321"><i
+              class="bi bi-telephone-fill"></i>部落協助</a>
+
           <button class="btn btn-sm btn-outline-secondary border-0" @click="toggleTheme" title="切換深淺色">
             <span v-if="theme === 'dark'">🌞</span>
             <span v-else>🌛</span>

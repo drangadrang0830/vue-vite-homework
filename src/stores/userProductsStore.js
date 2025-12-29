@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import useStatusStore from './statusStore'
@@ -44,6 +44,13 @@ export default defineStore('userProducts', () => {
       isFetching = false
     }
   }
+
+  //特價商品
+  const specialOfferProducts = computed(() => {
+    return farmProducts.value.filter((product) => {
+      return Number(product.origin_price) !== Number(product.price)
+    })
+  })
 
   //農特產品標籤預處理
   const updateFarmCategories = () => {
@@ -91,6 +98,7 @@ export default defineStore('userProducts', () => {
     farmProducts,
     categories,
     descriptionProduct,
-    product
+    product,
+    specialOfferProducts
   }
 })

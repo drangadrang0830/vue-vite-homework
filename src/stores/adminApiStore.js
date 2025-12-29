@@ -9,29 +9,24 @@ export default defineStore('adminApiStore', () => {
   const login = async (username, password) => {
     const statusStore = useStatusStore()
     const url = `${APIurl}admin/signin`
-
+    const title = '登入'
+    statusStore.isLoading = true
     try {
-      statusStore.isLoading = true
       const response = await axios.post(url, { username, password })
-      if (response.data.success) {
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
         const { token, expired } = response.data
         document.cookie = `hexToken=${token}; expires=${new Date(expired)}; path=/`
-        statusStore.isLoading = true
         return true
       }
+      return false
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '登入失敗',
-        style: 'danger',
-        content: errorMsg
-      })
-      statusStore.isLoading = true
+      statusStore.handleMessage(error, title)
       return false
     }
   }
 
-  // 確認 方法
+  //身分認證
   const getToken = async () => {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')
     const statusStore = useStatusStore()
@@ -43,41 +38,26 @@ export default defineStore('adminApiStore', () => {
         const response = await axios.post(url)
         return response.data.success
       } catch (error) {
-        const errorMsg = error.response?.data?.message || error.message
-        statusStore.pushMessage({
-          title: '身分認證失敗',
-          style: 'danger',
-          content: errorMsg
-        })
+        statusStore.handleMessage(error, '身分認證')
         return false
       }
     } else {
-      statusStore.pushMessage({
-        title: '缺乏token',
-        style: 'danger',
-        content: '請重新登入'
-      })
+      statusStore.pushMessage({ title: '缺乏token', style: 'danger' })
       return false
     }
   }
 
-  //登出 方法
+  //登出
   const logout = async () => {
     const statusStore = useStatusStore()
     const url = `${APIurl}logout`
-
     try {
       const response = await axios.post(url)
       if (response.data.success) {
         return true
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '登出失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, '登出')
       return false
     }
   }

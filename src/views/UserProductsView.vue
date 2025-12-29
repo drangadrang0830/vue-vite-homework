@@ -62,7 +62,7 @@ const changePage = (page) => {
 const getProduct = (id) => {
   router.push(`/products/product/${id}`)
 }
-//
+
 onMounted(() => {
   statusStore.resetOrderProgress()
 })

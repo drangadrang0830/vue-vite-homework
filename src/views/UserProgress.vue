@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="container my-4 pt-5">
+    <h6 class="bg-warning-subtle p-1 m-0 text-center text-danger">目前消費滿1,500元，即送85折優惠劵!</h6>
+    <div class="container my-4 pt-3">
       <div class="px-5 pt-2 pb-5">
         <div class="position-relative">
           <div class="progress" style="height: 10px;">
