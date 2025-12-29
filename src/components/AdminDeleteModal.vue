@@ -1,41 +1,36 @@
-<!-- components/AdminDeleteModal.vue -->
 <script setup>
-import { ref, onMounted, onUnmounted, shallowRef } from 'vue';
-import Modal from 'bootstrap/js/dist/modal';
+import { ref } from 'vue'
+import { useModal } from '@/composables/useModal'
 
-const modalElement = ref(null);
-const bsModal = shallowRef(null);
-const tempItem = ref({});
-const isLoading = ref(false);
-let onConfirmCallback = null;
+const { modalElement, openModal, closeModal } = useModal()
 
-onMounted(() => {
-  if (modalElement.value) {
-    bsModal.value = new Modal(modalElement.value);
-    modalElement.value.addEventListener('hide.bs.modal', () => document.activeElement.blur());
-  }
-});
+const tempItem = ref({})
+const isLoading = ref(false)
+let onConfirmCallback = null
 
-onUnmounted(() => {
-  if (bsModal.value) bsModal.value.dispose();
-});
+//開啟帶入
+const show = (item, confirmFn) => {
+  tempItem.value = { ...item }
+  onConfirmCallback = confirmFn
+  openModal()
+}
 
-const openModal = (item, confirmFn) => {
-  tempItem.value = { ...item };
-  onConfirmCallback = confirmFn;
-  bsModal.value.show();
-};
-
+//刪除按鈕事件
 const handleConfirm = async () => {
-  if (onConfirmCallback) {
-    isLoading.value = true;
-    await onConfirmCallback(tempItem.value);
-    isLoading.value = false;
-    bsModal.value.hide();
+  if (typeof onConfirmCallback === 'function') {
+    isLoading.value = true
+    try {
+      await onConfirmCallback(tempItem.value)
+      closeModal()
+    } finally {
+      isLoading.value = false
+    }
   }
-};
+}
 
-defineExpose({ openModal });
+defineExpose({
+  openModal: show
+})
 </script>
 
 <template>

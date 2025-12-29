@@ -121,7 +121,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-2 gx-3 gy-4 mb-3 py-4">
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1 gx-3 gy-4 mb-3 py-4">
       <div class="col" v-for="product in pagedList" :key="product.id">
         <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
 

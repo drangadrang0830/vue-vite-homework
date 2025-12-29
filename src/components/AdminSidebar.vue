@@ -1,26 +1,29 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 import { useRouter } from 'vue-router';
-import useAdminApiStore from '../stores/adminApiStore';
+import useAdminApiStore from '@/stores/adminApiStore'
 
-const adminApiStore = useAdminApiStore();
-const router = useRouter();
+const adminApiStore = useAdminApiStore()
+const router = useRouter()
 
-const isNavOpen = ref(false);
-const toggleNav = () => { isNavOpen.value = !isNavOpen.value; };
+const isNavOpen = ref(false)
+const toggleNav = () => { isNavOpen.value = !isNavOpen.value }
 
+//預設連結陣列
 const menuItems = ref([
   { name: '產品管理', path: '/admin', icon: 'bi-box-seam' },
   { name: '文章管理', path: '/admin/article', icon: 'bi-journal-text' },
   { name: '訂單列表', path: '/admin/orders', icon: 'bi-receipt' },
   { name: '優惠券', path: '/admin/coupon', icon: 'bi-ticket-perforated' },
-]);
+])
 
+//登出案件事件
 const handleLogout = async () => {
-  isNavOpen.value = false;
-  await adminApiStore.logout();
-  router.push('/login');
-};
+  isNavOpen.value = false
+  await adminApiStore.logout()
+  router.push('/login')
+}
+
 </script>
 
 <template>
@@ -28,7 +31,6 @@ const handleLogout = async () => {
     <div class="fs-5 mb-3 px-2 fw-semibold tracking-wider text-uppercase border-start border-3 border-white">
       後台管理系統
     </div>
-
     <ul class="nav nav-pills flex-column mb-auto">
       <li v-for="item in menuItems" :key="item.path" class="nav-item">
         <router-link :to="item.path" class="nav-link link-light" active-class="active-item">
@@ -36,7 +38,6 @@ const handleLogout = async () => {
         </router-link>
       </li>
     </ul>
-
     <div class="mt-auto pt-3 border-top border-secondary">
       <ul class="nav nav-pills flex-column gap-1">
         <li class="mt-2 border border-light text-center">
@@ -52,12 +53,11 @@ const handleLogout = async () => {
       </ul>
     </div>
   </div>
-
   <nav class="navbar navbar-dark bg-dark d-lg-none fixed-top border-bottom border-secondary">
     <div class="container-fluid">
       <span class="navbar-brand fs-6 fw-bold">後台管理系統</span>
       <button class="navbar-toggler border-0" type="button" @click="toggleNav">
-        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon" />
       </button>
 
       <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }">

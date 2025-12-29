@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import useStatusStore from './statusStore'
+import useStatusStore from '@/stores/statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 

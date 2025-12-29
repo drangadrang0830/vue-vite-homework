@@ -11,7 +11,7 @@ const userProductsStore = useUserProductsStore()
 const userCartStore = useUserCartStore()
 
 const productId = route.params.productId;
-const { product } = storeToRefs(userProductsStore);
+const { product } = storeToRefs(userProductsStore)
 
 onMounted(() => {
   userProductsStore.descriptionProduct(productId)
@@ -19,16 +19,28 @@ onMounted(() => {
 
 //圖片排版
 const getImageClass = (key) => {
-  if (!product.value.imagesUrl || product.value.imagesUrl.length === 1) {
+  const total = product.value.imagesUrl.length;
+
+  if (total === 1) {
     return 'col-12';
   }
-  if (key <= 1) {
-    return 'col-md-6';
+
+  if (total === 2) {
+    return 'col-6';
   }
-  const totalSubImages = product.value.imagesUrl.length - 2;
-  const cols = 12 / totalSubImages;
-  return `col-${cols}`;
-};
+
+  if (total === 3) {
+    return key === 0 ? 'col-12' : 'col-6';
+  }
+
+  if (total === 4) {
+    return 'col-6';
+  }
+
+  if (total === 5) {
+    return key < 2 ? 'col-6' : 'col-4';
+  }
+}
 
 const addCartToUser = async () => {
   await userCartStore.addCart(productId)
@@ -55,7 +67,7 @@ const addCartToUser = async () => {
     <div class="row my-3">
       <div class="col-lg-6">
         <div class="row g-3">
-          <img :class="getImageClass(key)" class="img-fluid rounded-3" :src="img" alt=""
+          <img :class="getImageClass(key)" class="img-fluid rounded-4" :src="img" alt=""
             v-for="(img, key) in product.imagesUrl" :key="img">
         </div>
 

@@ -1,71 +1,37 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import Modal from 'bootstrap/js/dist/modal';
+import { ref } from 'vue'
+import { useModal } from '../composables/useModal'
 
-// 宣告變數
-const modalRef = ref(null);
-const bsModalInstance = ref(null);
-
+const { modalElement, openModal } = useModal()
 
 const tempOrder = ref({
   user: {},
   products: {}
-});
+})
 
-const handleModalHide = () => {
-  if (document.activeElement) {
-    document.activeElement.blur();
-  }
-};
-
-// 定義開啟 Modal 的方法
-const openModal = (item) => {
-  // 使用深拷貝確保資料獨立
-  tempOrder.value = JSON.parse(JSON.stringify(item));
-  bsModalInstance.value.show();
-};
-
-const closeModal = () => {
-  bsModalInstance.value.hide();
-};
-
-onMounted(() => {
-  if (modalRef.value) {
-    bsModalInstance.value = new Modal(modalRef.value);
-    modalRef.value.addEventListener('hide.bs.modal', handleModalHide);
-  }
-});
-
-onUnmounted(() => {
-  if (modalRef.value && bsModalInstance.value) {
-    modalRef.value.removeEventListener('hide.bs.modal', handleModalHide);
-    bsModalInstance.value.dispose();
-  }
-});
+const show = (item) => {
+  tempOrder.value = JSON.parse(JSON.stringify(item))
+  openModal()
+}
 
 defineExpose({
-  openModal,
-  closeModal,
-});
+  openModal: show
+})
 </script>
 
 <template>
-  <div class="modal fade" tabindex="-1" ref="modalRef">
+  <div class="modal fade" tabindex="-1" ref="modalElement">
     <div class="modal-dialog modal-xl">
       <div class="modal-content border-0 shadow">
         <div class="modal-header bg-dark text-white">
-
-          <!-- 標題符合圖片上的「訂單細節」 -->
           <h5 class="modal-title">
             <i class="bi bi-file-earmark-text me-2"></i>訂單細節
           </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
 
-        <!-- 使用 v-if="tempOrder.id" 確保資料載入後才顯示內容 -->
         <div class="modal-body" v-if="tempOrder.id">
           <div class="row">
-            <!-- 左側：用戶資料 (佔 4 欄) -->
             <div class="col-md-4">
               <h6 class="fs-3 fw-bold pb-2">用戶資料</h6>
               <table class="table">
@@ -91,10 +57,8 @@ defineExpose({
                 </tbody>
               </table>
             </div>
-
             <div class="col-md-8">
               <h6 class="fs-3 fw-bold pb-2">訂單細節</h6>
-
               <table class="table">
                 <thead>
                   <tr class="fs-6 border-bottom">
@@ -155,7 +119,6 @@ defineExpose({
 </template>
 
 <style scoped>
-/* 稍微美化列表文字 */
 li {
   font-size: 0.9rem;
 }

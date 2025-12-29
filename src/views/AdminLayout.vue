@@ -1,7 +1,7 @@
 <script setup>
-import useStatusStore from '../stores/statusStore'
-import ToastMessages from '../components/ToastMessages.vue';
-import AdminSidebar from '../components/AdminSidebar.vue';
+import useStatusStore from '@/stores/statusStore'
+import ToastMessages from '@/components/ToastMessages.vue'
+import AdminSidebar from '@/components/AdminSidebar.vue'
 
 const statusStore = useStatusStore()
 
@@ -10,7 +10,7 @@ const statusStore = useStatusStore()
 <template>
   <div class="d-flex bg-body-secondary">
     <AdminSidebar />
-    <div class="main-content-wrapper flex-grow-1 d-flex flex-column min-vh-100">
+    <div class="main-content-wrapper flex-grow-1 d-flex flex-column min-vh-100 pt-5 pt-lg-0">
       <main class="flex-grow-1 p-3">
         <router-view />
       </main>

@@ -66,10 +66,10 @@ const getCouponInfo = (order) => {
 <template>
   <div>
 
-    <div class="container-fluid d-lg-none p-0 my-4">
+    <div class="container-fluid d-lg-none p-0">
       <div class="row g-3" v-if="adminOrderStore.orders.length > 0">
         <div class="col-12" v-for="order in adminOrderStore.orders" :key="order.id">
-          <div class="card h-100 shadow-sm border-0">
+          <div class="card h-100 shadow-sm border-0 mt-4">
             <div class="card-body p-3">
               <!-- 第一行：訂單時間與金額 -->
               <div class="d-flex justify-content-between align-items-start mb-2">

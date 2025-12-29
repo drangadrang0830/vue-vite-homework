@@ -1,20 +1,20 @@
 <script setup>
-import { ref, onMounted, onUnmounted, shallowRef } from 'vue'
-import Modal from 'bootstrap/js/dist/modal'
+import { ref } from 'vue'
+import { useModal } from '../composables/useModal'
 import useAdminArticleStore from '../stores/adminArticleStore'
 import useAdminProductsStore from '../stores/adminProductsStore'
 
-const adminArticleStore = useAdminArticleStore();
-const adminProductsStore = useAdminProductsStore();
+const adminArticleStore = useAdminArticleStore()
+const adminProductsStore = useAdminProductsStore()
 
+const { modalElement, openModal, closeModal } = useModal()
 
-//手動觸發 圖片input
 const fileInput = ref(null)
-//讀取狀態
 const isUploading = ref(false)
+const newTag = ref('')
 
-//MODAL資料
-const tempArticle = ref({
+//初始資料
+const initialArticle = {
   author: '',
   content: '',
   description: '',
@@ -24,115 +24,78 @@ const tempArticle = ref({
   title: '',
   create_at: 0,
   id: ''
-});
+}
 
-//modal控制
-const modal = ref(null)
-const bsModal = shallowRef(null)
+const tempArticle = ref({ ...initialArticle })
 
-onMounted(() => {
-  if (modal.value) {
-    bsModal.value = new Modal(modal.value);
-    modal.value.addEventListener('hide.bs.modal', handleModalHide);
-  }
-});
-
-onUnmounted(() => {
-  if (modal.value && bsModal.value) {
-    modal.value.removeEventListener('hide.bs.modal', handleModalHide);
-    bsModal.value.dispose();
-  }
-});
-
-//關閉前隱藏
-const handleModalHide = () => {
-  document.activeElement.blur();
-};
-
-// 開啟時接收資料
-const openModal = async (id) => {
+const show = async (id) => {
   if (id) {
     await adminArticleStore.getArticle(id)
-    // 使用深拷貝
     tempArticle.value = JSON.parse(JSON.stringify(adminArticleStore.article))
   } else {
-    // 若無 ID 則清空資料
-    tempArticle.value = {
-      author: '',
-      content: '',
-      description: '',
-      image: '',
-      isPublic: false,
-      tag: [],
-      title: '',
-      create_at: 0,
-      id: ''
-    }
+    tempArticle.value = JSON.parse(JSON.stringify(initialArticle))
   }
-  bsModal.value.show();
+  openModal()
 }
 
 // 標籤處理
-const newTag = ref('');
 const addTag = () => {
-  if (newTag.value.trim() && !tempArticle.value.tag.includes(newTag.value.trim())) {
-    tempArticle.value.tag.push(newTag.value.trim());
-    newTag.value = '';
-  }
-};
-const removeTag = (index) => {
-  tempArticle.value.tag.splice(index, 1);
-};
-
-//上傳圖片
-const handleFileChange = (e) => uploadImage(e.target.files);
-const handleDrop = (e) => uploadImage(e.dataTransfer.files);
-
-const uploadImage = async (files) => {
-  const file = files[0];
-  if (!file) return;
-
-  // 格式過濾
-  if (!['image/jpeg', 'image/png'].includes(file.type)) {
-    alert('僅支援 JPG 或 PNG 格式');
-    return;
-  }
-
-  isUploading.value = true;
-  const formData = new FormData();
-  formData.append('file-to-upload', file);
-
-  try {
-    const imageUrl = await adminProductsStore.uploadFile(formData);
-    if (imageUrl) {
-      tempArticle.value.image = imageUrl; // 上傳成功，自動填入網址
-    }
-  } catch (error) {
-    console.error("上傳失敗:", error);
-  } finally {
-    isUploading.value = false;
-    if (fileInput.value) fileInput.value.value = ''; // 清除 input 讓下次可選同張圖
-  }
-};
-
-const emit = defineEmits(['update-complete'])
-
-const submitArticle = async () => {
-  const success = await adminArticleStore.updateArticle(tempArticle.value);
-
-  if (success) {
-    emit('update-complete');
-    bsModal.value.hide();
+  const tag = newTag.value.trim()
+  if (tag && !tempArticle.value.tag.includes(tag)) {
+    tempArticle.value.tag.push(tag)
+    newTag.value = ''
   }
 }
+const removeTag = (index) => {
+  tempArticle.value.tag.splice(index, 1)
+}
 
+//上傳圖片
+const handleFileChange = (e) => uploadImage(e.target.files)
+const handleDrop = (e) => uploadImage(e.dataTransfer.files)
+
+const uploadImage = async (files) => {
+  const file = files[0]
+  if (!file) return
+
+  if (!['image/jpeg', 'image/png'].includes(file.type)) {
+    alert('僅支援 JPG 或 PNG 格式')
+    return
+  }
+
+  isUploading.value = true
+  const formData = new FormData()
+  formData.append('file-to-upload', file)
+
+  try {
+    const imageUrl = await adminProductsStore.uploadFile(formData)
+    if (imageUrl) {
+      tempArticle.value.image = imageUrl
+    }
+  } catch (error) {
+    console.error("上傳失敗:", error)
+  } finally {
+    isUploading.value = false
+    if (fileInput.value) fileInput.value.value = ''
+  }
+}
+//表單送出區-------
+const emit = defineEmits(['update-complete'])
+const submitArticle = async () => {
+  const success = await adminArticleStore.updateArticle(tempArticle.value)
+  if (success) {
+    emit('update-complete')
+    closeModal()
+  }
+}
+//----------------
 defineExpose({
-  openModal,
+  openModal: show,
 })
 </script>
 
 <template>
-  <div class="modal fade" id="articleModal" tabindex="-1" role="dialog" ref="modal">
+  <div class="modal fade" id="articleModal" tabindex="-1" role="dialog" ref="modalElement">
     <div class="modal-dialog modal-fullscreen-md-down modal-lg" role="document">
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">

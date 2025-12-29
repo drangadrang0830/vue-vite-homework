@@ -10,17 +10,17 @@ const adminCouponStore = useAdminCouponStore()
 const couponModal = ref(null);
 const deleteModal = ref(null);
 
-// 創建時讀取產品資訊
+// 創建行為
 onMounted(() => {
   adminCouponStore.getCoupon();
 })
 
-//新增按鈕
+//新增按鈕事件
 const openNewCouponModal = () => {
   couponModal.value.openModal(null, true);
 }
 
-//編輯按鈕
+//編輯按鈕事件
 const openEditCouponModal = (item) => {
   couponModal.value.openModal(item, false);
 }
@@ -59,20 +59,14 @@ const handlePageChange = (page) => {
                   </span>
                 </div>
               </div>
-
-              <!-- 折扣資訊 -->
               <div class="mb-2">
                 <div class="small text-muted">折扣強度</div>
                 <div class="h5 mb-0 fw-bold text-primary">{{ coupon.percent }}<span class="small">%</span></div>
               </div>
-
-              <!-- 到期日期 -->
               <div class="mb-3 mt-auto">
                 <div class="small text-muted">到期日</div>
                 <div class="small">{{ $filters.date(coupon.due_date) }}</div>
               </div>
-
-              <!-- 操作按鈕 -->
               <div class="d-grid gap-2">
                 <button class="btn btn-sm btn-outline-primary" @click="openEditCouponModal(coupon)">
                   <i class="bi bi-pencil"></i> 編輯
@@ -85,14 +79,11 @@ const handlePageChange = (page) => {
           </div>
         </div>
       </div>
-
-      <!-- 無資料顯示 -->
       <div v-else class="text-center py-5 text-muted bg-light rounded">
         目前尚無優惠券資料
       </div>
     </div>
 
-    <!-- 原本的 table 建議加上 d-none d-lg-table -->
     <table class="table mt-4 table-hover d-none d-lg-table">
       <thead>
         <tr class="text-center">

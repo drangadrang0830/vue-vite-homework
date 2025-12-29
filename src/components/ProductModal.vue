@@ -1,108 +1,82 @@
 <script setup>
-import { ref, onMounted, onUnmounted, shallowRef } from 'vue'
-import Modal from 'bootstrap/js/dist/modal'
-import useAdminProductsStore from '../stores/adminProductsStore'
+import { ref } from 'vue'
+import { useModal } from '@/composables/useModal'
+import useAdminProductsStore from '@/stores/adminProductsStore'
 
+const adminProductsStore = useAdminProductsStore()
+const { modalElement, openModal, closeModal } = useModal()
 
-const modal = ref(null)
-const bsModal = shallowRef(null)
-const filesInput = ref(null);
+const filesInput = ref(null)
+const isUpload = ref(false)
+const MAX_IMAGES = 5
 
-//modal控制
-onMounted(() => {
-  if (modal.value) {
-    bsModal.value = new Modal(modal.value);
-    modal.value.addEventListener('hide.bs.modal', handleModalHide);
-  }
-});
-
-onUnmounted(() => {
-  if (modal.value && bsModal.value) {
-    modal.value.removeEventListener('hide.bs.modal', handleModalHide);
-    bsModal.value.dispose();
-  }
-});
-
-//關閉前隱藏
-const handleModalHide = () => {
-  document.activeElement.blur();
-};
-
-//開啟時接收
-const openModal = (item = {}) => {
-  tempProduct.value = JSON.parse(JSON.stringify(item))
-
-  if (!tempProduct.value.imagesUrl) {
-    tempProduct.value.imagesUrl = [];
-  }
-  bsModal.value.show();
+// 初始資料
+const initialProduct = {
+  title: '',
+  category: '',
+  unit: '',
+  origin_price: 0,
+  price: 0,
+  description: '',
+  content: '',
+  is_enabled: 0,
+  imagesUrl: [],
 }
 
-// 變更資料
-const adminProductsStore = useAdminProductsStore();
+const tempProduct = ref({ ...initialProduct })
 
+const show = (item = {}) => {
+  tempProduct.value = JSON.parse(JSON.stringify({ ...initialProduct, ...item }))
+  if (!Array.isArray(tempProduct.value.imagesUrl)) {
+    tempProduct.value.imagesUrl = []
+  }
+  openModal()
+}
+
+//表單傳送區-------
 const emit = defineEmits(['update-complete'])
 
-const tempProduct = ref({
-  imagesUrl: [],
-});
-
 const submitProduct = async () => {
-  const success = await adminProductsStore.updateProduct(tempProduct.value);
+  const success = await adminProductsStore.updateProduct(tempProduct.value)
   if (success) {
-    emit('update-complete');
-    bsModal.value.hide();
+    emit('update-complete')
+    closeModal()
   }
-};
-
-// -----------------
-
-// 多張圖片上傳
-const MAX_IMAGES = 5;
-const isUpload = ref(false)
-
-
+}
+//---------------
+//多張上傳圖片
 const uploadFiles = async (event) => {
-  const uploadedFiles = event.target.files;
-  if (uploadedFiles.length === 0) return;
+  const uploadedFiles = event.target.files
+  if (!uploadedFiles.length) return
 
-  const currentTotal = tempProduct.value.imagesUrl.length;
-  const potentialTotal = currentTotal + uploadedFiles.length;
-
-  if (potentialTotal > MAX_IMAGES) {
-    alert(`圖片總數不能超過 ${MAX_IMAGES} 張。您已上傳 ${currentTotal} 張。`);
-    filesInput.value.value = '';
-    return;
+  const currentTotal = tempProduct.value.imagesUrl.length
+  if (currentTotal + uploadedFiles.length > MAX_IMAGES) {
+    alert(`圖片總數不能超過 ${MAX_IMAGES} 張。您已上傳 ${currentTotal} 張。`)
+    filesInput.value.value = ''
+    return
   }
 
   isUpload.value = true
-
   const uploadPromises = Array.from(uploadedFiles).map(file => {
-    const formData = new FormData();
-    formData.append('file-to-upload', file);
-    return adminProductsStore.uploadFile(formData);
-  });
+    const formData = new FormData()
+    formData.append('file-to-upload', file)
+    return adminProductsStore.uploadFile(formData)
+  })
 
   try {
-    const imageUrls = await Promise.all(uploadPromises);
+    const imageUrls = await Promise.all(uploadPromises)
     imageUrls.forEach(url => {
-      if (url) {
-        tempProduct.value.imagesUrl.push(url);
-      }
-    });
-    filesInput.value.value = '';
-  } catch (error) {
-    console.error("上傳失敗:", error);
-    filesInput.value.value = '';
+      if (url) tempProduct.value.imagesUrl.push(url)
+    })
   } finally {
     isUpload.value = false
+    if (filesInput.value) filesInput.value.value = ''
   }
-};
-
+}
 // -----------------
 
 defineExpose({
-  openModal,
+  openModal: show,
   submitProduct
 })
 </script>
@@ -110,20 +84,18 @@ defineExpose({
 <template>
   <div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-      ref="modal">
+      ref="modalElement">
       <div class="modal-dialog modal-fullscreen-md-down modal-xl" role="document">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
-
             <h5 class="modal-title" id="exampleModalLabel">
-              <span>{{ tempProduct.id ? '編輯產品' : '新增產品' }}</span>
+              <span>{{ tempProduct.id ? '編輯商品' : '新增商品' }}</span>
             </h5>
             <button type="button" class="btn-close" data-bs-theme="dark" data-bs-dismiss="modal"
               aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="row">
-
               <div class="col-sm-3 mb-4">
                 <div class="mb-3">
                   <label for="customFiles" class="btn btn-outline-secondary w-100 mb-0"
@@ -134,7 +106,6 @@ defineExpose({
                   <input type="file" id="customFiles" class="form-control d-none" multiple
                     accept="image/jpeg, image/png" @change="uploadFiles" ref="filesInput" :disabled="isUpload">
                 </div>
-
                 <div class="row">
                   <template v-for="(imgUrl, key) in tempProduct.imagesUrl" :key="key">
                     <div :class="{ 'col-12': key === 0, 'col-6': key > 0 }" class="mb-3">
@@ -151,8 +122,6 @@ defineExpose({
                       </div>
                     </div>
                   </template>
-
-                  <!-- 提示目前張數，並加上格式與大小限制 -->
                   <div class="col-12 mb-3">
                     <p class="text-muted text-center">
                       僅支援 JPG、PNG 格式 <br>
@@ -162,14 +131,11 @@ defineExpose({
                   </div>
                 </div>
               </div>
-
-              <!-- 右側欄位：產品資訊 (保留不變) -->
               <div class="col-sm-9">
                 <div class="mb-3">
                   <label for="title" class="form-label">標題<span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="title" placeholder="請輸入標題 " v-model="tempProduct.title">
                 </div>
-
                 <div class="row gx-2">
                   <div class="mb-3 col-6">
                     <label for="category" class="form-label">分類<span class="text-danger">*</span></label>
@@ -181,7 +147,6 @@ defineExpose({
                     <input type="text" class="form-control" id="unit" placeholder="請輸入單位" v-model="tempProduct.unit">
                   </div>
                 </div>
-
                 <div class="row gx-2">
                   <div class="mb-3 col-6">
                     <label for="origin_price" class="form-label">原價<span class="text-danger">*</span></label>
@@ -195,7 +160,6 @@ defineExpose({
                   </div>
                 </div>
                 <hr>
-
                 <div class="mb-3">
                   <label for="description" class="form-label">產品描述</label>
                   <textarea type="text" class="form-control" id="description" placeholder="請輸入產品描述" rows="2"
@@ -219,8 +183,7 @@ defineExpose({
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消
-            </button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
             <button type="button" class="btn btn-primary" @click="submitProduct">確認</button>
           </div>
         </div>

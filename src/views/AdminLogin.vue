@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useAdminApiStore from '@/stores/adminApiStore'
-import useStatusStore from '../stores/statusStore'
-import ToastMessages from '../components/ToastMessages.vue'
-import BiteBtn from '../components/BiteBtn.vue'
+import useStatusStore from '@/stores/statusStore'
+import ToastMessages from '@/components/ToastMessages.vue'
+import BiteBtn from '@/components/BiteBtn.vue'
 
 const adminApiStore = useAdminApiStore()
 const statusStore = useStatusStore()
@@ -44,7 +44,7 @@ const handleLogin = async () => {
             <v-field id="inputEmail" name="登入信箱" type="email" class="form-control"
               :class="{ 'is-invalid': errors['登入信箱'] }" placeholder="請輸入登入信箱" rules="email|required"
               v-model.trim="user.username" autofocus autocomplete="on" />
-            <error-message name="登入信箱" class="invalid-feedback"></error-message>
+            <error-message name="登入信箱" class="invalid-feedback" />
           </div>
           <div class="mb-3">
             <label for="inputPassword" class="form-label">登入密碼</label>
