@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import useStatusStore from './statusStore'
+import useStatusStore from '@/stores/statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
@@ -34,14 +34,8 @@ export default defineStore('adminArticleStore', () => {
       if (response.data.success) {
         article.value = response.data.article
       }
-      console.log(article.value)
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '文章MODAL讀取失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, '單一文章')
     } finally {
       statusStore.isLoading = false
     }
@@ -58,25 +52,15 @@ export default defineStore('adminArticleStore', () => {
       httpMethod = 'put'
       msg = '修改'
     }
+    const title = `文章${msg}`
     try {
       const response = await axios[httpMethod](url, { data: item })
-
-      if (response.data.success) {
-        statusStore.pushMessage({
-          title: `${item.title}${msg}成功`,
-          style: 'success'
-        })
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
         return true
       }
     } catch (error) {
-      const errorMsg = Array.isArray(error.response?.data?.message)
-        ? error.response.data.message.join('.')
-        : error.response?.data?.message || error.message || '未知錯誤'
-      statusStore.pushMessage({
-        title: `文章${msg}失敗`,
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, title)
       return false
     }
   }
@@ -86,30 +70,22 @@ export default defineStore('adminArticleStore', () => {
     const statusStore = useStatusStore()
     const url = `${APIurl}api/${PATHurl}/admin/article/${item.id}`
     statusStore.isLoading = true
-
+    const title = '刪除文章'
     try {
       const response = await axios.delete(url)
-      if (response.data.success) {
-        statusStore.pushMessage({
-          title: `成功刪除 ${item.title}`,
-          style: 'success'
-        })
-        // getArticles()
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
         return true
       }
     } catch (error) {
-      statusStore.pushMessage({
-        title: `刪除文章失敗`,
-        style: 'danger',
-        content: error.message
-      })
+      statusStore.handleMessage(error, title)
       return false
     } finally {
       statusStore.isLoading = false
     }
   }
 
-  //取得產品資訊
+  //取得文章資訊
   const getArticles = async (page = 1) => {
     const statusStore = useStatusStore()
     const url = `${APIurl}api/${PATHurl}/admin/articles?page=${page}`
@@ -121,14 +97,8 @@ export default defineStore('adminArticleStore', () => {
         articles.value = response.data.articles
         pagination.value = response.data.pagination
       }
-      // console.log(articles.value, pagination.value)
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '文章讀取失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, '文章資訊')
     } finally {
       statusStore.isLoading = false
     }

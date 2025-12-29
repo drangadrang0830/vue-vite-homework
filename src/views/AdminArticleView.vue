@@ -1,46 +1,47 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import useAdminArticleStore from '../stores/adminArticleStore'
-import ArticleModal from '../components/ArticleModal.vue'
-import SharedPagination from '../components/SharedPagination.vue'
-import AdminDeleteModal from '../components/AdminDeleteModal.vue'
-
+import useAdminArticleStore from '@/stores/adminArticleStore'
+import ArticleModal from '@/components/ArticleModal.vue'
+import SharedPagination from '@/components/SharedPagination.vue'
+import AdminDeleteModal from '@/components/AdminDeleteModal.vue'
 
 const adminArticleStore = useAdminArticleStore()
 
-const articleModal = ref(null);
-const deleteModal = ref(null);
+const articleModal = ref(null)
+const deleteModal = ref(null)
 
 onMounted(() => {
-  adminArticleStore.getArticles();
+  adminArticleStore.getArticles()
 })
 
 //Modal控制
 const openNewArticleModal = () => {
-  articleModal.value.openModal();
+  articleModal.value.openModal()
 }
 
 const openEditArticleModal = (id) => {
-  articleModal.value.openModal(id);
+  articleModal.value.openModal(id)
 }
 
-
+//文章MODAL回應
 const handleUpdateComplete = () => {
-  adminArticleStore.getArticles();
+  adminArticleStore.getArticles()
 }
 
-const handlePageChange = (page) => {
-  adminArticleStore.getArticles(page);
-};
-
+//刪除按鈕事件
 const openDeleteArticle = (article) => {
   deleteModal.value.openModal(article, async (target) => {
-    const success = await adminArticleStore.deleteArticle(target);
+    const success = await adminArticleStore.deleteArticle(target)
     if (success) {
-      adminArticleStore.getArticles();
+      adminArticleStore.getArticles()
     }
-  });
-};
+  })
+}
+
+//切換分頁
+const handlePageChange = (page) => {
+  adminArticleStore.getArticles(page)
+}
 </script>
 
 <style scoped>
@@ -58,27 +59,20 @@ const openDeleteArticle = (article) => {
     <div class="text-end m-3">
       <button class="btn btn-primary" type="button" @click="openNewArticleModal()">新增文章</button>
     </div>
-
     <div class="container-fluid d-lg-none p-0 my-4">
       <div class="row g-2" v-if="adminArticleStore.articles.length > 0">
         <div class="col-6" v-for="article in adminArticleStore.articles" :key="article.id">
           <div class="card h-100 shadow-sm border-0">
-
             <img :src="article.image" class="card-img-top object-fit-cover" height="150" alt="文章圖片">
-
             <div class="card-body p-2 d-flex flex-column">
-
               <h6 class="card-title text-truncate fw-bold mb-1" :title="article.title">{{ article.title }}</h6>
-
               <p class="small text-muted mb-1">
                 {{ article.author }} | <span :class="article.isPublic ? 'text-success' : 'text-muted'">{{
                   article.isPublic ? '已公開' : '未公開' }}</span>
               </p>
-
               <p class="card-text text-truncate-2 text-break mb-2">
                 {{ article.description }}
               </p>
-
               <div class="mt-auto d-grid gap-1">
                 <button class="btn btn-sm btn-outline-primary py-1"
                   @click="openEditArticleModal(article.id)">編輯</button>
@@ -89,7 +83,6 @@ const openDeleteArticle = (article) => {
         </div>
       </div>
     </div>
-
     <table class="table my-4 align-middle table-hover d-none d-lg-table">
       <thead>
         <tr class="text-center">
@@ -102,7 +95,6 @@ const openDeleteArticle = (article) => {
           <th>編輯</th>
         </tr>
       </thead>
-
       <tbody v-if="adminArticleStore.articles.length > 0">
         <tr v-for="article in adminArticleStore.articles" :key="article.id">
           <td class="text-center">{{ article.title }}</td>
@@ -121,7 +113,6 @@ const openDeleteArticle = (article) => {
           </td>
           <td class="text-center">
             <div class="vstack gap-2">
-              <!--  -->
               <button class="btn btn-outline-primary btn-sm" @click="openEditArticleModal(article.id)">編輯</button>
               <button type="button" class="btn btn-outline-danger btn-sm" @click="openDeleteArticle(article)">
                 刪除

@@ -1,4 +1,5 @@
 <script setup>
+//接收父層資訊
 defineProps({
   text: {
     type: String,
@@ -6,25 +7,15 @@ defineProps({
   },
   size: {
     type: String,
-    default: 'md' // md, lg
+    default: 'md'
   }
 });
 </script>
 
-<template>
-  <button :class="['btn-bite', `btn-${size}`, 'mt-3']">
-    <span v-for="n in 4" :key="'top-' + n" class="triangle top-row" :style="{ '--n': n }"></span>
-    <span v-for="n in 5" :key="'bot-' + n" class="triangle bot-row" :style="{ '--n': n }"></span>
-    <span class="btn-text">{{ text }}</span>
-  </button>
-</template>
-
 <style scoped>
-/* 核心樣式仍需保留在 scoped style 內 */
 .btn-bite {
   --color-dark: #000000;
   --color-accent: #dc3545;
-  /* BS color 'danger' */
 
   position: relative;
   z-index: 1;
@@ -37,16 +28,13 @@ defineProps({
   transition: color 0.4s ease, border-color 0.4s ease;
   letter-spacing: 2px;
   outline: none;
-  /* 移除點擊藍色外框 */
 }
 
-/* 大小變化：中等 (md) */
 .btn-md {
   padding: 10px 30px;
   font-size: 1rem;
 }
 
-/* 大小變化：大型 (lg) */
 .btn-lg {
   padding: 15px 40px;
   font-size: 1.2rem;
@@ -83,7 +71,6 @@ defineProps({
   opacity: 0.9;
 }
 
-/* --- Hover 觸發狀態 --- */
 .btn-bite:hover {
   color: #ffffff;
   border-color: var(--color-accent);
@@ -98,32 +85,10 @@ defineProps({
 }
 </style>
 
-<!-- 父層
-<script setup>
-import InterlockButton from './components/InterlockButton.vue'; // 引入組件
-</script>
-
 <template>
-  <div class="app-container">
-    <h1>使用組件化按鈕</h1>
-
-    <InterlockButton text="標準按鈕" size="md" />
-
-    <InterlockButton text="INTERLOCK 2" size="lg" />
-
-    <InterlockButton text="提交表單" size="md" />
-  </div>
+  <button :class="['btn-bite', `btn-${size}`, 'mt-3']">
+    <span v-for="n in 4" :key="'top-' + n" class="triangle top-row" :style="{ '--n': n }"></span>
+    <span v-for="n in 5" :key="'bot-' + n" class="triangle bot-row" :style="{ '--n': n }"></span>
+    <span class="btn-text">{{ text }}</span>
+  </button>
 </template>
-
-<style>
-.app-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  gap: 30px;
-  background-color: #f8f9fa;
-  font-family: sans-serif;
-}
-</style> -->

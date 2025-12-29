@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import { useModal } from '../composables/useModal'
-import useAdminCouponStore from '../stores/adminCouponStore'
+import { useModal } from '@/composables/useModal'
+import useAdminCouponStore from '@/stores/adminCouponStore'
 
 const adminCouponStore = useAdminCouponStore()
 
@@ -10,6 +10,7 @@ const isNew = ref(false)
 
 const { modalElement, openModal, closeModal } = useModal()
 
+//開啟時資料預處理
 const show = (item, isNewMode) => {
   isNew.value = isNewMode
   if (isNewMode) {
@@ -26,7 +27,6 @@ const submitCoupon = async () => {
   const apiData = { ...tempCoupon.value }
   const date = new Date(apiData.due_date)
   apiData.due_date = Math.floor(date.getTime() / 1000)
-
   let success = false
   if (isNew.value) {
     success = await adminCouponStore.addCoupon(apiData)
@@ -58,7 +58,6 @@ defineExpose({
                 <label for="title" class="form-label">標題<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="title" v-model.trim="tempCoupon.title" placeholder="請輸入標題">
               </div>
-
               <div class="row gx-2">
                 <div class="mb-3 col-md-6">
                   <label for="percent" class="form-label">折扣百分比<span class="text-danger">*</span></label>
@@ -70,12 +69,10 @@ defineExpose({
                   <input type="date" class="form-control" id="due_date" v-model="tempCoupon.due_date">
                 </div>
               </div>
-
               <div class="mb-3">
                 <label for="code" class="form-label">優惠碼<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="code" v-model.trim="tempCoupon.code" placeholder="請輸入優惠碼">
               </div>
-
               <div class="mb-3">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" :true-value="1" :false-value="0" id="is_enabled"

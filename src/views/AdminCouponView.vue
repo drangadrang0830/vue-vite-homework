@@ -1,40 +1,42 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import useAdminCouponStore from '../stores/adminCouponStore';
-import CouponModal from '../components/CouponModal.vue'
-import SharedPagination from '../components/SharedPagination.vue'
-import AdminDeleteModal from '../components/AdminDeleteModal.vue'
+import useAdminCouponStore from '@/stores/adminCouponStore'
+import CouponModal from '@/components/CouponModal.vue'
+import SharedPagination from '@/components/SharedPagination.vue'
+import AdminDeleteModal from '@/components/AdminDeleteModal.vue'
 
 const adminCouponStore = useAdminCouponStore()
 
-const couponModal = ref(null);
-const deleteModal = ref(null);
+const couponModal = ref(null)
+const deleteModal = ref(null)
 
-// 創建行為
+// 創建讀取
 onMounted(() => {
   adminCouponStore.getCoupon();
 })
 
 //新增按鈕事件
 const openNewCouponModal = () => {
-  couponModal.value.openModal(null, true);
+  couponModal.value.openModal(null, true)
 }
 
 //編輯按鈕事件
 const openEditCouponModal = (item) => {
-  couponModal.value.openModal(item, false);
+  couponModal.value.openModal(item, false)
 }
 
+//刪除按鍵事件
 const openDeleteCoupon = (coupon) => {
   deleteModal.value.openModal(coupon, async (target) => {
-    const success = await adminCouponStore.removeCoupon(target);
-    if (success) adminCouponStore.getCoupon();
-  });
-};
+    const success = await adminCouponStore.removeCoupon(target)
+    if (success) adminCouponStore.getCoupon()
+  })
+}
 
+//切換分頁
 const handlePageChange = (page) => {
-  adminCouponStore.getCoupon(page);
-};
+  adminCouponStore.getCoupon(page)
+}
 
 </script>
 
@@ -83,7 +85,6 @@ const handlePageChange = (page) => {
         目前尚無優惠券資料
       </div>
     </div>
-
     <table class="table mt-4 table-hover d-none d-lg-table">
       <thead>
         <tr class="text-center">
@@ -113,8 +114,8 @@ const handlePageChange = (page) => {
       </tbody>
     </table>
     <SharedPagination v-if="adminCouponStore.couponData.pagination > 1" :pages="adminCouponStore.couponData.pagination"
-      @emit-pages="handlePageChange"></SharedPagination>
+      @emit-pages="handlePageChange" />
     <AdminDeleteModal ref="deleteModal" />
-    <CouponModal ref="couponModal"></CouponModal>
+    <CouponModal ref="couponModal" />
   </div>
 </template>

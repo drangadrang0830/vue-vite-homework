@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { useModal } from '../composables/useModal'
+import { useModal } from '@/composables/useModal'
 
 const { modalElement, openModal } = useModal()
 
+//初始資料
 const tempOrder = ref({
   user: {},
   products: {}
@@ -21,7 +22,7 @@ defineExpose({
 
 <template>
   <div class="modal fade" tabindex="-1" ref="modalElement">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-fullscreen-md-down">
       <div class="modal-content border-0 shadow">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title">
@@ -29,7 +30,6 @@ defineExpose({
           </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
-
         <div class="modal-body" v-if="tempOrder.id">
           <div class="row">
             <div class="col-md-4">
@@ -88,7 +88,6 @@ defineExpose({
                   </tr>
                 </tbody>
               </table>
-
               <h6 class="fs-3 fw-bold pb-2">選購商品</h6>
               <table class="table">
                 <thead>
@@ -106,7 +105,6 @@ defineExpose({
                   </tr>
                 </tbody>
               </table>
-
             </div>
           </div>
         </div>
@@ -117,9 +115,3 @@ defineExpose({
     </div>
   </div>
 </template>
-
-<style scoped>
-li {
-  font-size: 0.9rem;
-}
-</style>

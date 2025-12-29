@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import { useModal } from '../composables/useModal'
-import useAdminArticleStore from '../stores/adminArticleStore'
-import useAdminProductsStore from '../stores/adminProductsStore'
+import { useModal } from '@/composables/useModal'
+import useAdminArticleStore from '@/stores/adminArticleStore'
+import useAdminProductsStore from '@/stores/adminProductsStore'
 
 const adminArticleStore = useAdminArticleStore()
 const adminProductsStore = useAdminProductsStore()
@@ -72,13 +72,12 @@ const uploadImage = async (files) => {
     if (imageUrl) {
       tempArticle.value.image = imageUrl
     }
-  } catch (error) {
-    console.error("上傳失敗:", error)
   } finally {
     isUploading.value = false
     if (fileInput.value) fileInput.value.value = ''
   }
 }
+
 //表單送出區-------
 const emit = defineEmits(['update-complete'])
 const submitArticle = async () => {
@@ -89,6 +88,7 @@ const submitArticle = async () => {
   }
 }
 //----------------
+
 defineExpose({
   openModal: show,
 })
@@ -100,40 +100,27 @@ defineExpose({
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title">
-
-            <!-- 標題 -->
             <span>{{ tempArticle.id ? '編輯文章' : '新增文章' }}</span>
           </h5>
           <button type="button" class="btn-close" data-bs-theme="dark" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="row">
-            <!-- 左側：圖片與標籤 -->
             <div class="col-sm-4">
               <label for="imageUrl" class="form-label">圖片網址</label>
-
-              <!-- 拖曳區 -->
               <div class="upload-area border border-2 border-dashed rounded p-4 text-center mb-2" @dragover.prevent
                 @drop.prevent="handleDrop" @click="fileInput.click()"
                 style="cursor: pointer; background-color: #f8f9fa; border-style: dashed !important;">
-                <!-- 狀態一：預設/等待上傳 -->
                 <div v-if="!isUploading">
                   <i class="bi bi-image fs-2 text-secondary"></i>
                   <p class="small mb-0 text-muted">點擊或拖曳圖片上傳</p>
                 </div>
-
-                <!-- 狀態二：上傳中 -->
                 <div v-else class="spinner-border spinner-border-sm text-primary" role="status"></div>
-
-                <!-- 隱藏的 Input -->
                 <input type="file" class="d-none" ref="fileInput" @change="handleFileChange" accept="image/*">
               </div>
-
-              <!-- 圖片網址顯示與預覽 -->
               <div class="mb-3">
                 <input type="text" class="form-control form-control-sm mb-2" id="imageUrl" v-model="tempArticle.image"
                   placeholder="圖片網址">
-
                 <div v-if="tempArticle.image" class="position-relative border rounded overflow-hidden">
                   <img :src="tempArticle.image" class="img-fluid" alt="預覽">
                   <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
@@ -142,7 +129,6 @@ defineExpose({
                   </button>
                 </div>
               </div>
-
               <div class="mb-3">
                 <label for="tagInput" class="form-label">標籤 (Tags)</label>
                 <div class="input-group mb-2">
@@ -160,33 +146,26 @@ defineExpose({
                 </div>
               </div>
             </div>
-
-            <!-- 右側：文章內容 -->
             <div class="col-sm-8">
               <div class="mb-3">
                 <label for="title" class="form-label">標題<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="title" v-model="tempArticle.title" placeholder="請輸入標題">
               </div>
-
               <div class="mb-3">
                 <label for="author" class="form-label">作者<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="author" v-model="tempArticle.author" placeholder="請輸入作者">
               </div>
-
               <hr>
-
               <div class="mb-3">
                 <label for="description" class="form-label">文章摘要</label>
                 <textarea class="form-control" id="description" v-model="tempArticle.description" rows="3"
                   placeholder="請輸入文章摘要"></textarea>
               </div>
-
               <div class="mb-3">
                 <label for="content" class="form-label">文章內容<span class="text-danger">*</span></label>
                 <textarea class="form-control" id="content" v-model="tempArticle.content" rows="5"
                   placeholder="請輸入文章詳細內容"></textarea>
               </div>
-
               <div class="mb-3">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" v-model="tempArticle.isPublic" id="isPublic">

@@ -1,14 +1,14 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import useStatusStore from './statusStore'
+import useStatusStore from '@/stores/statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
 const couponData = ref({})
 
-export default defineStore('couponStore', () => {
+export default defineStore('adminCouponStore', () => {
   //讀取優惠劵
   const getCoupon = async (page = 1) => {
     const statusStore = useStatusStore()
@@ -20,12 +20,7 @@ export default defineStore('couponStore', () => {
         couponData.value = response.data
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '優惠劵讀取失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, '取得優惠劵')
     } finally {
       statusStore.isLoading = false
     }
@@ -36,23 +31,16 @@ export default defineStore('couponStore', () => {
     const statusStore = useStatusStore()
     const url = `${APIurl}api/${PATHurl}/admin/coupon/${item.id}`
     statusStore.isLoading = true
+    const title = '刪除優惠劵'
     try {
       const response = await axios.delete(url)
-      if (response.data.success) {
-        statusStore.pushMessage({
-          title: `優惠劵刪除成功`,
-          style: 'success'
-        })
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
         getCoupon()
         return true
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '優惠劵刪除失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, title)
       return false
     } finally {
       statusStore.isLoading = false
@@ -64,52 +52,37 @@ export default defineStore('couponStore', () => {
     const statusStore = useStatusStore()
     const url = `${APIurl}api/${PATHurl}/admin/coupon`
     statusStore.isLoading = true
+    const title = '新增優惠劵'
     try {
-      // API 要求的格式需要包裝在 data 屬性內
       const response = await axios.post(url, { data })
-      if (response.data.success) {
-        statusStore.pushMessage({
-          title: `優惠劵新增成功`,
-          style: 'success'
-        })
-        getCoupon() // 重新整理列表
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
+        getCoupon()
         return true
       }
     } catch (error) {
-      statusStore.pushMessage({
-        title: `優惠劵新增失敗`,
-        style: 'danger',
-        content: error.response?.data?.message || error.message
-      })
+      statusStore.handleMessage(error, title)
       return false
     } finally {
       statusStore.isLoading = false
     }
   }
 
-  // 更新優惠劵 (編輯)
+  // 編輯優惠劵
   const updateCoupon = async (item) => {
     const statusStore = useStatusStore()
-    // 更新 API endpoint 需要帶上 ID
     const url = `${APIurl}api/${PATHurl}/admin/coupon/${item.id}`
     statusStore.isLoading = true
+    const title = '編輯優惠劵'
     try {
-      // API 要求的格式需要包裝在 data 屬性內
       const response = await axios.put(url, { data: item })
-      if (response.data.success) {
-        statusStore.pushMessage({
-          title: `優惠劵更新成功`,
-          style: 'success'
-        })
-        getCoupon() // 重新整理列表
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
+        getCoupon()
         return true
       }
     } catch (error) {
-      statusStore.pushMessage({
-        title: `優惠劵更新失敗`,
-        style: 'danger',
-        content: error.response?.data?.message || error.message
-      })
+      statusStore.handleMessage(error, title)
       return false
     } finally {
       statusStore.isLoading = false
