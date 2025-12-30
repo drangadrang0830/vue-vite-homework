@@ -1,7 +1,7 @@
 @import 'bootstrap/scss/functions';
 
-@import '@/assets/helpers/variables';
+@import './helpers/variables';
+
+@import './helpers/variables-dark';
 
 @import 'bootstrap/scss/bootstrap';
-
-@import '@/assets/helpers/variables-dark';
