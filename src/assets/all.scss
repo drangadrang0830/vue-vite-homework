@@ -1,8 +1,7 @@
 @import 'bootstrap/scss/functions';
 
-// 自定義
-@import './helpers/variables';
-// 自定義
-@import './helpers/variables-dark';
+@import '@/assets/helpers/variables';
 
 @import 'bootstrap/scss/bootstrap';
+
+@import '@/assets/helpers/variables-dark';

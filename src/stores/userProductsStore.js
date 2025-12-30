@@ -1,25 +1,23 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import useStatusStore from './statusStore'
+import useStatusStore from '@/stores/statusStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
 
-export default defineStore('userProducts', () => {
-  const allProducts = ref([]) // 原始總資料
-  const homeData = ref([]) // 給首頁用
-  const attractionData = ref([]) // 給景點用
-  const farmProducts = ref([]) // 給農特產品用
-  const categories = ref([]) // 農特產品分類選單
+export default defineStore('userProductsStore', () => {
+  const allProducts = ref([])
+  const homeData = ref([])
+  const attractionData = ref([])
+  const farmProducts = ref([])
+  const categories = ref([])
   const product = ref({})
-
   let isFetching = false
 
-  //取得所有產品資訊
+  //取得所有商品資訊
   const getAllProducts = async () => {
     if (allProducts.value.length > 0 || isFetching) return
-
     isFetching = true
     const url = `${APIurl}api/${PATHurl}/products/all`
     const statusStore = useStatusStore()
@@ -37,8 +35,7 @@ export default defineStore('userProducts', () => {
       farmProducts.value = data.filter((item) => item.category?.includes('農特產品'))
       updateFarmCategories()
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({ title: '所有產品資訊讀取失敗', style: 'danger', content: errorMsg })
+      statusStore.handleMessage(error, '讀取商品')
     } finally {
       statusStore.isLoading = false
       isFetching = false
@@ -78,18 +75,11 @@ export default defineStore('userProducts', () => {
         product.value = response.data.product
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '產品說明讀取失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, '讀取商品')
     } finally {
       statusStore.isLoading = false
     }
   }
-
-  // -----------------
 
   return {
     getAllProducts,

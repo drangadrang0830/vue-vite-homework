@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import useStatusStore from './statusStore'
-import useUserCartStore from './userCartStore'
+import useStatusStore from '@/stores/statusStore'
+import useUserCartStore from '@/stores/userCartStore'
 
 const APIurl = import.meta.env.VITE_APP_API
 const PATHurl = import.meta.env.VITE_APP_PATH
@@ -13,23 +13,16 @@ export default defineStore('userOrderStore', () => {
     const userCartStore = useUserCartStore()
     statusStore.isLoading = true
     const url = `${APIurl}api/${PATHurl}/order`
+    const title = '建立訂單'
     try {
       const response = await axios.post(url, { data })
-      if (response.data.success) {
-        statusStore.pushMessage({
-          title: `已建立訂單`,
-          style: 'success'
-        })
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
         userCartStore.getCart()
         return response.data.orderId
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '建立訂單失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, title)
       return null
     } finally {
       statusStore.isLoading = false
@@ -47,12 +40,7 @@ export default defineStore('userOrderStore', () => {
         return response.data
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '取得訂單資料失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, '接收訂單')
       return null
     } finally {
       statusStore.isLoading = false
@@ -64,22 +52,15 @@ export default defineStore('userOrderStore', () => {
     const statusStore = useStatusStore()
     statusStore.isLoading = true
     const url = `${APIurl}api/${PATHurl}/pay/${orderId}`
+    const title = '付款'
     try {
       const response = await axios.post(url)
-      if (response.data.success) {
-        statusStore.pushMessage({
-          title: `付款完成`,
-          style: 'success'
-        })
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
         return true
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message
-      statusStore.pushMessage({
-        title: '結帳失敗',
-        style: 'danger',
-        content: errorMsg
-      })
+      statusStore.handleMessage(error, title)
       return false
     } finally {
       statusStore.isLoading = false

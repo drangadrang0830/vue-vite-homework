@@ -1,8 +1,19 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import useUserCartStore from '../stores/userCartStore'
+import useUserCartStore from '@/stores/userCartStore'
 
 const userCartStore = useUserCartStore()
+
+onMounted(() => {
+  updateNavbarHeight()
+  window.addEventListener('resize', updateNavbarHeight)
+  document.documentElement.setAttribute('data-bs-theme', theme.value)
+  userCartStore.getCart()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateNavbarHeight)
+})
 
 // NAVBAR控制區-----------
 const isNavOpen = ref(false)
@@ -20,15 +31,6 @@ const updateNavbarHeight = () => {
   }
 }
 
-onMounted(() => {
-  updateNavbarHeight()
-  window.addEventListener('resize', updateNavbarHeight)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updateNavbarHeight)
-})
-
 watch(isNavOpen, async () => {
   await nextTick()
   updateNavbarHeight()
@@ -43,14 +45,6 @@ const toggleTheme = () => {
   localStorage.setItem('selected-theme', theme.value)
 }
 
-onMounted(() => {
-  document.documentElement.setAttribute('data-bs-theme', theme.value)
-})
-// --------------------------------
-//互動資料
-onMounted(() => {
-  userCartStore.getCart()
-})
 </script>
 
 <style scoped>
@@ -96,6 +90,7 @@ onMounted(() => {
   100% {
     box-shadow: 0 0 0 0 rgba(54, 12, 12, 0);
   }
+
 }
 </style>
 
@@ -104,13 +99,20 @@ onMounted(() => {
     <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top border-bottom border-2 border-success-subtle"
       ref="navbarRef">
       <div class="container-fluid">
-        <router-link class="navbar-brand link-body-emphasis" to="/">
+
+        <button class="navbar-toggler" type="button" @click="toggleNav" :aria-expanded="isNavOpen ? 'true' : 'false'"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <router-link class="navbar-brand link-body-emphasis d-lg-none d-block ms-2" to="/">
           <img src="/favicon.png" alt="Logo" width="25" height="24" class="d-inline-block align-text-top">
           獅子鄉<span class="d-none d-md-inline">聯合</span>行銷網
         </router-link>
+
         <div class="d-flex ms-auto me-2 order-lg-last">
-          <a class="btn btn-danger rounded-5 btn-animate-pulse3" href="tel:+886987654321"><i
-              class="bi bi-telephone-fill"></i>部落協助</a>
+          <a class="btn btn-danger btn-sm rounded-5 btn-animate-pulse3 me-2" href="tel:+886987654321"><i
+              class="bi bi-telephone-fill"></i><span class="d-none d-lg-inline">部落協助</span></a>
 
           <button class="btn btn-sm btn-outline-secondary border-0" @click="toggleTheme" title="切換深淺色">
             <span v-if="theme === 'dark'">🌞</span>
@@ -118,14 +120,8 @@ onMounted(() => {
           </button>
         </div>
 
-        <!-- 漢堡按鈕 -->
-        <button class="navbar-toggler" type="button" @click="toggleNav" :aria-expanded="isNavOpen ? 'true' : 'false'"
-          aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
         <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }" id="navbarNavDropdown">
-          <ul class="navbar-nav text-center">
+          <ul class="navbar-nav text-center  w-100 justify-content-lg-center align-items-center">
             <li class="nav-item">
               <router-link class="nav-link link-body-emphasis mx-3" to="/attractions"
                 @click="isNavOpen = false">景點介紹</router-link>
@@ -134,6 +130,10 @@ onMounted(() => {
               <router-link class="nav-link link-body-emphasis mx-3" to="/products"
                 @click="isNavOpen = false">農業特產</router-link>
             </li>
+            <router-link class="navbar-brand link-body-emphasis d-lg-block d-none" to="/">
+              <img src="/favicon.png" alt="Logo" width="25" height="24" class="d-inline-block align-text-top">
+              獅子鄉<span class="d-none d-md-inline">聯合</span>行銷網
+            </router-link>
             <li class="nav-item">
               <router-link class="nav-link link-body-emphasis mx-3" to="/products/favorite" @click="isNavOpen = false">
                 我的最愛
@@ -146,11 +146,6 @@ onMounted(() => {
                     v-if="userCartStore.cartTotalQuantity > 0">{{ userCartStore.cartTotalQuantity }}</span>
                 </span>
               </router-link>
-            </li>
-            <!-- 作業版才有 正式應移除 -->
-            <li class="nav-item ">
-              <router-link class="nav-link link-body-emphasis mx-3" to="/login"
-                @click="isNavOpen = false">後台登入</router-link>
             </li>
           </ul>
         </div>

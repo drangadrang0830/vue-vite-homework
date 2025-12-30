@@ -1,28 +1,23 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import HomeCarousel from '../components/HomeCarousel.vue'
-import useUserProductsStore from '../stores/userProductsStore'
-import BiteBtn from '../components/BiteBtn.vue'
+import { onMounted } from 'vue'
 import Swal from 'sweetalert2'
+import useUserProductsStore from '@/stores/userProductsStore'
+import useUserArticleStore from '@/stores/userArticleStore'
+import HomeCarousel from '@/components/HomeCarousel.vue'
+import BiteBtn from '@/components/BiteBtn.vue'
 
 const userProductsStore = useUserProductsStore()
-
-const scrollY = ref(0)
-const handleScroll = () => {
-  scrollY.value = window.scrollY
-}
-
-onMounted(() => window.addEventListener('scroll', handleScroll))
-onUnmounted(() => window.removeEventListener('scroll', handleScroll))
+const userArticleStore = useUserArticleStore()
 
 onMounted(async () => {
-  await userProductsStore.getAllProducts();
+  await userProductsStore.getAllProducts()
+  await userArticleStore.getArticles()
 })
 
 //路徑轉換
 const getImgUrl = (path) => {
-  return new URL(path, import.meta.url).href;
-};
+  return new URL(path, import.meta.url).href
+}
 
 // 表單送出後的動作
 const onSubmit = (values, { resetForm }) => {
@@ -31,11 +26,10 @@ const onSubmit = (values, { resetForm }) => {
     text: '感謝您訂閱獅子電子報，優惠劵代碼為「Shizi」。',
     icon: 'success',
     confirmButtonText: '確定',
-    confirmButtonColor: '#198754' // Bootstrap success 顏色
-  });
-
-  resetForm();
-};
+    confirmButtonColor: '#198754'
+  })
+  resetForm()
+}
 </script>
 
 <style scoped>
@@ -55,10 +49,6 @@ const onSubmit = (values, { resetForm }) => {
   filter: invert(100%);
 }
 
-[data-bs-theme="dark"] .png-outline {
-  filter: drop-shadow(0 0 10px white);
-}
-
 .text-aligned {
   text-align: justify;
   text-justify: inter-character;
@@ -67,6 +57,19 @@ const onSubmit = (values, { resetForm }) => {
 .home-wood {
   background-image: url('../assets/home-wood.jpg');
   background-size: cover;
+}
+
+.img-hover {
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.img-hover:hover {
+  transform: scale(1.1) rotate(10deg);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1);
+  border-color: #ffc107;
 }
 </style>
 
@@ -92,23 +95,22 @@ const onSubmit = (values, { resetForm }) => {
           <img src="../assets/home-youCan.png" class="w-50" alt="">
         </div>
       </div>
-
       <div class="row justify-content-md-center align-items-center mb-4 my-lg-5"
         :class="{ 'flex-md-row-reverse': index % 2 !== 0 }" v-for="(item, index) in userProductsStore.homeData"
         :key="item.title">
         <div class="col-md-5 position-relative">
           <img :src="getImgUrl(item.imagesUrl[0])" :alt="item.title" class="img-fluid img-thumbnail mb-2">
-          <img src="../assets/home-border.png"
+          <img src="@/assets/home-border.png"
             class="img-fluid position-absolute top-0 translate-middle w-25 z-1 d-none d-lg-block invert bg-opacity-75"
             alt="" :class="index % 2 === 0 ? 'start-0' : 'start-100'">
           <div class="position-absolute top-0 translate-middle w-25 z-3 text-center d-none d-lg-block invert"
             :class="index % 2 === 0 ? 'start-0' : 'start-100'">
             <router-link class="w-75" to="/attractions">
-              <img :src="getImgUrl(item.imagesUrl[1])" class="w-75 bg-info rounded-circle" :alt="item.description">
+              <img :src="getImgUrl(item.imagesUrl[1])" class="w-75 bg-info rounded-circle img-hover"
+                :alt="item.description">
             </router-link>
           </div>
         </div>
-
         <div class="col-md-6 text-center text-md-start">
           <h3 class="d-inline-block border-bottom border-primary border-3">{{ item.title }}</h3>
           <br class="d-none d-lg-block">
@@ -117,16 +119,14 @@ const onSubmit = (values, { resetForm }) => {
           </p>
         </div>
       </div>
-
     </div>
     <div class="home-wood py-4">
       <div class="container">
         <div class="row justify-content-center my-5">
           <div class="col-lg-11">
             <h2 class="text-center mb-4 text-white fw-bold"><i class="bi bi-images"></i>活動剪影</h2>
-            <HomeCarousel />
+            <HomeCarousel v-if="userArticleStore.articles.length > 5" />
           </div>
-
           <div class="col-lg-7 bg-body rounded-4 border border-3 border-primary p-4 bg-opacity-75">
             <h2 class="text-center">訂閱獅子電子報</h2>
             <p class="text-muted mb-4 text-center">獲取最新鄉內消息、優惠活動與專屬好康</p>
@@ -139,7 +139,6 @@ const onSubmit = (values, { resetForm }) => {
                 <BiteBtn text="立即訂閱" size="lg" type="submit" id="button-addon2" />
               </div>
             </v-form>
-
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import useUserOrderStore from '../stores/userOrderStore'
-import useUserCartStore from '../stores/userCartStore'
-import useStatusStore from '../stores/statusStore'
+import { useRouter } from 'vue-router'
+import useUserOrderStore from '@/stores/userOrderStore'
+import useUserCartStore from '@/stores/userCartStore'
+import useStatusStore from '@/stores/statusStore'
 
 const router = useRouter()
 const userOrderStore = useUserOrderStore()
@@ -20,6 +20,7 @@ const form = ref({
   message: ''
 })
 
+//資料送出
 const onSubmit = async () => {
   const orderId = await userOrderStore.submitOrder(form.value)
   if (orderId) {
@@ -28,7 +29,8 @@ const onSubmit = async () => {
   }
 }
 
-const isPhone = (value) => { //電話驗證函式
+//電話驗證
+const isPhone = (value) => {
   const phoneNumber = /^(09)[0-9]{8}$/
   return phoneNumber.test(value) ? true : '需要正確的電話號碼'
 }
@@ -89,11 +91,11 @@ const isPhone = (value) => { //電話驗證函式
       <div class="col-md-5 my-2">
         <h4 class="text-center"><i class="bi bi-box-seam-fill"></i> 獅子鄉農特產品宅配須知</h4>
         <table class="table bg-transparent" style="--bs-table-bg: transparent;">
+          <!-- 預設定義表格寬度 -->
           <colgroup>
             <col style="width: 25%;">
             <col style="width: 75%;">
           </colgroup>
-
           <thead>
             <tr>
               <th colspan="2">訂購方式：</th>
@@ -130,7 +132,6 @@ const isPhone = (value) => { //電話驗證函式
               <td>北農也提供「預約交易」模式，主要對象為大宗訂購者（如學校、團膳、公司行號），採預約、分級包裝、直送到點的服務。</td>
             </tr>
           </tbody>
-
         </table>
       </div>
     </div>

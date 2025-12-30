@@ -1,19 +1,21 @@
 <script setup>
 import { onMounted } from 'vue'
-import UserAttractionsLightBox from '../components/UserAttractionsLightBox.vue'
-import useUserProductsStore from '../stores/userProductsStore'
+import UserAttractionsLightBox from '@/components/UserAttractionsLightBox.vue'
+import useUserProductsStore from '@/stores/userProductsStore'
 
 const userProductsStore = useUserProductsStore()
+
 onMounted(async () => {
-  await userProductsStore.getAllProducts();
+  await userProductsStore.getAllProducts()
 })
 
+//邊框顏色
 const borderColor = (num) => {
   switch (num) {
-    case '夜宿地點': return 'primary';
-    case '熱門景點': return 'success';
-    case '歲時祭儀': return 'danger';
-    default: return 'warning';
+    case '夜宿地點': return 'primary'
+    case '熱門景點': return 'success'
+    case '歲時祭儀': return 'danger'
+    default: return 'warning'
   }
 }
 </script>
@@ -112,11 +114,9 @@ const borderColor = (num) => {
   font-weight: bold;
 }
 
-
 .fixed-box:hover .triangle {
   border-color: #f7f6c8 transparent transparent transparent;
 }
-
 
 .fixed-box:hover .triangleBorder {
   border-color: rgb(85, 14, 201) transparent transparent transparent;
@@ -144,7 +144,6 @@ const borderColor = (num) => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
     <div class="fixed-box text-center">
@@ -158,6 +157,5 @@ const borderColor = (num) => {
         <div class="fixed-img" />
       </router-link>
     </div>
-
   </div>
 </template>

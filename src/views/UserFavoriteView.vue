@@ -1,14 +1,15 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import useStatusStore from '../stores/statusStore'
-import useUserFavoriteStore from '../stores/userFavoriteStore'
-import useUserCartStore from '../stores/userCartStore'
+import useStatusStore from '@/stores/statusStore'
+import useUserFavoriteStore from '@/stores/userFavoriteStore'
+import useUserCartStore from '@/stores/userCartStore'
 
 const router = useRouter()
 const statusStore = useStatusStore()
 const userFavoriteStore = useUserFavoriteStore()
 const userCartStore = useUserCartStore()
 
+//切換產品詳細
 const getProduct = (id) => {
   router.push(`/products/product/${id}`)
 }
@@ -52,7 +53,6 @@ const getProduct = (id) => {
     <div class="row row-cols-lg-4 row-cols-md-3 row-cols-2 gx-3 gy-4" v-if="userFavoriteStore.favorites?.length > 0">
       <div class="col" v-for="product in userFavoriteStore.favorites" :key="product.id">
         <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
-
           <div
             class="custom-ribbon ard-badgeBg bg-danger text-white text-center py-1 fw-bold shadow-sm position-absolute top-0 start-0 z-1"
             v-if="product.origin_price !== product.price">
@@ -62,7 +62,6 @@ const getProduct = (id) => {
               </div>
             </div>
           </div>
-
           <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light"></div>
           <div class="card-badgeImgWarp position-absolute z-2" @click.stop="userFavoriteStore.toggleFavorite(product)"
             style="cursor: pointer;">
@@ -71,7 +70,6 @@ const getProduct = (id) => {
           <div class="ratio ratio-4x3 overflow-hidden main-image">
             <img :src="product.imagesUrl[0]" class="card-img-top object-fit-cover zoomable-img" alt="圖片顯示失敗">
           </div>
-
           <div class="card-body text-center d-flex flex-column justify-content-between">
             <h5 class="card-title border-bottom pb-3">{{ product.title }}</h5>
             <div>
@@ -87,7 +85,6 @@ const getProduct = (id) => {
               </div>
             </div>
           </div>
-
           <div class="card-footer p-0">
             <button class="btn btn-success btn-sm rounded-top-0 w-100"
               :disabled="statusStore.loadingItem === product.id"
@@ -104,11 +101,9 @@ const getProduct = (id) => {
         </div>
       </div>
     </div>
-
     <div class="text-center mt-4 p-4 bg-body text-body rounded-4 shadow-sm" v-else>
       <h5>您的收藏是空的</h5>
       <router-link class="btn btn-primary mt-3" to="/products">前往選購商品</router-link>
     </div>
   </div>
-
 </template>

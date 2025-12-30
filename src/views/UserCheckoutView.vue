@@ -1,42 +1,37 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
-import useUserOrder from '../stores/userOrderStore'
-import useStatusStore from '../stores/statusStore'
+import useUserOrderStore from '@/stores/userOrderStore'
+import useStatusStore from '@/stores/statusStore'
 
 const route = useRoute()
 const router = useRouter()
-const userOrder = useUserOrder()
+const userOrderStore = useUserOrderStore()
 const statusStore = useStatusStore()
 
-const orderId = route.params.orderId;
+const orderId = route.params.orderId
+
 const orderDate = ref(null)
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 const fetchOrder = async () => {
-  orderDate.value = await userOrder.getIdOrder(orderId)
+  orderDate.value = await userOrderStore.getIdOrder(orderId)
 }
 
 // 創建時讀取產品資訊
 onMounted(async () => {
-  await fetchOrder();
-
+  await fetchOrder()
   if (!orderDate.value || !orderDate.value.success) {
-    statusStore.pushMessage({ title: '錯誤', style: 'danger', content: '找不到此訂單' });
-    router.replace('/products');
-    return;
+    statusStore.pushMessage({ title: '錯誤', style: 'danger', content: '找不到此訂單' })
+    router.replace('/products')
+    return
   }
 
   if (orderDate.value.order.is_paid) {
-    statusStore.pushMessage({
-      title: '提示',
-      style: 'info',
-      content: '此訂單已完成付款'
-    });
-    router.replace('/products');
+    statusStore.pushMessage({ title: '提示', style: 'info', content: '此訂單已完成付款' })
+    router.replace('/products')
   }
 })
 
@@ -44,15 +39,14 @@ onMounted(async () => {
 const isSubmitting = ref(false)
 
 const onSubmit = async () => {
-  if (orderDate.value.order.is_paid) return;
-  isSubmitting.value = true;
+  if (orderDate.value.order.is_paid) return
+  isSubmitting.value = true
   try {
-    const isPay = await userOrder.payOrder(orderId)
+    const isPay = await userOrderStore.payOrder(orderId)
     if (isPay) {
       statusStore.setOrderCompleted(true)
       await fetchOrder()
-
-      const totalAmount = orderDate.value.order.total;
+      const totalAmount = orderDate.value.order.total
       if (totalAmount > 1500) {
         await Swal.fire({
           title: '感謝您的支持！',
@@ -60,22 +54,19 @@ const onSubmit = async () => {
           icon: 'success',
           confirmButtonText: '確定',
           confirmButtonColor: '#198754'
-        });
-        router.replace('/products');
+        })
+        router.replace('/products')
       } else {
-        statusStore.pushMessage({
-          title: '訂單已完成',
-          style: 'success',
-          content: '5秒後將為您跳轉至商品頁面...'
-        });
-        await delay(5000);
-        router.replace('/products');
+        statusStore.pushMessage({ title: '訂單已完成', style: 'success', content: '5秒後將為您跳轉至商品頁面...' })
+        await delay(5000)
+        router.replace('/products')
       }
     }
   } finally {
-    isSubmitting.value = false;
+    isSubmitting.value = false
   }
 }
+
 </script>
 
 <template>
@@ -111,7 +102,6 @@ const onSubmit = async () => {
           </tbody>
         </table>
         <div class="row my-3 g-2">
-
           <div class="col-6">
             <button type="button" class="btn btn-warning w-100"
               :disabled="statusStore.isLoading || isSubmitting || orderDate.order.is_paid"
@@ -119,7 +109,6 @@ const onSubmit = async () => {
               暫緩付款
             </button>
           </div>
-
           <div class="col-6">
             <button class="btn btn-danger w-100"
               :disabled="statusStore.isLoading || isSubmitting || orderDate.order.is_paid" type="submit">
@@ -128,9 +117,7 @@ const onSubmit = async () => {
               {{ orderDate.order.is_paid ? '已完成付款' : '確認付款去' }}
             </button>
           </div>
-
         </div>
-
         <div class="accordion rounded-0" id="accordionExample">
           <div class="accordion-item">
             <h2 class="accordion-header">
@@ -170,7 +157,6 @@ const onSubmit = async () => {
             </div>
           </div>
         </div>
-
       </form>
     </div>
   </div>

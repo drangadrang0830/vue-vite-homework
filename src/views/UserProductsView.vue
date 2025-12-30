@@ -1,30 +1,29 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import useStatusStore from '@/stores/statusStore'
+import useUserProductsStore from '@/stores/userProductsStore'
+import useUserCartStore from '@/stores/userCartStore'
+import useUserFavoriteStore from '@/stores/userFavoriteStore'
+import SharedPagination from '@/components/SharedPagination.vue'
 
-import useStatusStore from '../stores/statusStore'
-import useUserProductsStore from '../stores/userProductsStore'
-import useUserCartStore from '../stores/userCartStore'
-import useUserFavoriteStore from '../stores/userFavoriteStore'
-import SharedPagination from '../components/SharedPagination.vue'
-
+const router = useRouter()
 const statusStore = useStatusStore()
 const userProductsStore = useUserProductsStore()
 const userCartStore = useUserCartStore()
 const userFavoriteStore = useUserFavoriteStore()
-const router = useRouter()
 
 const useCategory = ref('全部商品')
-
 const currentPage = ref(1)
 const pageSize = 12
 
-//資料預處理
+
 onMounted(async () => {
-  await userProductsStore.getAllProducts();
+  await userProductsStore.getAllProducts()
   statusStore.resetOrderProgress()
 })
 
+//資料預處理
 const filterData = (category) => {
   useCategory.value = category
   currentPage.value = 1
@@ -35,7 +34,7 @@ const filteredList = computed(() => {
   return userProductsStore.farmProducts.filter(item => item.category?.includes(useCategory.value))
 })
 
-//分頁功能
+//分頁功能(不同於預設10頁切換)---------
 const pagedList = computed(() => {
   const start = (currentPage.value - 1) * pageSize
   const end = start + pageSize
@@ -52,7 +51,7 @@ const paginationInfo = computed(() => {
     category: useCategory.value
   }
 })
-
+//------------------------
 const changePage = (page) => {
   currentPage.value = page
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -63,9 +62,6 @@ const getProduct = (id) => {
   router.push(`/products/product/${id}`)
 }
 
-onMounted(() => {
-  statusStore.resetOrderProgress()
-})
 </script>
 
 <style scoped>
@@ -74,14 +70,9 @@ onMounted(() => {
 }
 
 .card-badgeBg {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.card-badgeImgWarp {
-  top: 1%;
-  right: 2%;
 }
 
 .zoomable-img {
@@ -120,11 +111,9 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1 gx-3 gy-4 mb-3 py-4">
       <div class="col" v-for="product in pagedList" :key="product.id">
         <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
-
           <div
             class="custom-ribbon ard-badgeBg bg-danger text-white text-center py-1 fw-bold shadow-sm position-absolute top-0 start-0 z-1"
             v-if="product.origin_price !== product.price">
@@ -134,16 +123,14 @@ onMounted(() => {
               </div>
             </div>
           </div>
-
           <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light"></div>
-          <div class="card-badgeImgWarp position-absolute z-2" @click.stop="userFavoriteStore.toggleFavorite(product)"
-            style="cursor: pointer;">
+          <div class="card-badgeImgWarp position-absolute z-2 p-2 top-0 end-0"
+            @click.stop="userFavoriteStore.toggleFavorite(product)" style="cursor: pointer;">
             <i :class="userFavoriteStore.isFavorite(product.id) ? 'bi bi-heart-fill text-danger' : 'bi bi-heart'"></i>
           </div>
           <div class="ratio ratio-4x3 overflow-hidden main-image">
             <img :src="product.imagesUrl[0]" class="card-img-top object-fit-cover zoomable-img" alt="圖片顯示失敗">
           </div>
-
           <div class="card-body text-center d-flex flex-column justify-content-between">
             <h5 class="card-title border-bottom pb-3">{{ product.title }}</h5>
             <div>
@@ -159,7 +146,6 @@ onMounted(() => {
               </div>
             </div>
           </div>
-
           <div class="card-footer p-0">
             <button class="btn btn-success btn-sm rounded-top-0 w-100"
               :disabled="statusStore.loadingItem === product.id"

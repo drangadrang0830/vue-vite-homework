@@ -1,7 +1,7 @@
 <script setup>
-import useStatusStore from '../stores/statusStore'
-import Navbar from '../components/UserNavbar.vue'
-import ToastMessages from '../components/ToastMessages.vue';
+import useStatusStore from '@/stores/statusStore'
+import Navbar from '@/components/UserNavbar.vue'
+import ToastMessages from '@/components/ToastMessages.vue'
 
 const statusStore = useStatusStore()
 
@@ -40,12 +40,13 @@ const statusStore = useStatusStore()
                 <i class="bi bi-geo-alt-fill"></i>
               </a>
             </div>
+            <router-link class="btn btn-outline-primary mx-3" to="/login">管理員登入</router-link>
           </div>
           <p class="mb-0 text-body text-center">本網站由范智聖設計 © 2025版權所有 <br>個人練習作品用，非商業使用</p>
         </div>
       </div>
     </div>
-    <ToastMessages></ToastMessages>
-    <Navbar></Navbar>
+    <ToastMessages />
+    <Navbar />
   </div>
 </template>

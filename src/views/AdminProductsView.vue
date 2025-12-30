@@ -99,7 +99,7 @@ const handlePageChange = (page) => {
           </td>
           <td class="text-center">
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openEditProductModal(product)">編輯</button>
+              <button class="btn btn-outline-primary btn-sm" @click="openProductModal(false, product)">編輯</button>
               <button class="btn btn-outline-danger btn-sm" @click="openDeleteProduct(product)">刪除</button>
             </div>
           </td>
