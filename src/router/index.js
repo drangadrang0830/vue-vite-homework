@@ -2,22 +2,22 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import useAdminApiStore from '@/stores/adminApiStore'
 
 // 實體化路徑
-import UserLayout from '@/views/UserLayout.vue'
-import UserHome from '@/views/UserHomeView.vue'
-import UserAttractions from '@/views/UserAttractions.vue'
-import UserProgress from '@/views/UserProgress.vue'
-import UserProducts from '@/views/UserProductsView.vue'
-import UserProduct from '@/views/UserProductDescriptionView.vue'
-import UserFavorite from '@/views/UserFavoriteView.vue'
-import UserCart from '@/views/UserCartView.vue'
-import UserOrder from '@/views/UserOrderView.vue'
-import UserCheckOut from '@/views/UserCheckoutView.vue'
-import AdminLogin from '@/views/AdminLogin.vue'
-import AdminLayout from '@/views/AdminLayout.vue'
-import AdminProductsView from '@/views/AdminProductsView.vue'
-import AdminArticleView from '@/views/AdminArticleView.vue'
-import AdminOrdersView from '@/views/AdminOrdersView.vue'
-import AdminCouponView from '@/views/AdminCouponView.vue'
+const UserLayout = () => import('@/views/UserLayout.vue')
+const UserHome = () => import('@/views/UserHomeView.vue')
+const UserAttractions = () => import('@/views/UserAttractions.vue')
+const UserProgress = () => import('@/views/UserProgress.vue')
+const UserProducts = () => import('@/views/UserProductsView.vue')
+const UserProduct = () => import('@/views/UserProductDescriptionView.vue')
+const UserFavorite = () => import('@/views/UserFavoriteView.vue')
+const UserCart = () => import('@/views/UserCartView.vue')
+const UserOrder = () => import('@/views/UserOrderView.vue')
+const UserCheckOut = () => import('@/views/UserCheckoutView.vue')
+const AdminLogin = () => import('@/views/AdminLogin.vue')
+const AdminLayout = () => import('@/views/AdminLayout.vue')
+const AdminProductsView = () => import('@/views/AdminProductsView.vue')
+const AdminArticleView = () => import('@/views/AdminArticleView.vue')
+const AdminOrdersView = () => import('@/views/AdminOrdersView.vue')
+const AdminCouponView = () => import('@/views/AdminCouponView.vue')
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),

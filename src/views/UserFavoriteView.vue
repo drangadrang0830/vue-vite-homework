@@ -50,7 +50,7 @@ const getProduct = (id) => {
 
 <template>
   <div class="container my-4">
-    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-2 gx-3 gy-4" v-if="userFavoriteStore.favorites?.length > 0">
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1 gx-3 gy-4" v-if="userFavoriteStore.favorites?.length > 0">
       <div class="col" v-for="product in userFavoriteStore.favorites" :key="product.id">
         <div class="card h-100 position-relative overflow-hidden" @click.prevent="getProduct(product.id)">
           <div

@@ -49,7 +49,7 @@ const getProduct = (id) => {
             <img :src="product.imagesUrl[0]" class="card-img-top object-fit-cover w-100 h-100" alt="產品圖片">
           </div>
 
-          <div class="card-body text-center d-flex flex-column justify-content-between bg-white">
+          <div class="card-body text-center d-flex flex-column justify-content-between bg-body">
             <h5 class="card-title text-truncate">{{ product.title }}</h5>
             <div>
               <del class="text-muted small">原價 {{ $filters.currency(product.origin_price) }}</del>
