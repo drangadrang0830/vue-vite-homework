@@ -89,10 +89,10 @@ const onSubmit = (values, { resetForm }) => {
     <div class="container">
       <div class="row my-4 my-lg-5">
         <div class="col-12 col-md-5 offset-md-3 text-center invert">
-          <img src="../assets/home-inhere.png" class="w-50" alt="在這裡">
+          <img src="@/assets/home-inhere.png" class="w-50" alt="在這裡">
         </div>
         <div class="col-12 col-md-5 offset-md-4 text-center invert">
-          <img src="../assets/home-youCan.png" class="w-50" alt="你可以">
+          <img src="@/assets/home-youCan.png" class="w-50" alt="你可以">
         </div>
       </div>
       <div class="row justify-content-md-center align-items-center mb-4 my-lg-5"
