@@ -1,23 +1,23 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import useAdminApiStore from '@/stores/adminApiStore'
+import useAdminApiStore from '@/stores/backend/adminApiStore'
 
 // 實體化路徑
-const UserLayout = () => import('@/views/UserLayout.vue')
-const UserHome = () => import('@/views/UserHomeView.vue')
-const UserAttractions = () => import('@/views/UserAttractions.vue')
-const UserProgress = () => import('@/views/UserProgress.vue')
-const UserProducts = () => import('@/views/UserProductsView.vue')
-const UserProduct = () => import('@/views/UserProductDescriptionView.vue')
-const UserFavorite = () => import('@/views/UserFavoriteView.vue')
-const UserCart = () => import('@/views/UserCartView.vue')
-const UserOrder = () => import('@/views/UserOrderView.vue')
-const UserCheckOut = () => import('@/views/UserCheckoutView.vue')
-const AdminLogin = () => import('@/views/AdminLogin.vue')
-const AdminLayout = () => import('@/views/AdminLayout.vue')
-const AdminProductsView = () => import('@/views/AdminProductsView.vue')
-const AdminArticleView = () => import('@/views/AdminArticleView.vue')
-const AdminOrdersView = () => import('@/views/AdminOrdersView.vue')
-const AdminCouponView = () => import('@/views/AdminCouponView.vue')
+const UserLayout = () => import('@/views/frontend/UserLayout.vue')
+const UserHome = () => import('@/views/frontend/UserHomeView.vue')
+const UserAttractions = () => import('@/views/frontend/UserAttractions.vue')
+const UserProgress = () => import('@/views/frontend/UserProgress.vue')
+const UserProducts = () => import('@/views/frontend/UserProductsView.vue')
+const UserProduct = () => import('@/views/frontend/UserProductDescriptionView.vue')
+const UserFavorite = () => import('@/views/frontend/UserFavoriteView.vue')
+const UserCart = () => import('@/views/frontend/UserCartView.vue')
+const UserOrder = () => import('@/views/frontend/UserOrderView.vue')
+const UserCheckOut = () => import('@/views/frontend/UserCheckoutView.vue')
+const AdminLogin = () => import('@/views/backend/AdminLogin.vue')
+const AdminLayout = () => import('@/views/backend/AdminLayout.vue')
+const AdminProductsView = () => import('@/views/backend/AdminProductsView.vue')
+const AdminArticleView = () => import('@/views/backend/AdminArticleView.vue')
+const AdminOrdersView = () => import('@/views/backend/AdminOrdersView.vue')
+const AdminCouponView = () => import('@/views/backend/AdminCouponView.vue')
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -122,7 +122,7 @@ router.beforeEach(async (to, from, next) => {
   const adminApiStore = useAdminApiStore()
 
   if (to.meta.requiresAuth) {
-    const isAuthenticated = await adminApiStore.getToken()
+    const isAuthenticated = await adminApiStore.checkLogin()
 
     if (isAuthenticated) {
       next()
