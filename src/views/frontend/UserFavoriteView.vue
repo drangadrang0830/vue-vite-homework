@@ -11,7 +11,7 @@ const userCartStore = useUserCartStore()
 
 //切換產品詳細
 const getProduct = (id) => {
-  router.push(`/products/product/${id}`)
+  router.push(`/product/${id}`)
 }
 </script>
 

@@ -107,7 +107,7 @@ const toggleTheme = () => {
         </RouterLink>
 
         <div class="d-flex ms-auto me-2 order-md-last align-items-center">
-          <RouterLink class="nav-link d-none d-md-block  link-body-emphasis mx-md-3 mx-1" to="/products/cart"
+          <RouterLink class="nav-link d-none d-md-block  link-body-emphasis mx-md-3 mx-1" to="/cart"
             @click="isNavOpen = false">
             <i class="bi" :class="userCartStore.cartTotalQuantity > 0 ? 'bi-cart-fill' : 'bi-cart'"></i>
             <span class="position-relative">購物車
@@ -115,7 +115,7 @@ const toggleTheme = () => {
                 v-if="userCartStore.cartTotalQuantity > 0">{{ userCartStore.cartTotalQuantity }}</span>
             </span>
           </RouterLink>
-          <RouterLink class="nav-link d-none d-md-block link-body-emphasis mx-md-3 mx-1" to="/products/favorite"
+          <RouterLink class="nav-link d-none d-md-block link-body-emphasis mx-md-3 mx-1" to="/favorite"
             @click="isNavOpen = false">
             <i class="bi bi-heart-fill text-danger"></i>
             我的最愛
@@ -145,12 +145,12 @@ const toggleTheme = () => {
               </RouterLink>
             </li>
             <li class="nav-item d-block d-md-none">
-              <RouterLink class="nav-link link-body-emphasis mx-3" to="/products/favorite" @click="isNavOpen = false">
+              <RouterLink class="nav-link link-body-emphasis mx-3" to="/favorite" @click="isNavOpen = false">
                 我的最愛
               </RouterLink>
             </li>
             <li class="nav-item d-block d-md-none">
-              <RouterLink class="nav-link link-body-emphasis mx-3" to="/products/cart" @click="isNavOpen = false">
+              <RouterLink class="nav-link link-body-emphasis mx-3" to="/cart" @click="isNavOpen = false">
                 <span class="position-relative">購物車
                   <span class="position-absolute location-setting badge rounded-pill bg-danger"
                     v-if="userCartStore.cartTotalQuantity > 0">{{ userCartStore.cartTotalQuantity }}</span>

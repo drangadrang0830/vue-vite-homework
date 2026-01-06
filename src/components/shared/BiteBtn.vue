@@ -80,10 +80,16 @@ defineProps({
   opacity: 0.9;
 }
 
+[data-bs-theme="dark"] .btn-bite {
+  border-color: #ffffff;
+}
+
 .btn-bite:hover {
   color: #ffffff;
   border-color: var(--color-accent);
 }
+
+
 
 .btn-bite:hover .triangle {
   transform: translateY(0);

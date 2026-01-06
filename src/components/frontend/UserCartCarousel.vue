@@ -20,7 +20,7 @@ onMounted(() => {
 });
 
 const getProduct = (id) => {
-  router.push(`/products/product/${id}`)
+  router.push(`/product/${id}`)
 }
 </script>
 

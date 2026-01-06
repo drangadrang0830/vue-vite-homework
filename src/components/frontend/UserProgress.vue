@@ -1,48 +1,77 @@
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, computed, watch, nextTick, onUnmounted } from 'vue'
 import useStatusStore from '@/stores/statusStore'
 
-const route = useRoute()
 const statusStore = useStatusStore()
+let timer = null;
 
+const props = defineProps({
+  step: {
+    type: Number,
+    required: true
+  }
+})
+
+//各進度設定
 const steps = [
-  { title: '選擇商品', icon: 'bi-bag' },
   { title: '確認購物', icon: 'bi-cart-check' },
   { title: '填寫資料', icon: 'bi-pencil-square' },
   { title: '確認訂單', icon: 'bi-card-list' },
   { title: '完成下訂', icon: 'bi-check-circle' }
 ]
 
-const currentStep = computed(() => {
-  if (statusStore.isOrderCompleted) return 4
-  const path = route.path
-  if (path.includes('/checkout')) return 3
-  if (path.includes('/order')) return 2
-  if (path.includes('/cart')) return 1
-  return 0
+const denominator = steps.length - 1
+const initialPercent = (statusStore.previousStep / denominator) * 100
+const displayWidth = ref(`${initialPercent}%`)
+
+const animateToStep = (targetStep) => {
+  const endWidth = (targetStep / denominator) * 100
+  displayWidth.value = `${endWidth}%`
+  // 更新 Pinia
+  statusStore.setPreviousStep(targetStep)
+}
+
+//監視步驟調整進度條
+watch(() => props.step, (newStep) => {
+  animateToStep(newStep)
 })
 
-const progressWidth = computed(() => {
-  return `${(currentStep.value / (steps.length - 1)) * 100}%`
+//創建時
+onMounted(() => {
+  nextTick(() => {
+    timer = setTimeout(() => {
+      animateToStep(props.step)
+    }, 50)
+  })
 })
+
+// 組件卸載時清除計時器
+onUnmounted(() => {
+  if (timer) clearTimeout(timer)
+})
+
+const currentStep = computed(() => props.step)
 </script>
 
 <style scoped>
 .invert {
   filter: invert(100%);
 }
+
+/* 增加組件間距控制 */
+.user-progress {
+  margin-bottom: 2rem;
+}
 </style>
 
 <template>
-  <div>
-    <h6 class="bg-warning-subtle p-1 m-0 text-center text-danger">目前消費滿1,500元，即送85折優惠劵!</h6>
+  <div class="user-progress">
     <div class="container my-4 pt-3">
       <div class="px-5 pt-2 pb-5">
         <div class="position-relative">
           <div class="progress" style="height: 10px;">
             <div class="progress-bar bg-primary" :style="{
-              width: progressWidth,
+              width: displayWidth,
               transition: 'width 1s cubic-bezier(0.8, 0, 1, 1)'
             }"></div>
           </div>
@@ -76,6 +105,5 @@ const progressWidth = computed(() => {
         </div>
       </div>
     </div>
-    <RouterView />
   </div>
 </template>

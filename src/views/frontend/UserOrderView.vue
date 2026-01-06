@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import UserProgress from '@/components/frontend/UserProgress.vue'
 import useUserOrderStore from '@/stores/frontend/userOrderStore'
 import useUserCartStore from '@/stores/frontend/userCartStore'
 import useStatusStore from '@/stores/statusStore'
@@ -24,8 +25,8 @@ const form = ref({
 const onSubmit = async () => {
   const orderId = await userOrderStore.submitOrder(form.value)
   if (orderId) {
-    router.push(`/products/checkout/${orderId}`)
-    form.value.user = {}
+    router.push(`/checkout/${orderId}`)
+    form.value.user = { name: '', email: '', tel: '', address: '' }
   }
 }
 
@@ -38,6 +39,7 @@ const isPhone = (value) => {
 
 <template>
   <div class="container my-4">
+    <UserProgress :step="1" />
     <div class="row  mt-4">
       <div class="col-md-7 my-2" v-if="userCartStore.cartData.carts?.length > 0">
         <v-form v-slot="{ errors }" @submit="onSubmit">
@@ -80,7 +82,7 @@ const isPhone = (value) => {
 
 
           <div class="text-end d-flex justify-content-between">
-            <RouterLink class="btn btn-warning" to="/products/cart">回到購物車</RouterLink>
+            <RouterLink class="btn btn-warning" to="/cart">回到購物車</RouterLink>
             <button class="btn btn-success" type="submit" :disabled="statusStore.isLoading">
               <span v-if="statusStore.isLoading" class="spinner-border spinner-border-sm"></span>
               送出訂單

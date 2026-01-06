@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import UserCartCarousel from '@/components/frontend/UserCartCarousel.vue'
+import UserProgress from '@/components/frontend/UserProgress.vue'
 import useUserCartStore from '@/stores/frontend/userCartStore'
 import useStatusStore from '@/stores/statusStore'
 
@@ -15,7 +16,7 @@ onMounted(async () => {
 })
 
 const toOrder = () => {
-  router.push(`/products/order`)
+  router.push(`/order`)
 }
 
 const useCouponButton = async () => {
@@ -32,13 +33,11 @@ const useCouponButton = async () => {
 }
 </script>
 
-
-<style scoped></style>
-
-
 <template>
-  <!-- 購物車 -->
   <div class="container my-4">
+
+    <UserProgress v-if="userCartStore.cartData.carts?.length > 0" :step="0" />
+
     <div class="row my-4" v-if="userCartStore.cartData.carts?.length > 0">
       <div class="col-md-8">
         <table class="table align-middle table-hover" style="--bs-table-bg: transparent;">
@@ -96,7 +95,7 @@ const useCouponButton = async () => {
             <tfoot>
               <tr>
                 <td colspan="6" class="text-end fw-bold">
-                  <RouterLink class="btn btn-warning" to="/products" @click="isNavOpen = false">繼續選購</RouterLink>
+                  <RouterLink class="btn btn-warning" to="/products">繼續選購</RouterLink>
                 </td>
               </tr>
             </tfoot>
@@ -165,6 +164,7 @@ const useCouponButton = async () => {
       </div>
 
     </div>
+
     <div v-else class="text-center p-4 bg-body text-body rounded-4 shadow-sm">
       <h5>您的購物車是空的</h5>
       <RouterLink class="btn btn-info mt-3" to="/products">前往選購商品</RouterLink>

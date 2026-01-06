@@ -56,7 +56,7 @@ const modules = [EffectCoverflow, Pagination, Navigation, Autoplay]
       <SwiperSlide v-for="article in userArticleStore.articles" :key="article.id">
         <img :src="article.image" :alt="article.title" class="object-fit-cover carousel-img w-100"
           style="height: 450px;" />
-        <div class="carousel-caption d-none d-md-block bg-body text-body bg-opacity-50 rounded">
+        <div class="carousel-caption d-none d-md-block bg-body text-body bg-opacity-75 rounded">
           <h5 class="m-0 h4">{{ article.title }}</h5>
           <p class="m-0 h5">{{ article.description }}</p>
         </div>

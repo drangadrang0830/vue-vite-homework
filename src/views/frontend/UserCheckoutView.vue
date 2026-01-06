@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
+import UserProgress from '@/components/frontend/UserProgress.vue'
 import useUserOrderStore from '@/stores/frontend/userOrderStore'
 import useStatusStore from '@/stores/statusStore'
 
@@ -11,10 +12,9 @@ const userOrderStore = useUserOrderStore()
 const statusStore = useStatusStore()
 
 const orderId = route.params.orderId
-
 const orderDate = ref(null)
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const isSubmitting = ref(false)
+const currentStep = ref(2)
 
 const fetchOrder = async () => {
   orderDate.value = await userOrderStore.getIdOrder(orderId)
@@ -36,8 +36,6 @@ onMounted(async () => {
 })
 
 //表單控制
-const isSubmitting = ref(false)
-
 const onSubmit = async () => {
   if (orderDate.value.order.is_paid) return
   isSubmitting.value = true
@@ -45,22 +43,30 @@ const onSubmit = async () => {
     const isPay = await userOrderStore.payOrder(orderId)
     if (isPay) {
       statusStore.setOrderCompleted(true)
+      currentStep.value = 3
       await fetchOrder()
       const totalAmount = orderDate.value.order.total
+
       if (totalAmount > 1500) {
+        // 使用 Swal 前動畫就應該開始跑了
         await Swal.fire({
           title: '感謝您的支持！',
           text: `本次消費已達感恩大回饋門檻。您的85折優惠碼為ShiziTownship，請妥善收存`,
           icon: 'success',
-          confirmButtonText: '確定',
+          confirmButtonText: '回到商品頁面',
+          confirmButtonColor: '#198754',
+          allowOutsideClick: false
+        })
+      } else {
+        await Swal.fire({
+          title: '付款成功！',
+          text: '我們將盡快為您安排出貨，感謝您的購買。',
+          icon: 'success',
+          confirmButtonText: '回到商品頁面',
           confirmButtonColor: '#198754'
         })
-        router.replace('/products')
-      } else {
-        statusStore.pushMessage({ title: '訂單已完成', style: 'success', content: '5秒後將為您跳轉至商品頁面...' })
-        await delay(5000)
-        router.replace('/products')
       }
+      router.replace('/products')
     }
   } finally {
     isSubmitting.value = false
@@ -71,6 +77,7 @@ const onSubmit = async () => {
 
 <template>
   <div class="container my-4">
+    <UserProgress :step="currentStep" />
     <div v-if="orderDate" class="my-5 row justify-content-center">
       <form class="col-md-8 bg-white border rounded-4 p-2" @submit.prevent="onSubmit">
         <h4 class="text-center">訂單資訊</h4>

@@ -54,10 +54,6 @@ const onSubmit = (values, { resetForm }) => {
   text-justify: inter-character;
 }
 
-.home-wood {
-  background-image: url('@/assets/home-wood.jpg');
-  background-size: cover;
-}
 
 .img-hover {
   transition: all 0.3s ease-in-out;
@@ -69,18 +65,26 @@ const onSubmit = (values, { resetForm }) => {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
   filter: brightness(1.1);
 }
+
+.sea-border {
+  border-style: solid;
+  border-width: 45px 0px 45px 0px;
+  border-image: url(@/assets/home-sea-border.png) 28% 0% repeat;
+}
 </style>
 
 <template>
   <div>
     <div class="position-relative">
-      <h6 class="bg-warning-subtle p-1 m-0 text-center text-danger">目前訂閱電子報，即送9折優惠劵</h6>
+      <h6 class="bg-warning-subtle p-1 m-0 text-center text-danger">目前訂閱電子報，即送9折優惠劵!</h6>
       <div class="parallax-section"></div>
       <div class="position-absolute top-50 start-0 translate-middle-y w-100">
         <div class="row justify-content-center w-100">
           <div class="col-8 col-lg-4 position-relative">
             <img src="@/assets/home-bannerText.png" class="img-fluid" alt="帶著微醺，頂著驕陽，歡迎來到獅子鄉">
-            <RouterLink class="btn btn-info position-absolute top-100 start-50 translate-middle-x" to="/products">
+            <RouterLink
+              class="btn btn-info position-absolute top-100 start-50 translate-middle-x border-light border-2 mt-2 text-nowrap"
+              to="/products">
               瞧瞧有啥好料 <i class="bi bi-arrow-right"></i></RouterLink>
           </div>
         </div>
@@ -105,9 +109,9 @@ const onSubmit = (values, { resetForm }) => {
             alt="" :class="index % 2 === 0 ? 'start-0' : 'start-100'">
           <div class="position-absolute top-0 translate-middle w-25 z-3 text-center d-none d-lg-block"
             :class="index % 2 === 0 ? 'start-0' : 'start-100'">
-            <RouterLink class="w-75" to="/attractions">
+            <RouterLink class="w-75" :to="item.description">
               <img :src="getImgUrl(item.imagesUrl[1])" class="w-75 bg-info rounded-circle img-hover"
-                :alt="item.description">
+                :alt="`前往${item.title}相關頁面`">
             </RouterLink>
           </div>
         </div>
@@ -120,11 +124,11 @@ const onSubmit = (values, { resetForm }) => {
         </div>
       </div>
     </div>
-    <div class="home-wood py-4">
-      <div class="container">
+    <div class="p-4 bg-body sea-border">
+      <div class="container ">
         <div class="row justify-content-center my-5">
           <div class="col-lg-11">
-            <h2 class="text-center mb-4 text-white fw-bold"><i class="bi bi-images"></i>活動剪影</h2>
+            <h2 class="text-center mb-4 text-body fw-bold"><i class="bi bi-images"></i>活動剪影</h2>
             <HomeCarousel v-if="userArticleStore.articles.length > 5" />
           </div>
           <div class="col-lg-7 bg-body rounded-4 border border-3 border-primary p-4 bg-opacity-75">

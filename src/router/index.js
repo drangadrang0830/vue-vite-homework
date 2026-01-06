@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import useAdminApiStore from '@/stores/backend/adminApiStore'
+import useStatusStore from '@/stores/statusStore'
 
 // 實體化路徑
 const UserLayout = () => import('@/views/frontend/UserLayout.vue')
 const UserHome = () => import('@/views/frontend/UserHomeView.vue')
 const UserAttractions = () => import('@/views/frontend/UserAttractions.vue')
-const UserProgress = () => import('@/views/frontend/UserProgress.vue')
 const UserProducts = () => import('@/views/frontend/UserProductsView.vue')
 const UserProduct = () => import('@/views/frontend/UserProductDescriptionView.vue')
 const UserFavorite = () => import('@/views/frontend/UserFavoriteView.vue')
@@ -37,40 +37,34 @@ const router = createRouter({
         },
         {
           path: 'products',
-          component: UserProgress,
-          children: [
-            {
-              path: '',
-              component: UserProducts
-            },
-            {
-              path: 'product/:productId',
-              component: UserProduct
-            },
-            {
-              path: 'favorite',
-              component: UserFavorite
-            },
-            {
-              path: 'cart',
-              component: UserCart
-            },
-            {
-              path: 'order',
-              component: UserOrder
-            },
-            {
-              path: 'checkout/:orderId',
-              component: UserCheckOut,
-              beforeEnter: (to, from, next) => {
-                if (from.path === '/products/order') {
-                  next()
-                } else {
-                  next('/products')
-                }
-              }
+          component: UserProducts
+        },
+        {
+          path: 'product/:productId',
+          component: UserProduct
+        },
+        {
+          path: 'favorite',
+          component: UserFavorite
+        },
+        {
+          path: 'cart',
+          component: UserCart
+        },
+        {
+          path: 'order',
+          component: UserOrder
+        },
+        {
+          path: 'checkout/:orderId',
+          component: UserCheckOut,
+          beforeEnter: (to, from, next) => {
+            if (from.path === '/order') {
+              next()
+            } else {
+              next('/products')
             }
-          ]
+          }
         }
       ]
     },
@@ -120,7 +114,16 @@ const router = createRouter({
 // 路由守衛
 router.beforeEach(async (to, from, next) => {
   const adminApiStore = useAdminApiStore()
+  const statusStore = useStatusStore()
 
+  //其他頁面重置進度條
+  const isCheckoutFlow =
+    to.path.includes('/cart') || to.path.includes('/order') || to.path.includes('/checkout')
+  if (!isCheckoutFlow) {
+    statusStore.resetOrderProgress()
+  }
+
+  //非用戶端重置主題
   if (to.path === '/login' || to.matched.some((record) => record.path.startsWith('/admin'))) {
     document.documentElement.removeAttribute('data-bs-theme')
   } else {
@@ -128,6 +131,7 @@ router.beforeEach(async (to, from, next) => {
     document.documentElement.setAttribute('data-bs-theme', userTheme)
   }
 
+  //檢查金鑰
   if (to.meta.requiresAuth) {
     const isAuthenticated = await adminApiStore.checkLogin()
 

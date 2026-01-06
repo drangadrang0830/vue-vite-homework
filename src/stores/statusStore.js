@@ -63,14 +63,21 @@ export default defineStore('statusStore', () => {
   }
 
   //進度條控制區------
+
   const isOrderCompleted = ref(false)
+  const previousStep = ref(0)
 
   const setOrderCompleted = (status) => {
     isOrderCompleted.value = status
   }
 
+  const setPreviousStep = (step) => {
+    previousStep.value = step
+  }
+
   const resetOrderProgress = () => {
     isOrderCompleted.value = false
+    previousStep.value = 0
   }
   //-----------------
 
@@ -83,6 +90,8 @@ export default defineStore('statusStore', () => {
     handleMessage,
     isOrderCompleted,
     setOrderCompleted,
-    resetOrderProgress
+    resetOrderProgress,
+    previousStep,
+    setPreviousStep
   }
 })
