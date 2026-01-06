@@ -15,7 +15,9 @@ const changePage = (page) => {
 
 <template>
   <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center pagination justify-content-center" style="--bs-pagination-color: var(--bs-info); --bs-pagination-hover-color: var(--bs-info-text-emphasis);
+    --bs-pagination-active-bg: var(--bs-info); --bs-pagination-active-border-color: var(--bs-info);
+    --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);">
       <!-- 上一頁按鈕 -->
       <li class="page-item" :class="{ 'disabled': !pages.has_pre }">
         <a class="page-link" href="#" aria-label="Previous" @click.prevent="changePage(props.pages.current_page - 1)">

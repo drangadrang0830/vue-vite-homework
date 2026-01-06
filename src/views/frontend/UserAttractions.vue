@@ -12,10 +12,11 @@ onMounted(async () => {
 //邊框顏色
 const borderColor = (num) => {
   switch (num) {
-    case '夜宿地點': return 'primary'
-    case '熱門景點': return 'success'
-    case '歲時祭儀': return 'danger'
-    default: return 'warning'
+    case '熱門景點': return 'danger'
+    case '夜宿地點': return 'warning'
+    case '美食饗宴': return 'success'
+
+    default: return 'primary'
   }
 }
 </script>
@@ -110,12 +111,8 @@ const borderColor = (num) => {
 }
 
 .fixed-box:hover .triangle-text {
-  background: #f7f6c8;
+  background: #ffffff;
   font-weight: bold;
-}
-
-.fixed-box:hover .triangle {
-  border-color: #f7f6c8 transparent transparent transparent;
 }
 
 .fixed-box:hover .triangleBorder {

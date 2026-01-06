@@ -22,10 +22,13 @@ const statusStore = useStatusStore()
 </style>
 
 <template>
-  <div class="bg-body-secondary">
-    <main style="margin-top: var(--nav-height, 70px);"></main>
-    <LoadingOverlay :active="statusStore.isLoading" :z-index="1070" />
-    <RouterView />
+  <div class="bg-body-secondary d-flex flex-column min-vh-100">
+    <Navbar />
+    <main class="flex-grow-1" style="margin-top: var(--nav-height, 70px);">
+      <LoadingOverlay :active="statusStore.isLoading" :z-index="1070" />
+      <ToastMessages />
+      <RouterView />
+    </main>
     <div class="footer bg-info-subtle">
       <div class="container py-4">
         <div class="row justify-content-center">
@@ -60,7 +63,6 @@ const statusStore = useStatusStore()
         </div>
       </div>
     </div>
-    <ToastMessages />
-    <Navbar />
+
   </div>
 </template>

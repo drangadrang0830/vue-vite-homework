@@ -96,7 +96,7 @@ const getProduct = (id) => {
     <div class="row py-3 sticky-top" style="top: var(--nav-height);">
       <div class="col">
         <div class="dropdown d-inline-block position-relative">
-          <button class="btn btn-primary dropdown-toggle border-3" type="button" data-bs-toggle="dropdown">
+          <button class="btn btn-info dropdown-toggle border-3" type="button" data-bs-toggle="dropdown">
             {{ useCategory === '' ? '選擇顯示類別' : useCategory.replace('農特產品-', '') }}
           </button>
           <ul class="dropdown-menu">
@@ -147,7 +147,7 @@ const getProduct = (id) => {
             </div>
           </div>
           <div class="card-footer p-0">
-            <button class="btn btn-success btn-sm rounded-top-0 w-100" type="button"
+            <button class="btn btn-info btn-sm rounded-top-0 w-100" type="button"
               :disabled="statusStore.loadingItem === product.id"
               @click.prevent.stop="userCartStore.addCart(product.id)">
               <div v-if="statusStore.loadingItem === product.id">

@@ -47,16 +47,13 @@ const formattedImgs = computed(() => {
 </template>
 
 <style scoped>
-/* 這裡放您原本的 CSS */
 .main-image img {
   cursor: pointer;
 }
 
 .zoomable-img {
   transition: transform 0.3s ease;
-  /* 關鍵：加入平滑過渡動畫 */
   object-fit: cover;
-  /* 確保圖片正確填充容器，不變形 */
 }
 
 .main-image:hover .zoomable-img {

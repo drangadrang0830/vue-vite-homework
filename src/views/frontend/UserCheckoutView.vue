@@ -110,7 +110,7 @@ const onSubmit = async () => {
             </button>
           </div>
           <div class="col-6">
-            <button class="btn btn-danger w-100"
+            <button class="btn btn-success w-100"
               :disabled="statusStore.isLoading || isSubmitting || orderDate.order.is_paid" type="submit">
               <span v-if="statusStore.isLoading || isSubmitting" class="spinner-border spinner-border-sm me-1"
                 role="status"></span>
@@ -143,13 +143,13 @@ const onSubmit = async () => {
                       </td>
                       <td>{{ item.product.title }}</td>
                       <td>{{ item.qty }} / {{ item.product.unit }}</td>
-                      <td class="text-end">{{ item.final_total }}</td>
+                      <td class="text-end">{{ $filters.currency(item.final_total) }}</td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr>
                       <td colspan="2" class="text-end">總計</td>
-                      <td class="text-end">{{ orderDate.order.total }}</td>
+                      <td class="text-end">{{ $filters.currency(orderDate.order.total) }}</td>
                     </tr>
                   </tfoot>
                 </table>

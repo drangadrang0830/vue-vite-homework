@@ -81,7 +81,7 @@ const isPhone = (value) => {
 
           <div class="text-end d-flex justify-content-between">
             <RouterLink class="btn btn-warning" to="/products/cart">回到購物車</RouterLink>
-            <button class="btn btn-primary" type="submit" :disabled="statusStore.isLoading">
+            <button class="btn btn-success" type="submit" :disabled="statusStore.isLoading">
               <span v-if="statusStore.isLoading" class="spinner-border spinner-border-sm"></span>
               送出訂單
             </button>

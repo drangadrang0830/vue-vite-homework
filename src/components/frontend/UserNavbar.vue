@@ -122,7 +122,8 @@ const toggleTheme = () => {
           </RouterLink>
           <a class="btn btn-danger btn-sm rounded-5 btn-animate-pulse3 mx-md-3 mx-1" href="tel:+886987654321"><i
               class="bi bi-telephone-fill"></i><span class="d-none d-lg-inline">部落協助</span></a>
-          <button class="btn btn-sm btn-outline-secondary border-0" type="button" @click="toggleTheme" title="切換深淺色">
+          <button class="btn btn-sm btn-outline-secondary border-0 text-center" style="width: 35px;" type="button"
+            @click="toggleTheme" title="切換深淺色">
             <span v-if="theme === 'dark'">🌞</span>
             <span v-else>🌛</span>
           </button>

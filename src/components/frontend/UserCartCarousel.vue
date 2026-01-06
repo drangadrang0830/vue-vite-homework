@@ -58,7 +58,7 @@ const getProduct = (id) => {
           </div>
 
           <div class="card-footer p-0 border-0">
-            <button class="btn btn-success rounded-0 w-100 py-2" type="button"
+            <button class="btn btn-info rounded-0 w-100 py-2" type="button"
               :disabled="statusStore.loadingItem === product.id" @click.stop="userCartStore.addCart(product.id)">
               <span v-if="statusStore.loadingItem === product.id" class="spinner-border spinner-border-sm"></span>
               <span v-else><i class="bi bi-cart-plus me-1"></i>直接加購</span>

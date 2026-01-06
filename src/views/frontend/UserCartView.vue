@@ -80,7 +80,7 @@ const useCouponButton = async () => {
                       @change="userCartStore.updateCart(item)" :disabled="statusStore.loadingItem === item.id">
                     <div class="input-group-text w-50 text-center d-none d-lg-block bg-body">/ {{
                       item.product.unit
-                      }}</div>
+                    }}</div>
                   </div>
                 </td>
 
@@ -167,7 +167,7 @@ const useCouponButton = async () => {
     </div>
     <div v-else class="text-center p-4 bg-body text-body rounded-4 shadow-sm">
       <h5>您的購物車是空的</h5>
-      <RouterLink class="btn btn-primary mt-3" to="/products">前往選購商品</RouterLink>
+      <RouterLink class="btn btn-info mt-3" to="/products">前往選購商品</RouterLink>
     </div>
 
     <UserCartCarousel />

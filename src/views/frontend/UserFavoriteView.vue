@@ -21,14 +21,14 @@ const getProduct = (id) => {
 }
 
 .card-badgeBg {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .card-badgeImgWarp {
-  top: 1%;
-  right: 2%;
+  top: 0%;
+  right: 0%;
 }
 
 .zoomable-img {
@@ -62,9 +62,9 @@ const getProduct = (id) => {
               </div>
             </div>
           </div>
-          <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light"></div>
-          <div class="card-badgeImgWarp position-absolute z-2" @click.stop="userFavoriteStore.toggleFavorite(product)"
-            style="cursor: pointer;">
+          <div class="card-badgeBg position-absolute z-1 top-0 start-100 bg-light" />
+          <div class="card-badgeImgWarp position-absolute z-2 p-2"
+            @click.stop="userFavoriteStore.toggleFavorite(product)" style="cursor: pointer;">
             <i :class="userFavoriteStore.isFavorite(product.id) ? 'bi bi-heart-fill text-danger' : 'bi bi-heart'"></i>
           </div>
           <div class="ratio ratio-4x3 overflow-hidden main-image">
@@ -86,7 +86,7 @@ const getProduct = (id) => {
             </div>
           </div>
           <div class="card-footer p-0">
-            <button class="btn btn-success btn-sm rounded-top-0 w-100" type="button"
+            <button class="btn btn-info btn-sm rounded-top-0 w-100" type="button"
               :disabled="statusStore.loadingItem === product.id"
               @click.prevent.stop="userCartStore.addCart(product.id)">
               <div v-if="statusStore.loadingItem === product.id">
@@ -103,7 +103,7 @@ const getProduct = (id) => {
     </div>
     <div class="text-center mt-4 p-4 bg-body text-body rounded-4 shadow-sm" v-else>
       <h5>您的收藏是空的</h5>
-      <RouterLink class="btn btn-primary mt-3" to="/products">前往選購商品</RouterLink>
+      <RouterLink class="btn btn-info mt-3" to="/products">前往選購商品</RouterLink>
     </div>
   </div>
 </template>
