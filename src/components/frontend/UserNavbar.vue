@@ -26,8 +26,10 @@ const navbarRef = ref(null)
 
 const updateNavbarHeight = () => {
   if (navbarRef.value) {
-    const height = navbarRef.value.offsetHeight
-    document.documentElement.style.setProperty('--nav-height', `${height}px`)
+    if (!isNavOpen.value) {
+      const height = navbarRef.value.offsetHeight
+      document.documentElement.style.setProperty('--nav-height', `${height}px`)
+    }
   }
 }
 
@@ -48,7 +50,7 @@ const toggleTheme = () => {
 </script>
 
 <style scoped>
-.RouterLink-exact-active {
+.router-link-exact-active {
   font-weight: bold;
   text-shadow: 0 0 5px #fff,
     0 0 10px #42b883,
@@ -64,7 +66,7 @@ const toggleTheme = () => {
     0 0 10px #00BCD4;
 }
 
-.RouterLink-exact-active .badge {
+.router-link-exact-active .badge {
   text-shadow: none;
 }
 
@@ -96,32 +98,43 @@ const toggleTheme = () => {
 
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top border-bottom border-2 border-success-subtle"
+    <nav class="navbar navbar-expand-md bg-body-tertiary fixed-top border-bottom border-2 border-success-subtle"
       ref="navbarRef">
       <div class="container-fluid">
-
-        <button class="navbar-toggler" type="button" @click="toggleNav" :aria-expanded="isNavOpen ? 'true' : 'false'"
-          aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <RouterLink class="navbar-brand link-body-emphasis d-lg-none d-block ms-2" to="/">
+        <RouterLink class="navbar-brand link-body-emphasis ms-2" to="/">
           <img src="/favicon.png" alt="Logo" width="25" height="24" class="d-inline-block align-text-top">
           獅子鄉<span class="d-none d-md-inline">聯合</span>行銷網
         </RouterLink>
 
-        <div class="d-flex ms-auto me-2 order-lg-last">
-          <a class="btn btn-danger btn-sm rounded-5 btn-animate-pulse3 me-2" href="tel:+886987654321"><i
+        <div class="d-flex ms-auto me-2 order-md-last align-items-center">
+          <RouterLink class="nav-link d-none d-md-block  link-body-emphasis mx-md-3 mx-1" to="/products/cart"
+            @click="isNavOpen = false">
+            <i class="bi" :class="userCartStore.cartTotalQuantity > 0 ? 'bi-cart-fill' : 'bi-cart'"></i>
+            <span class="position-relative">購物車
+              <span class="position-absolute location-setting badge rounded-pill bg-danger"
+                v-if="userCartStore.cartTotalQuantity > 0">{{ userCartStore.cartTotalQuantity }}</span>
+            </span>
+          </RouterLink>
+          <RouterLink class="nav-link d-none d-md-block link-body-emphasis mx-md-3 mx-1" to="/products/favorite"
+            @click="isNavOpen = false">
+            <i class="bi bi-heart-fill text-danger"></i>
+            我的最愛
+          </RouterLink>
+          <a class="btn btn-danger btn-sm rounded-5 btn-animate-pulse3 mx-md-3 mx-1" href="tel:+886987654321"><i
               class="bi bi-telephone-fill"></i><span class="d-none d-lg-inline">部落協助</span></a>
-
           <button class="btn btn-sm btn-outline-secondary border-0" type="button" @click="toggleTheme" title="切換深淺色">
             <span v-if="theme === 'dark'">🌞</span>
             <span v-else>🌛</span>
           </button>
         </div>
 
+        <button class="navbar-toggler" type="button" @click="toggleNav" :aria-expanded="isNavOpen ? 'true' : 'false'"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
         <div class="collapse navbar-collapse" :class="{ 'show': isNavOpen }" id="navbarNavDropdown">
-          <ul class="navbar-nav text-center  w-100 justify-content-lg-center align-items-center">
+          <ul class="navbar-nav text-center align-items-center">
             <li class="nav-item">
               <RouterLink class="nav-link link-body-emphasis mx-3" to="/attractions" @click="isNavOpen = false">景點介紹
               </RouterLink>
@@ -130,16 +143,12 @@ const toggleTheme = () => {
               <RouterLink class="nav-link link-body-emphasis mx-3" to="/products" @click="isNavOpen = false">農業特產
               </RouterLink>
             </li>
-            <RouterLink class="navbar-brand link-body-emphasis d-lg-block d-none" to="/">
-              <img src="/favicon.png" alt="Logo" width="25" height="24" class="d-inline-block align-text-top">
-              獅子鄉<span class="d-none d-md-inline">聯合</span>行銷網
-            </RouterLink>
-            <li class="nav-item">
+            <li class="nav-item d-block d-md-none">
               <RouterLink class="nav-link link-body-emphasis mx-3" to="/products/favorite" @click="isNavOpen = false">
                 我的最愛
               </RouterLink>
             </li>
-            <li class="nav-item">
+            <li class="nav-item d-block d-md-none">
               <RouterLink class="nav-link link-body-emphasis mx-3" to="/products/cart" @click="isNavOpen = false">
                 <span class="position-relative">購物車
                   <span class="position-absolute location-setting badge rounded-pill bg-danger"

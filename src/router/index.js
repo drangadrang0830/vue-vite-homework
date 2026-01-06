@@ -121,6 +121,13 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const adminApiStore = useAdminApiStore()
 
+  if (to.path === '/login' || to.matched.some((record) => record.path.startsWith('/admin'))) {
+    document.documentElement.removeAttribute('data-bs-theme')
+  } else {
+    const userTheme = localStorage.getItem('selected-theme') || 'dark'
+    document.documentElement.setAttribute('data-bs-theme', userTheme)
+  }
+
   if (to.meta.requiresAuth) {
     const isAuthenticated = await adminApiStore.checkLogin()
 

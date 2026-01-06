@@ -84,7 +84,7 @@ const handleLogout = async () => {
   height: 100vh;
 }
 
-.RouterLink-exact-active {
+.router-link-exact-active {
   font-weight: bold;
   text-shadow: 0 0 5px #fff,
     0 0 10px #42b883,

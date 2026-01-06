@@ -43,6 +43,16 @@ defineProps({
 .btn-text {
   position: relative;
   z-index: 2;
+  transition: color 0.6s;
+  color: #000000;
+}
+
+[data-bs-theme="dark"] .btn-text {
+  color: #ffffff;
+}
+
+.btn-text:hover {
+  color: #ffffff;
 }
 
 .triangle {

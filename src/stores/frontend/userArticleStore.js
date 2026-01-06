@@ -12,14 +12,12 @@ export default defineStore('userArticleStore', () => {
     if (articles.value.length > 0 || isFetching) return
     isFetching = true
     const statusStore = useStatusStore()
-    statusStore.isLoading = true
     try {
       const response = await userArticles.getList()
       articles.value = response.data.articles
     } catch (error) {
       statusStore.handleMessage(error, '文章讀取')
     } finally {
-      statusStore.isLoading = false
       isFetching = false
     }
   }

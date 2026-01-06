@@ -78,7 +78,7 @@ const useCouponButton = async () => {
                   <div class="input-group input-group-sm">
                     <input type="number" class="form-control w-50 text-end bg-body" min="1" v-model.number="item.qty"
                       @change="userCartStore.updateCart(item)" :disabled="statusStore.loadingItem === item.id">
-                    <div class="input-group-text w-50 text-center d-none d-lg-block">/ {{
+                    <div class="input-group-text w-50 text-center d-none d-lg-block bg-body">/ {{
                       item.product.unit
                       }}</div>
                   </div>
@@ -122,7 +122,7 @@ const useCouponButton = async () => {
               <td colspan="2" class="text-end">
                 <div class="input-group">
                   <input type="text" class="form-control" placeholder="請輸入優惠碼" v-model="code">
-                  <button class="btn btn-outline-secondary" type="button" @click="useCouponButton">
+                  <button class="btn btn-success" type="button" @click="useCouponButton">
                     套用優惠碼
                   </button>
                 </div>

@@ -7,12 +7,26 @@ const statusStore = useStatusStore()
 
 </script>
 
+<style scoped>
+.btn-adaptive {
+  color: var(--bs-emphasis-color);
+  border: 1px solid var(--bs-emphasis-color);
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-adaptive:hover {
+  background-color: var(--bs-emphasis-color);
+  color: var(--bs-body-bg);
+}
+</style>
+
 <template>
   <div class="bg-body-secondary">
     <main style="margin-top: var(--nav-height, 70px);"></main>
     <LoadingOverlay :active="statusStore.isLoading" :z-index="1070" />
     <RouterView />
-    <div class="footer  bg-info-subtle">
+    <div class="footer bg-info-subtle">
       <div class="container py-4">
         <div class="row justify-content-center">
           <div class="col-12 col-lg-11  text-center">
@@ -40,7 +54,7 @@ const statusStore = useStatusStore()
                 <i class="bi bi-geo-alt-fill"></i>
               </a>
             </div>
-            <RouterLink class="btn btn-outline-primary mx-3" to="/login">管理員登入</RouterLink>
+            <RouterLink class="btn btn-adaptive m-3" to="/login">管理員登入</RouterLink>
           </div>
           <p class="mb-0 text-body text-center">本網站由范智聖設計 © 2025版權所有 <br>個人練習作品用，非商業使用</p>
         </div>
