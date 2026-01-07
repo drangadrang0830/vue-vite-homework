@@ -98,7 +98,7 @@ const toggleTheme = () => {
 
 <template>
   <div>
-    <nav class="navbar navbar-expand-md bg-body-tertiary fixed-top border-bottom border-2 border-success-subtle"
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top border-bottom border-2 border-success-subtle"
       ref="navbarRef">
       <div class="container-fluid">
         <RouterLink class="navbar-brand link-body-emphasis ms-2" to="/">
@@ -106,8 +106,8 @@ const toggleTheme = () => {
           獅子鄉<span class="d-none d-md-inline">聯合</span>行銷網
         </RouterLink>
 
-        <div class="d-flex ms-auto me-2 order-md-last align-items-center">
-          <RouterLink class="nav-link d-none d-md-block  link-body-emphasis mx-md-3 mx-1" to="/cart"
+        <div class="d-flex ms-auto me-2 order-lg-last align-items-center">
+          <RouterLink class="nav-link d-none d-lg-block  link-body-emphasis mx-lg-3 mx-1" to="/cart"
             @click="isNavOpen = false">
             <i class="bi" :class="userCartStore.cartTotalQuantity > 0 ? 'bi-cart-fill' : 'bi-cart'"></i>
             <span class="position-relative">購物車
@@ -115,12 +115,12 @@ const toggleTheme = () => {
                 v-if="userCartStore.cartTotalQuantity > 0">{{ userCartStore.cartTotalQuantity }}</span>
             </span>
           </RouterLink>
-          <RouterLink class="nav-link d-none d-md-block link-body-emphasis mx-md-3 mx-1" to="/favorite"
+          <RouterLink class="nav-link d-none d-lg-block link-body-emphasis mx-lg-3 mx-1" to="/favorite"
             @click="isNavOpen = false">
             <i class="bi bi-heart-fill text-danger"></i>
             我的最愛
           </RouterLink>
-          <a class="btn btn-danger btn-sm rounded-5 btn-animate-pulse3 mx-md-3 mx-1" href="tel:+886987654321"><i
+          <a class="btn btn-danger btn-sm rounded-5 btn-animate-pulse3 mx-lg-3 mx-1" href="tel:+886987654321"><i
               class="bi bi-telephone-fill"></i><span class="d-none d-lg-inline">部落協助</span></a>
           <button class="btn btn-sm btn-outline-secondary border-0 text-center" style="width: 35px;" type="button"
             @click="toggleTheme" title="切換深淺色">
@@ -144,12 +144,12 @@ const toggleTheme = () => {
               <RouterLink class="nav-link link-body-emphasis mx-3" to="/products" @click="isNavOpen = false">農業特產
               </RouterLink>
             </li>
-            <li class="nav-item d-block d-md-none">
+            <li class="nav-item d-block d-lg-none">
               <RouterLink class="nav-link link-body-emphasis mx-3" to="/favorite" @click="isNavOpen = false">
                 我的最愛
               </RouterLink>
             </li>
-            <li class="nav-item d-block d-md-none">
+            <li class="nav-item d-block d-lg-none">
               <RouterLink class="nav-link link-body-emphasis mx-3" to="/cart" @click="isNavOpen = false">
                 <span class="position-relative">購物車
                   <span class="position-absolute location-setting badge rounded-pill bg-danger"
