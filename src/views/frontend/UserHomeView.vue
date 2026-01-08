@@ -75,6 +75,33 @@ const onSubmit = (values, { resetForm }) => {
   border-width: 45px 0px 45px 0px;
   border-image: url(@/assets/home-sea-border.png) 28% 0% repeat;
 }
+
+/* 閃光按鈕特效 */
+.btn-shiny {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shiny:hover {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-shiny::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  width: 20%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.4);
+  transition: none;
+  left: 0;
+  transform: translateX(-150%) rotate(30deg);
+}
+
+.btn-shiny:hover::after {
+  transform: translateX(600%) rotate(30deg);
+  transition: transform 0.6s ease-in-out;
+}
 </style>
 
 <template>
@@ -87,9 +114,9 @@ const onSubmit = (values, { resetForm }) => {
           <div class="col-11 col-lg-6 position-relative">
             <img src="@/assets/home-bannerText.png" class="img-fluid" alt="帶著微醺，頂著驕陽，歡迎來到獅子鄉">
             <RouterLink
-              class="btn btn-info position-absolute top-100 start-50 translate-middle-x border-light border-2 mt-2 text-nowrap"
+              class="btn btn-lg btn-info position-absolute top-100 start-50 translate-middle-x border-white border-3 mt-2 text-nowrap btn-shiny"
               to="/products">
-              瞧瞧有啥好料 <i class="bi bi-arrow-right"></i></RouterLink>
+              瞧瞧有啥好料！</RouterLink>
           </div>
         </div>
       </div>
