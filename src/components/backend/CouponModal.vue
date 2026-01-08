@@ -10,7 +10,7 @@ const isNew = ref(false)
 
 const { modalElement, openModal, closeModal } = useModal()
 
-//開啟時資料預處理
+//顯示與資料初始化
 const show = (item, isNewMode) => {
   isNew.value = isNewMode
   if (isNewMode) {

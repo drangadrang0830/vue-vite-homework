@@ -14,7 +14,7 @@ export default defineStore('userProductsStore', () => {
 
   //取得所有商品資訊
   const getAllProducts = async () => {
-    if (allProducts.value.length > 0 || isFetching) return
+    if (isFetching) return
     isFetching = true
     const statusStore = useStatusStore()
     statusStore.isLoading = true
@@ -38,7 +38,24 @@ export default defineStore('userProductsStore', () => {
     }
   }
 
-  //特價商品
+  //取得單一產品說明
+  const descriptionProduct = async (id) => {
+    product.value = {}
+    const statusStore = useStatusStore()
+    statusStore.isLoading = true
+    try {
+      const response = await userProducts.getSingle(id)
+      if (response.data.success) {
+        product.value = response.data.product
+      }
+    } catch (error) {
+      statusStore.handleMessage(error, '讀取商品')
+    } finally {
+      statusStore.isLoading = false
+    }
+  }
+
+  //特價商品預處理
   const specialOfferProducts = computed(() => {
     return farmProducts.value.filter((product) => {
       return Number(product.origin_price) !== Number(product.price)
@@ -57,23 +74,6 @@ export default defineStore('userProductsStore', () => {
       { name: '全部商品', count: farmProducts.value.length },
       ...Object.keys(categoryCounts).map((name) => ({ name, count: categoryCounts[name] }))
     ]
-  }
-
-  //取得單一產品說明
-  const descriptionProduct = async (id) => {
-    product.value = {}
-    const statusStore = useStatusStore()
-    statusStore.isLoading = true
-    try {
-      const response = await userProducts.getSingle(id)
-      if (response.data.success) {
-        product.value = response.data.product
-      }
-    } catch (error) {
-      statusStore.handleMessage(error, '讀取商品')
-    } finally {
-      statusStore.isLoading = false
-    }
   }
 
   return {

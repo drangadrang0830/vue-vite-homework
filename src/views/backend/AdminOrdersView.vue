@@ -9,11 +9,31 @@ import AdminDeleteModal from '@/components/backend/AdminDeleteModal.vue'
 const adminOrderStore = useAdminOrderStore()
 const userOrderStore = useUserOrderStore()
 
-//MODAL控制
+//創建時讀取資料
+onMounted(() => {
+  adminOrderStore.getOrders()
+})
+
+//MODAL實體化
 const orderModalRef = ref(null)
 const deleteModal = ref(null)
 
-//檢視按鈕事件
+//取得優惠劵資訊
+const getCouponInfo = (order) => {
+  const firstProductKey = Object.keys(order.products)
+  if (firstProductKey.length === 0) return null
+  const firstProduct = order.products[firstProductKey[0]]
+  if (firstProduct.coupon && typeof firstProduct.coupon.percent === 'number') {
+    const discountPercent = 100 - firstProduct.coupon.percent
+    return {
+      title: firstProduct.coupon.title,
+      discount: discountPercent
+    }
+  }
+  return null
+}
+
+//檢視MODAL
 const openOrderDetailModal = (orderItem) => {
   orderModalRef.value.openModal(orderItem)
 }
@@ -32,12 +52,7 @@ const openDeleteOrder = (order) => {
   })
 }
 
-//創建時讀取資料
-onMounted(() => {
-  adminOrderStore.getOrders()
-})
-
-//會員操作付款
+//手動操作付款
 const changeCheckbox = async (orderId) => {
   const isPay = await userOrderStore.payOrder(orderId)
   if (isPay) {
@@ -48,21 +63,6 @@ const changeCheckbox = async (orderId) => {
 //切換分頁
 const handlePageChange = (page) => {
   adminOrderStore.getOrders(page)
-}
-
-//取得優惠劵資訊
-const getCouponInfo = (order) => {
-  const firstProductKey = Object.keys(order.products)
-  if (firstProductKey.length === 0) return null
-  const firstProduct = order.products[firstProductKey[0]]
-  if (firstProduct.coupon && typeof firstProduct.coupon.percent === 'number') {
-    const discountPercent = 100 - firstProduct.coupon.percent
-    return {
-      title: firstProduct.coupon.title,
-      discount: discountPercent
-    }
-  }
-  return null
 }
 
 </script>

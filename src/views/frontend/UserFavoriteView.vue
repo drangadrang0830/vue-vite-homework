@@ -13,22 +13,13 @@ const userCartStore = useUserCartStore()
 const getProduct = (id) => {
   router.push(`/product/${id}`)
 }
+
 </script>
 
 <style scoped>
+/* 卡片 */
 .card {
   cursor: pointer;
-}
-
-.card-badgeBg {
-  width: 80px;
-  height: 80px;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.card-badgeImgWarp {
-  top: 0%;
-  right: 0%;
 }
 
 .zoomable-img {
@@ -38,6 +29,19 @@ const getProduct = (id) => {
 
 .main-image:hover .zoomable-img {
   transform: scale(1.2);
+}
+
+/* 最愛功能 */
+.card-badgeImgWarp {
+  top: 0%;
+  right: 0%;
+}
+
+/* 特價裝飾 */
+.card-badgeBg {
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .custom-ribbon {

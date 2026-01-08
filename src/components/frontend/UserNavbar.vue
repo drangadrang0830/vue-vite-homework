@@ -11,19 +11,21 @@ onMounted(() => {
   userCartStore.getCart()
 })
 
+//離開時移除監聽
 onUnmounted(() => {
   window.removeEventListener('resize', updateNavbarHeight)
 })
 
 // NAVBAR控制區-----------
 const isNavOpen = ref(false)
+const navbarRef = ref(null)
 
+//切換漢堡開關
 const toggleNav = () => {
   isNavOpen.value = !isNavOpen.value
 }
 
-const navbarRef = ref(null)
-
+//計算導覽列高度並存入CSS變數
 const updateNavbarHeight = () => {
   if (navbarRef.value) {
     if (!isNavOpen.value) {
@@ -33,6 +35,7 @@ const updateNavbarHeight = () => {
   }
 }
 
+//開關漢堡重新計算高度
 watch(isNavOpen, async () => {
   await nextTick()
   updateNavbarHeight()
@@ -41,6 +44,7 @@ watch(isNavOpen, async () => {
 // 主題控制
 const theme = ref(localStorage.getItem('selected-theme') || 'dark')
 
+//儲存偏好
 const toggleTheme = () => {
   theme.value = theme.value === 'dark' ? 'light' : 'dark'
   document.documentElement.setAttribute('data-bs-theme', theme.value)
@@ -50,6 +54,7 @@ const toggleTheme = () => {
 </script>
 
 <style scoped>
+/* 當前頁面連結 */
 .router-link-exact-active {
   font-weight: bold;
   text-shadow: 0 0 5px #fff,
@@ -57,6 +62,7 @@ const toggleTheme = () => {
     0 0 15px #42b883;
 }
 
+/* 點擊與聚焦 */
 .navbar-brand:active,
 .navbar-brand:focus,
 .nav-link:active,
@@ -66,16 +72,19 @@ const toggleTheme = () => {
     0 0 10px #00BCD4;
 }
 
+/* 標籤的步發光 */
 .router-link-exact-active .badge {
   text-shadow: none;
 }
 
+/* 購物車數字 */
 .location-setting {
   top: -17%;
   left: 95%;
   font-size: 0.6rem;
 }
 
+/* 部落協助按鈕 */
 .btn-animate-pulse3 {
   animation: btn-pulse-effect 3s infinite;
 }

@@ -25,7 +25,7 @@ export default defineStore('userOrderStore', () => {
     }
   }
 
-  //接收指定訂單
+  //查詢訂單
   const getIdOrder = async (orderId) => {
     const statusStore = useStatusStore()
     statusStore.isLoading = true

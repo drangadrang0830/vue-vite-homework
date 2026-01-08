@@ -10,7 +10,7 @@ const filesInput = ref(null)
 const isUpload = ref(false)
 const MAX_IMAGES = 5
 
-// 初始資料
+//初始資料
 const initialProduct = {
   title: '',
   category: '',
@@ -23,8 +23,10 @@ const initialProduct = {
   imagesUrl: [],
 }
 
+//暫存資料
 const tempProduct = ref({ ...initialProduct })
 
+//顯示與資料初始化
 const show = (item = {}) => {
   tempProduct.value = JSON.parse(JSON.stringify({ ...initialProduct, ...item }))
   if (!Array.isArray(tempProduct.value.imagesUrl)) {

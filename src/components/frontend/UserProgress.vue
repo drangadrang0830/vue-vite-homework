@@ -3,7 +3,7 @@ import { ref, onMounted, computed, watch, nextTick, onUnmounted } from 'vue'
 import useStatusStore from '@/stores/statusStore'
 
 const statusStore = useStatusStore()
-let timer = null;
+let timer = null
 
 const props = defineProps({
   step: {
@@ -27,7 +27,6 @@ const displayWidth = ref(`${initialPercent}%`)
 const animateToStep = (targetStep) => {
   const endWidth = (targetStep / denominator) * 100
   displayWidth.value = `${endWidth}%`
-  // 更新 Pinia
   statusStore.setPreviousStep(targetStep)
 }
 

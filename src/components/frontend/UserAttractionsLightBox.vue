@@ -19,15 +19,18 @@ const props = defineProps({
 const visibleRef = ref(false)
 const indexRef = ref(0)
 
+//開啟燈箱並定位到特定圖片
 const showLightbox = (index) => {
   indexRef.value = index
   visibleRef.value = true
 }
 
+//隱藏燈箱
 const onHide = () => {
   visibleRef.value = false
 }
 
+//資料格式預處理
 const formattedImgs = computed(() => {
   return props.imgList.map((url, index) => ({
     src: url,

@@ -24,7 +24,7 @@ export default defineStore('adminProductsStore', () => {
     }
   }
 
-  //刪除商品
+  //刪除指定商品
   const deleteProduct = async (item) => {
     const statusStore = useStatusStore()
     statusStore.isLoading = true
@@ -64,7 +64,7 @@ export default defineStore('adminProductsStore', () => {
     }
   }
 
-  // 圖片上傳
+  // 圖片上傳及回報傳連結
   const uploadFile = async (formData) => {
     const statusStore = useStatusStore()
     const title = '圖片上傳'

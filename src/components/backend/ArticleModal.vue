@@ -26,8 +26,10 @@ const initialArticle = {
   id: ''
 }
 
+//暫存資料
 const tempArticle = ref({ ...initialArticle })
 
+//顯示與資料初始化
 const show = async (id) => {
   if (id) {
     await adminArticleStore.getArticle(id)
@@ -38,7 +40,7 @@ const show = async (id) => {
   openModal()
 }
 
-// 標籤處理
+//新增標籤
 const addTag = () => {
   const tag = newTag.value.trim()
   if (tag && !tempArticle.value.tag.includes(tag)) {
@@ -46,6 +48,8 @@ const addTag = () => {
     newTag.value = ''
   }
 }
+
+//移除標籤
 const removeTag = (index) => {
   tempArticle.value.tag.splice(index, 1)
 }

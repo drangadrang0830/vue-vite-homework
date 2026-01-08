@@ -7,25 +7,26 @@ import AdminDeleteModal from '@/components/backend/AdminDeleteModal.vue'
 
 const adminCouponStore = useAdminCouponStore()
 
+// 創建讀取
+onMounted(() => {
+  adminCouponStore.getCoupons()
+})
+
+//MODAL實體化
 const couponModal = ref(null)
 const deleteModal = ref(null)
 
-// 創建讀取
-onMounted(() => {
-  adminCouponStore.getCoupons();
-})
-
-//新增按鈕事件
+//新增MODAL
 const openNewCouponModal = () => {
   couponModal.value.openModal(null, true)
 }
 
-//編輯按鈕事件
+//編輯MODAL
 const openEditCouponModal = (item) => {
   couponModal.value.openModal(item, false)
 }
 
-//刪除按鍵事件
+//刪除MODAL
 const openDeleteCoupon = (coupon) => {
   deleteModal.value.openModal(coupon, async (target) => {
     await adminCouponStore.removeCoupon(target.id)

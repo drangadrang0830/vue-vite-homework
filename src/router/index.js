@@ -58,6 +58,7 @@ const router = createRouter({
         {
           path: 'checkout/:orderId',
           component: UserCheckOut,
+          // [獨有守衛] 確保結帳頁面只能從訂單頁進入，防止非法跳轉
           beforeEnter: (to, from, next) => {
             if (from.path === '/order') {
               next()
@@ -69,6 +70,7 @@ const router = createRouter({
       ]
     },
     {
+      //後台端
       path: '/login',
       component: AdminLogin
     },
@@ -103,11 +105,7 @@ const router = createRouter({
   ],
   //過畫面回到最上方
   scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    } else {
-      return { top: 0 }
-    }
+    return savedPosition || { top: 0 }
   }
 })
 
@@ -116,7 +114,7 @@ router.beforeEach(async (to, from, next) => {
   const adminApiStore = useAdminApiStore()
   const statusStore = useStatusStore()
 
-  //其他頁面重置進度條
+  //非結帳流程頁面則重置購物進度狀態
   const isCheckoutFlow =
     to.path.includes('/cart') || to.path.includes('/order') || to.path.includes('/checkout')
   if (!isCheckoutFlow) {
@@ -134,12 +132,7 @@ router.beforeEach(async (to, from, next) => {
   //檢查金鑰
   if (to.meta.requiresAuth) {
     const isAuthenticated = await adminApiStore.checkLogin()
-
-    if (isAuthenticated) {
-      next()
-    } else {
-      next('/login')
-    }
+    isAuthenticated ? next() : next('/login')
   } else {
     next()
   }

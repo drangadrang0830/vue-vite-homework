@@ -10,6 +10,7 @@ const tempOrder = ref({
   products: {}
 })
 
+//顯示與資料初始化
 const show = (item) => {
   tempOrder.value = JSON.parse(JSON.stringify(item))
   openModal()

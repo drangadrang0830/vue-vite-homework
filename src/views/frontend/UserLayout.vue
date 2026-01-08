@@ -8,6 +8,7 @@ const statusStore = useStatusStore()
 </script>
 
 <style scoped>
+/* 管理員按鈕 */
 .btn-adaptive {
   color: var(--bs-emphasis-color);
   border: 1px solid var(--bs-emphasis-color);
@@ -59,10 +60,9 @@ const statusStore = useStatusStore()
             </div>
             <RouterLink class="btn btn-adaptive m-3" to="/login">管理員登入</RouterLink>
           </div>
-          <p class="mb-0 text-body text-center">本網站由范智聖設計 © 2025版權所有 <br>個人練習作品用，非商業使用</p>
+          <p class="mb-0 text-body text-center">本網站由范智聖設計 © 2025版權所有 <br>「本網站為專案練習使用，所載之圖片、資訊皆為虛構，無實際交易行為」</p>
         </div>
       </div>
     </div>
-
   </div>
 </template>

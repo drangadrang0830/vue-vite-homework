@@ -7,28 +7,25 @@ import AdminDeleteModal from '@/components/backend/AdminDeleteModal.vue'
 
 const adminArticleStore = useAdminArticleStore()
 
-const articleModal = ref(null)
-const deleteModal = ref(null)
-
 onMounted(() => {
   adminArticleStore.getArticles()
 })
 
-//Modal控制
+//MODAL初始化
+const articleModal = ref(null)
+const deleteModal = ref(null)
+
+//新增Modal
 const openNewArticleModal = () => {
   articleModal.value.openModal()
 }
 
+//編輯MODAL
 const openEditArticleModal = (id) => {
   articleModal.value.openModal(id)
 }
 
-//文章MODAL回應
-const handleUpdateComplete = () => {
-  adminArticleStore.getArticles()
-}
-
-//刪除按鈕事件
+//刪除MODAL
 const openDeleteArticle = (article) => {
   deleteModal.value.openModal(article, async (target) => {
     const success = await adminArticleStore.deleteArticle(target)
@@ -38,6 +35,11 @@ const openDeleteArticle = (article) => {
   })
 }
 
+//MODAL確認後更新資料
+const handleUpdateComplete = () => {
+  adminArticleStore.getArticles()
+}
+
 //切換分頁
 const handlePageChange = (page) => {
   adminArticleStore.getArticles(page)
@@ -45,6 +47,7 @@ const handlePageChange = (page) => {
 </script>
 
 <style scoped>
+/* 文字 */
 .text-truncate-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;

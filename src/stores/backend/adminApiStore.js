@@ -3,7 +3,7 @@ import { adminAuth } from '@/api'
 import useStatusStore from '@/stores/statusStore'
 
 export default defineStore('adminApiStore', () => {
-  //登入
+  //登入並儲存憑證
   const login = async (username, password) => {
     const statusStore = useStatusStore()
     const title = '登入'
@@ -41,7 +41,7 @@ export default defineStore('adminApiStore', () => {
     }
   }
 
-  //登出
+  //安全登出
   const logout = async () => {
     const statusStore = useStatusStore()
     try {

@@ -19,7 +19,7 @@ const getImgUrl = (path) => {
   return new URL(path, import.meta.url).href
 }
 
-// 表單送出後的動作
+// 表單送出
 const onSubmit = (values, { resetForm }) => {
   Swal.fire({
     title: '訂閱成功！',
@@ -30,9 +30,11 @@ const onSubmit = (values, { resetForm }) => {
   })
   resetForm()
 }
+
 </script>
 
 <style scoped>
+/* Banner */
 .parallax-section {
   height: 500px;
   background-image: url('@/assets/home-banner.jpg');
@@ -45,6 +47,7 @@ const onSubmit = (values, { resetForm }) => {
   filter: brightness(0.9);
 }
 
+/* 視覺特效 */
 [data-bs-theme="dark"] .invert {
   filter: invert(100%);
 }
@@ -66,6 +69,7 @@ const onSubmit = (values, { resetForm }) => {
   filter: brightness(1.1);
 }
 
+/* 自訂邊框 */
 .sea-border {
   border-style: solid;
   border-width: 45px 0px 45px 0px;
@@ -80,8 +84,8 @@ const onSubmit = (values, { resetForm }) => {
       <div class="parallax-section"></div>
       <div class="position-absolute top-50 start-0 translate-middle-y w-100">
         <div class="row justify-content-center w-100">
-          <div class="col-8 col-lg-4 position-relative">
-            <img src="@/assets/home-bannerText.png" class="img-fluid" alt="帶著微醺，頂著驕陽，歡迎來到獅子鄉">
+          <div class="col-11 col-lg-6 position-relative">
+            <img src="@/assets/home-bannerText2.png" class="img-fluid" alt="帶著微醺，頂著驕陽，歡迎來到獅子鄉">
             <RouterLink
               class="btn btn-info position-absolute top-100 start-50 translate-middle-x border-light border-2 mt-2 text-nowrap"
               to="/products">

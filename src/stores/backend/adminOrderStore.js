@@ -7,7 +7,7 @@ export default defineStore('adminOrderStore', () => {
   const orders = ref([])
   const pagination = ref({})
 
-  //取得訂單資訊
+  //讀取訂單資訊
   const getOrders = async (page = 1) => {
     const statusStore = useStatusStore()
     statusStore.isLoading = true
@@ -18,7 +18,7 @@ export default defineStore('adminOrderStore', () => {
         pagination.value = response.data.pagination
       }
     } catch (error) {
-      statusStore.handleMessage(error, '取得訂單')
+      statusStore.handleMessage(error, '讀取訂單')
     } finally {
       statusStore.isLoading = false
     }

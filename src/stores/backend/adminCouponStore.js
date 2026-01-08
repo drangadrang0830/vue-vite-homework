@@ -18,7 +18,7 @@ export default defineStore('adminCouponStore', () => {
         pagination.value = response.data.pagination
       }
     } catch (error) {
-      statusStore.handleMessage(error, '取得優惠劵')
+      statusStore.handleMessage(error, '讀取優惠劵')
     } finally {
       statusStore.isLoading = false
     }
@@ -44,26 +44,6 @@ export default defineStore('adminCouponStore', () => {
     }
   }
 
-  // 新增優惠劵
-  const addCoupon = async (item) => {
-    const statusStore = useStatusStore()
-    statusStore.isLoading = true
-    const title = '新增優惠劵'
-    try {
-      const response = await adminCoupons.add(item)
-      const success = statusStore.handleMessage(response, title)
-      if (success) {
-        getCoupons()
-        return true
-      }
-    } catch (error) {
-      statusStore.handleMessage(error, title)
-      return false
-    } finally {
-      statusStore.isLoading = false
-    }
-  }
-
   // 編輯優惠劵
   const updateCoupon = async (item) => {
     const statusStore = useStatusStore()
@@ -74,6 +54,26 @@ export default defineStore('adminCouponStore', () => {
       const success = statusStore.handleMessage(response, title)
       if (success) {
         getCoupons(pagination.value.current_page || 1)
+        return true
+      }
+    } catch (error) {
+      statusStore.handleMessage(error, title)
+      return false
+    } finally {
+      statusStore.isLoading = false
+    }
+  }
+
+  // 新增優惠劵
+  const addCoupon = async (item) => {
+    const statusStore = useStatusStore()
+    statusStore.isLoading = true
+    const title = '新增優惠劵'
+    try {
+      const response = await adminCoupons.add(item)
+      const success = statusStore.handleMessage(response, title)
+      if (success) {
+        getCoupons()
         return true
       }
     } catch (error) {

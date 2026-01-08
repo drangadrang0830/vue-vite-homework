@@ -8,7 +8,7 @@ const tempItem = ref({})
 const isLoading = ref(false)
 let onConfirmCallback = null
 
-//開啟帶入
+//顯示與資料初始化
 const show = (item, confirmFn) => {
   tempItem.value = { ...item }
   onConfirmCallback = confirmFn

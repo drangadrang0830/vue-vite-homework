@@ -21,54 +21,8 @@ const { product, farmProducts } = storeToRefs(userProductsStore)
 const isSwiperReady = ref(false)
 const qty = ref(1)
 const isAdding = ref(false)
-
-watch(qty, (newValue) => {
-  if (newValue < 1 || !newValue) {
-    qty.value = 1
-  }
-})
-
-onMounted(async () => {
-  isSwiperReady.value = false;
-  await userProductsStore.descriptionProduct(productId)
-  await nextTick();
-  isSwiperReady.value = true;
-})
-
 const thumbsSwiper = ref(null)
-
-const setThumbsSwiper = (swiper) => {
-  thumbsSwiper.value = swiper
-}
-
 const modules = [FreeMode, Thumbs, Autoplay, Pagination]
-
-const addCartToUser = async () => {
-  if (isAdding.value) return
-  isAdding.value = true
-
-  try {
-    await userCartStore.addCart(productId, qty.value)
-  } finally {
-    isAdding.value = false
-  }
-}
-
-const validateQty = () => {
-  if (qty.value < 1 || !qty.value) {
-    qty.value = 1;
-  }
-}
-
-const relatedProducts = computed(() => {
-  if (!product.value.category || farmProducts.value.length === 0) return []
-  return farmProducts.value.filter(item =>
-    // 篩選掉目前的產品
-    item.category === product.value.category && item.id !== product.value.id
-  );
-})
-
-// 響應式斷點設定
 const relatedSwiperBreakpoints = {
   576: { slidesPerView: 1 },
   768: { slidesPerView: 2 },
@@ -76,6 +30,53 @@ const relatedSwiperBreakpoints = {
   1400: { slidesPerView: 4 },
 };
 
+onMounted(async () => {
+  isSwiperReady.value = false
+  await userProductsStore.descriptionProduct(productId)
+  await nextTick();
+  isSwiperReady.value = true
+})
+
+//監視數量變動(負值歸1)
+watch(qty, (newValue) => {
+  if (newValue === null || newValue === '') return;
+  if (newValue < 1) {
+    qty.value = 1;
+  }
+})
+
+//防呆確保數值無0及負數
+const validateQty = () => {
+  if (qty.value < 1 || !qty.value) {
+    qty.value = 1;
+  }
+}
+
+//Swiper 實體
+const setThumbsSwiper = (swiper) => {
+  thumbsSwiper.value = swiper
+}
+
+//加入購物車頁面處理
+const addToCart = async (id = productId, count = qty.value) => {
+  if (isAdding.value) return
+  isAdding.value = true
+  try {
+    await userCartStore.addCart(id, count)
+  } finally {
+    isAdding.value = false
+  }
+}
+
+//篩選出同類商品但去除目前商品
+const relatedProducts = computed(() => {
+  if (!product.value.category || farmProducts.value.length === 0) return []
+  return farmProducts.value.filter(item =>
+    item.category === product.value.category && item.id !== product.value.id
+  );
+})
+
+//下方Swiper分頁調整
 const renderCustomPagination = (index, className) => {
   const totalItems = relatedProducts.value.length;
   const startNum = index * 3 + 1;
@@ -83,14 +84,7 @@ const renderCustomPagination = (index, className) => {
   return `<span class="${className}">商品 ${startNum} - ${endNum}</span>`;
 }
 
-const addCartToUserFromRelated = async (id) => {
-  try {
-    await userCartStore.addCart(id, 1);
-  } catch (error) {
-    console.error('Failed to add related product to cart:', error);
-  }
-}
-
+//返回產品列表頁面
 const goBack = () => {
   router.push('/products');
 }
@@ -98,12 +92,14 @@ const goBack = () => {
 </script>
 
 <style scoped>
+/* 圖片調整 */
 .object-fit-cover {
   object-fit: cover;
   width: 100%;
   height: 100%;
 }
 
+/* 購買須知 */
 .purchase-info ul {
   list-style: none;
   padding-left: 5px;
@@ -125,6 +121,7 @@ const goBack = () => {
   top: 3px;
 }
 
+/* Swiper共用 */
 :deep(.swiper-pagination-bullet) {
   width: 8px;
   height: 8px;
@@ -141,12 +138,28 @@ const goBack = () => {
   opacity: 1;
 }
 
+/* 上Swiper */
 .zoomable-img {
   transition: transform 0.3s ease;
 }
 
 .main-image:hover .zoomable-img {
   transform: scale(1.2);
+}
+
+/* 下Swiper */
+:deep(.thumbs-swiper .swiper-slide-thumb-active .ratio) {
+  border: 2px solid var(--bs-info) !important;
+  box-shadow: 0 0 5px rgba(var(--bs-info-rgb), 0.5);
+}
+
+:deep(.thumbs-swiper .ratio) {
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+:deep(.thumbs-swiper .swiper-slide:hover .ratio) {
+  border-color: var(--bs-info);
 }
 </style>
 
@@ -168,7 +181,6 @@ const goBack = () => {
         </li>
       </ol>
     </nav>
-
     <div class="row my-3">
       <div class="col-lg-6" v-if="isSwiperReady && product.imagesUrl && product.imagesUrl.length > 0">
         <swiper :spaceBetween="10" :thumbs="{ swiper: thumbsSwiper }" :modules="modules"
@@ -179,7 +191,6 @@ const goBack = () => {
             </div>
           </swiper-slide>
         </swiper>
-
         <swiper @swiper="setThumbsSwiper" :spaceBetween="12" :slidesPerView="5" :freeMode="true"
           :watchSlidesProgress="true" :modules="modules" class="thumbs-swiper mt-3" v-if="product.imagesUrl.length > 1">
           <swiper-slide v-for="(img, key) in product.imagesUrl" :key="'thumb' + key" class="cursor-pointer">
@@ -194,7 +205,7 @@ const goBack = () => {
       </div>
       <div class="col-lg-6 d-md-flex flex-column justify-content-between">
         <div class="">
-          <h2 class="fw-bold">{{ product.title }}</h2>
+          <h2 class="fw-bold  mt-3 mt-md-0">{{ product.title }}</h2>
           <p class="fs-5">{{ product.description }}</p>
           <p>備註：{{ product.content }}</p>
         </div>
@@ -217,7 +228,7 @@ const goBack = () => {
             <span class="input-group-text">數量</span>
             <input type="number" class="form-control text-end" v-model.number="qty" min="1" @blur="validateQty"
               :disabled="isAdding">
-            <button class="btn btn-info" type="button" @click="addCartToUser" :disabled="isAdding">加到購物車</button>
+            <button class="btn btn-info" type="button" @click="addToCart()" :disabled="isAdding">加到購物車</button>
           </div>
         </div>
       </div>
@@ -262,9 +273,8 @@ const goBack = () => {
                 </div>
               </div>
               <div class="card-footer p-0">
-                <button class="btn btn-info rounded-top-0 w-100" type="button"
-                  @click="addCartToUserFromRelated(item.id)">
-                  <span>加入購物車</span>
+                <button class="btn btn-info rounded-top-0 w-100" type="button" @click="addToCart(item.id, 1)">
+                  <span>加到購物車</span>
                 </button>
               </div>
             </div>

@@ -9,7 +9,7 @@ import useStatusStore from '@/stores/statusStore'
 import useUserCartStore from '@/stores/frontend/userCartStore'
 import useUserProductsStore from '@/stores/frontend/userProductsStore'
 
-const modules = [Pagination, Autoplay];
+const modules = [Pagination, Autoplay]
 const userCartStore = useUserCartStore()
 const statusStore = useStatusStore()
 const userProductsStore = useUserProductsStore()
@@ -17,8 +17,9 @@ const router = useRouter()
 
 onMounted(() => {
   userProductsStore.getAllProducts()
-});
+})
 
+//切換到產品詳細說明頁面
 const getProduct = (id) => {
   router.push(`/product/${id}`)
 }

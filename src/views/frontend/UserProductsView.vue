@@ -12,11 +12,9 @@ const statusStore = useStatusStore()
 const userProductsStore = useUserProductsStore()
 const userCartStore = useUserCartStore()
 const userFavoriteStore = useUserFavoriteStore()
-
 const useCategory = ref('全部商品')
 const currentPage = ref(1)
 const pageSize = 12
-
 
 onMounted(async () => {
   await userProductsStore.getAllProducts()
@@ -29,6 +27,7 @@ const filterData = (category) => {
   currentPage.value = 1
 }
 
+//分類顯示
 const filteredList = computed(() => {
   if (useCategory.value === '全部商品') return userProductsStore.farmProducts
   return userProductsStore.farmProducts.filter(item => item.category?.includes(useCategory.value))
@@ -41,6 +40,7 @@ const pagedList = computed(() => {
   return filteredList.value.slice(start, end)
 })
 
+//處理傳遞用分頁變數
 const paginationInfo = computed(() => {
   const total = Math.ceil(filteredList.value.length / pageSize) || 1
   return {
@@ -51,12 +51,13 @@ const paginationInfo = computed(() => {
     category: useCategory.value
   }
 })
-//------------------------
+
+//執行換頁
 const changePage = (page) => {
   currentPage.value = page
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
-
+//------------------------
 //轉往介紹頁
 const getProduct = (id) => {
   router.push(`/product/${id}`)
@@ -65,14 +66,9 @@ const getProduct = (id) => {
 </script>
 
 <style scoped>
+/* 卡片 */
 .card {
   cursor: pointer;
-}
-
-.card-badgeBg {
-  width: 80px;
-  height: 80px;
-  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .zoomable-img {
@@ -83,6 +79,12 @@ const getProduct = (id) => {
   transform: scale(1.2);
 }
 
+.card-badgeBg {
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
 .custom-ribbon {
   width: 150px;
   transform: translate(-37%, 4%) rotate(-45deg);
@@ -90,6 +92,7 @@ const getProduct = (id) => {
   pointer-events: none;
 }
 
+/* 側邊攔 */
 .totem {
   width: 1.5rem;
   height: auto;
@@ -122,14 +125,12 @@ const getProduct = (id) => {
 <template>
   <div>
     <h6 class="bg-warning-subtle p-1 m-0 text-center text-danger">目前消費滿1,500元，即送85折優惠劵!</h6>
-
     <div class="container my-4">
       <div class="row">
         <div class="col-lg-2 mb-4">
           <div class="sticky-top" style="top: calc(var(--nav-height) + 20px);">
             <div class="card border-0 shadow-sm">
               <div class="list-group list-group-flush">
-
                 <button v-for="(category, index) in userProductsStore.categories" :key="index" type="button"
                   class="list-group-item list-group-item-action d-flex align-items-center"
                   :class="{ active: category.name === useCategory }" @click="filterData(category.name)">
@@ -144,7 +145,6 @@ const getProduct = (id) => {
             </div>
           </div>
         </div>
-
         <div class="col-lg-10">
           <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1 gx-3 gy-4 mb-3">
             <div class="col" v-for="product in pagedList" :key="product.id">
@@ -199,11 +199,9 @@ const getProduct = (id) => {
               </div>
             </div>
           </div>
-
           <div class="d-flex justify-content-center py-4">
             <SharedPagination v-if="paginationInfo.total_pages > 1" :pages="paginationInfo" @emit-pages="changePage" />
           </div>
-
         </div>
       </div>
     </div>

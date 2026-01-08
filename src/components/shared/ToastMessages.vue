@@ -9,7 +9,7 @@ const { messages } = storeToRefs(statusStore)
 </script>
 
 <template>
-  <div class="toast-container position-fixed pt-3 pe-3 top-0 end-0 mt-5" style="z-index: 1060">
+  <div class="toast-container position-fixed pt-3 px-3 top-0 end-0 mt-5" style="z-index: 1060">
     <toastFormat v-for="msg in messages" :key="msg.id" :msg="msg" />
   </div>
 </template>

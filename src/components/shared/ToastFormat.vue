@@ -3,13 +3,14 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import Toast from 'bootstrap/js/dist/toast'
 import useStatusStore from '@/stores/statusStore'
 
+//接收變數
 const props = defineProps(['msg'])
 const toastEl = ref(null)
 const statusStore = useStatusStore()
 let bsToastInstance = null
 
 onMounted(() => {
-  const toastDomElement = toastEl.value;
+  const toastDomElement = toastEl.value
 
   bsToastInstance = new Toast(toastDomElement, {
     delay: 3000,

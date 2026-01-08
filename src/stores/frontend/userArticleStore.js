@@ -7,7 +7,7 @@ export default defineStore('userArticleStore', () => {
   const articles = ref([])
   let isFetching = false
 
-  //取得所有產品資訊
+  //取得文章資訊
   const getArticles = async () => {
     if (articles.value.length > 0 || isFetching) return
     isFetching = true

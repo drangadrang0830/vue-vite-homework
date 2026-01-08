@@ -7,14 +7,15 @@ import AdminDeleteModal from '@/components/backend/AdminDeleteModal.vue'
 
 const adminProductsStore = useAdminProductsStore()
 
-const productModal = ref(null)
-const deleteModal = ref(null)
-
 onMounted(() => {
   adminProductsStore.getProducts()
 })
 
-//Modal控制
+//MODAL實體化
+const productModal = ref(null)
+const deleteModal = ref(null)
+
+//新增及編輯MODAL
 const openProductModal = (isNew, item) => {
   if (isNew) {
     productModal.value.openModal()
@@ -23,6 +24,7 @@ const openProductModal = (isNew, item) => {
   }
 }
 
+//刪除MODAL
 const openDeleteProduct = (item) => {
   deleteModal.value.openModal(item, async (target) => {
     const success = await adminProductsStore.deleteProduct(target)

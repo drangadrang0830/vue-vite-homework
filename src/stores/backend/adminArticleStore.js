@@ -18,7 +18,7 @@ export default defineStore('adminArticleStore', () => {
   })
   const pagination = ref({})
 
-  //取得文章資訊
+  //讀取文章資訊
   const getArticles = async (page = 1) => {
     const statusStore = useStatusStore()
     statusStore.isLoading = true
@@ -29,7 +29,7 @@ export default defineStore('adminArticleStore', () => {
         pagination.value = response.data.pagination
       }
     } catch (error) {
-      statusStore.handleMessage(error, '文章資訊')
+      statusStore.handleMessage(error, '讀取文章')
     } finally {
       statusStore.isLoading = false
     }
@@ -46,7 +46,7 @@ export default defineStore('adminArticleStore', () => {
         article.value = response.data.article
       }
     } catch (error) {
-      statusStore.handleMessage(error, '單一文章')
+      statusStore.handleMessage(error, '讀取指定文章')
     } finally {
       statusStore.isLoading = false
     }

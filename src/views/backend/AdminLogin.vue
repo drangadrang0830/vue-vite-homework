@@ -10,6 +10,7 @@ const adminApiStore = useAdminApiStore()
 const statusStore = useStatusStore()
 const router = useRouter()
 
+//表單輸入綁定
 const user = ref(
   {
     username: '',
@@ -20,7 +21,7 @@ const user = ref(
 //密碼顯示切換
 const isPasswordVisible = ref(false)
 
-//點擊登入按鈕事件
+//表單送出
 const handleLogin = async () => {
   const loginSuccess = await adminApiStore.login(user.value.username, user.value.password)
   if (loginSuccess) {
