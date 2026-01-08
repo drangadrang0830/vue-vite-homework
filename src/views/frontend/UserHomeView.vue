@@ -85,7 +85,7 @@ const onSubmit = (values, { resetForm }) => {
       <div class="position-absolute top-50 start-0 translate-middle-y w-100">
         <div class="row justify-content-center w-100">
           <div class="col-11 col-lg-6 position-relative">
-            <img src="@/assets/home-bannerText2.png" class="img-fluid" alt="帶著微醺，頂著驕陽，歡迎來到獅子鄉">
+            <img src="@/assets/home-bannerText.png" class="img-fluid" alt="帶著微醺，頂著驕陽，歡迎來到獅子鄉">
             <RouterLink
               class="btn btn-info position-absolute top-100 start-50 translate-middle-x border-light border-2 mt-2 text-nowrap"
               to="/products">

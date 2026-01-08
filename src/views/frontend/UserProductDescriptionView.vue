@@ -213,13 +213,13 @@ const goBack = () => {
           <div class="text-lg-end mt-4">
             <p class="my-0" :class="product.origin_price !== product.price
               ? 'text-decoration-line-through fs-6 text-secondary'
-              : 'fs-5'">
+              : 'fs-4'">
               <span v-if="product.origin_price !== product.price">原價</span>
               <span v-else>售價</span>
               {{ $filters.currency(product.origin_price) }}元
             </p>
             <div v-if="product.origin_price !== product.price" class="position-relative">
-              <h3 class="fs-4 text-danger fw-bold">現在只要{{ $filters.currency(product.price) }}元!!</h3>
+              <h3 class="fs-3 text-danger fw-bold">現在只要{{ $filters.currency(product.price) }}元!!</h3>
               <img src="@/assets/special-offer.png" alt="特價標示圖"
                 class="w-25 d-none d-lg-block start-100 top-50 position-absolute translate-middle-y">
             </div>
@@ -228,7 +228,8 @@ const goBack = () => {
             <span class="input-group-text">數量</span>
             <input type="number" class="form-control text-end" v-model.number="qty" min="1" @blur="validateQty"
               :disabled="isAdding">
-            <button class="btn btn-info" type="button" @click="addToCart()" :disabled="isAdding">加到購物車</button>
+            <button class="btn btn-info btn-lg" type="button" @click="addToCart()" :disabled="isAdding"><i
+                class="bi bi-cart"></i> 加到購物車</button>
           </div>
         </div>
       </div>
