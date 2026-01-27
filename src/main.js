@@ -14,7 +14,7 @@ import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/css/index.css'
 
 import { Field, Form, ErrorMessage, defineRule, configure } from 'vee-validate'
-import { required, email, min, max, alpha_dash } from '@vee-validate/rules'
+import { required, email, min, max, alpha_dash, regex } from '@vee-validate/rules'
 import { localize, setLocale } from '@vee-validate/i18n'
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 
@@ -29,6 +29,7 @@ defineRule('email', email)
 defineRule('min', min)
 defineRule('alpha_dash', alpha_dash)
 defineRule('max', max)
+defineRule('regex', regex)
 
 configure({
   generateMessage: localize('zh_TW', zhTW),

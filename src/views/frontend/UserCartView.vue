@@ -21,7 +21,7 @@ const useCouponButton = async () => {
     statusStore.pushMessage({
       title: `無法使用優惠劵`,
       style: 'danger',
-      content: '優惠碼不可為空值',
+      content: '優惠碼不可為空值'
     })
     return
   }
@@ -33,15 +33,14 @@ const useCouponButton = async () => {
 const toOrder = () => {
   router.push(`/order`)
 }
-
 </script>
 
 <template>
   <div class="container my-4">
     <UserProgress v-if="userCartStore.cartData.carts?.length > 0" :step="0" />
-    <div class="row g-5 my-4" v-if="userCartStore.cartData.carts?.length > 0">
+    <div class="row gy-5 my-4" v-if="userCartStore.cartData.carts?.length > 0">
       <div class="col-md-8">
-        <table class="table align-middle table-hover" style="--bs-table-bg: transparent;">
+        <table class="table align-middle table-hover" style="--bs-table-bg: transparent">
           <thead>
             <tr class="text-center">
               <th></th>
@@ -60,23 +59,21 @@ const toOrder = () => {
                       class="bi bi-x-lg text-danger p-2"></i></a>
                 </td>
                 <td class="d-none d-lg-table-cell">
-                  <img :src="item.product.imagesUrl[0]" :alt="item.product.title" class="img-fluid">
+                  <img :src="item.product.imagesUrl[0]" :alt="item.product.title" class="img-fluid" />
                 </td>
                 <td class="text-center">
                   {{ item.product.title }}
                   <div class="text-success" v-if="item.coupon">
-                    <div class="d-none d-lg-block">
-                      已套用優惠券
-                    </div>
+                    <div class="d-none d-lg-block">已套用優惠券</div>
                   </div>
                 </td>
                 <td>
                   <div class="input-group input-group-sm">
                     <input type="number" class="form-control w-50 text-end bg-body" min="1" v-model.number="item.qty"
-                      @change="userCartStore.updateCart(item)" :disabled="statusStore.loadingItem === item.id">
-                    <div class="input-group-text w-50 text-center d-none d-lg-block bg-body">/ {{
-                      item.product.unit
-                      }}</div>
+                      @change="userCartStore.updateCart(item)" :disabled="statusStore.loadingItem === item.id" />
+                    <div class="input-group-text w-50 text-center d-none d-lg-block bg-body">
+                      / {{ item.product.unit }}
+                    </div>
                   </div>
                 </td>
                 <td class="text-end d-none d-lg-table-cell">
@@ -90,7 +87,7 @@ const toOrder = () => {
             <tfoot>
               <tr>
                 <td colspan="6" class="text-end fw-bold">
-                  <RouterLink class="btn btn-warning" to="/products">繼續選購</RouterLink>
+                  <RouterLink class="btn btn-secondary" to="/products">繼續選購</RouterLink>
                 </td>
               </tr>
             </tfoot>
@@ -107,7 +104,7 @@ const toOrder = () => {
             </div>
             <div v-if="!userCartStore.cartData.carts[0]?.coupon" class="mb-3">
               <div class="input-group">
-                <input type="text" class="form-control" placeholder="請輸入優惠碼" v-model="code">
+                <input type="text" class="form-control" placeholder="請輸入優惠碼" v-model="code" />
                 <button class="btn btn-outline-success" type="button" @click="useCouponButton">
                   套用
                 </button>
@@ -123,26 +120,35 @@ const toOrder = () => {
                 <span class="text-danger">-{{ 100 - userCartStore.cartData.carts[0].coupon?.percent }}%</span>
               </div>
             </template>
-            <hr class="my-3">
+            <hr class="my-3" />
             <template v-if="userCartStore.cartData.final_total !== userCartStore.cartData.total">
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">折扣抵免</span>
                 <span class="text-danger fw-bold">
-                  -{{ $filters.currency(Math.floor(userCartStore.cartData.total) -
-                    Math.floor(userCartStore.cartData.final_total)) }}
+                  -{{
+                    $filters.currency(
+                      Math.floor(userCartStore.cartData.total) -
+                      Math.floor(userCartStore.cartData.final_total)
+                    )
+                  }}
                 </span>
               </div>
             </template>
             <div class="d-flex justify-content-between align-items-end mb-4">
               <span class="fw-bold">總計金額</span>
               <span class="fs-4 fw-bold" :class="{
-                'text-success': userCartStore.cartData.final_total !== userCartStore.cartData.total,
+                'text-success':
+                  userCartStore.cartData.final_total !== userCartStore.cartData.total,
                 'text-dark': userCartStore.cartData.final_total === userCartStore.cartData.total
               }">
-                {{ $filters.currency(userCartStore.cartData.final_total || userCartStore.cartData.total) }}
+                {{
+                  $filters.currency(
+                    userCartStore.cartData.final_total || userCartStore.cartData.total
+                  )
+                }}
               </span>
             </div>
-            <button class="btn btn-success w-100 py-2 fw-bold" type="button" @click="toOrder()">
+            <button class="btn btn-info w-100 py-2" type="button" @click="toOrder()">
               填寫收件資料
             </button>
           </div>

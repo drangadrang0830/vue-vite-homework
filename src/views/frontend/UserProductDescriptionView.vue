@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, nextTick, watch, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import useUserProductsStore from '@/stores/frontend/userProductsStore'
 import useUserCartStore from '@/stores/frontend/userCartStore'
@@ -13,7 +13,6 @@ import 'swiper/css/thumbs'
 import 'swiper/css/pagination'
 
 const route = useRoute()
-const router = useRouter()
 const productId = route.params.productId
 const userProductsStore = useUserProductsStore()
 const userCartStore = useUserCartStore()
@@ -27,28 +26,28 @@ const relatedSwiperBreakpoints = {
   576: { slidesPerView: 1 },
   768: { slidesPerView: 2 },
   992: { slidesPerView: 3 },
-  1400: { slidesPerView: 4 },
-};
+  1400: { slidesPerView: 4 }
+}
 
 onMounted(async () => {
   isSwiperReady.value = false
   await userProductsStore.descriptionProduct(productId)
-  await nextTick();
+  await nextTick()
   isSwiperReady.value = true
 })
 
 //監視數量變動(負值歸1)
 watch(qty, (newValue) => {
-  if (newValue === null || newValue === '') return;
+  if (newValue === null || newValue === '') return
   if (newValue < 1) {
-    qty.value = 1;
+    qty.value = 1
   }
 })
 
 //防呆確保數值無0及負數
 const validateQty = () => {
   if (qty.value < 1 || !qty.value) {
-    qty.value = 1;
+    qty.value = 1
   }
 }
 
@@ -71,24 +70,18 @@ const addToCart = async (id = productId, count = qty.value) => {
 //篩選出同類商品但去除目前商品
 const relatedProducts = computed(() => {
   if (!product.value.category || farmProducts.value.length === 0) return []
-  return farmProducts.value.filter(item =>
-    item.category === product.value.category && item.id !== product.value.id
-  );
+  return farmProducts.value.filter(
+    (item) => item.category === product.value.category && item.id !== product.value.id
+  )
 })
 
 //下方Swiper分頁調整
 const renderCustomPagination = (index, className) => {
-  const totalItems = relatedProducts.value.length;
-  const startNum = index * 3 + 1;
-  const endNum = Math.min(startNum + 3 - 1, totalItems);
-  return `<span class="${className}">商品 ${startNum} - ${endNum}</span>`;
+  const totalItems = relatedProducts.value.length
+  const startNum = index * 3 + 1
+  const endNum = Math.min(startNum + 3 - 1, totalItems)
+  return `<span class="${className}">商品 ${startNum} - ${endNum}</span>`
 }
-
-//返回產品列表頁面
-const goBack = () => {
-  router.push('/products');
-}
-
 </script>
 
 <style scoped>
@@ -143,7 +136,7 @@ const goBack = () => {
   transition: transform 0.3s ease;
 }
 
-.main-image:hover .zoomable-img {
+.card:hover .zoomable-img {
   transform: scale(1.2);
 }
 
@@ -204,42 +197,46 @@ const goBack = () => {
         <p>圖片載入中...</p>
       </div>
       <div class="col-lg-6 d-md-flex flex-column justify-content-between">
-        <div class="">
-          <h2 class="fw-bold  mt-3 mt-md-0">{{ product.title }}</h2>
+        <div>
+          <h2 class="fw-bold mt-3 mt-md-0">{{ product.title }}</h2>
           <p class="fs-5">{{ product.description }}</p>
           <p>備註：{{ product.content }}</p>
         </div>
         <div>
           <div class="text-lg-end mt-4">
             <p class="my-0" :class="product.origin_price !== product.price
-              ? 'text-decoration-line-through fs-6 text-secondary'
-              : 'fs-4'">
+                ? 'text-decoration-line-through fs-6 text-secondary'
+                : 'fs-4'
+              ">
               <span v-if="product.origin_price !== product.price">原價</span>
               <span v-else>售價</span>
               {{ $filters.currency(product.origin_price) }}元
             </p>
             <div v-if="product.origin_price !== product.price" class="position-relative">
-              <h3 class="fs-3 text-danger fw-bold">現在只要{{ $filters.currency(product.price) }}元!!</h3>
+              <h3 class="fs-3 text-danger fw-bold">
+                現在只要{{ $filters.currency(product.price) }}元!!
+              </h3>
               <img src="@/assets/special-offer.png" alt="特價標示圖"
-                class="w-25 d-none d-lg-block start-100 top-50 position-absolute translate-middle-y">
+                class="w-25 d-none d-lg-block start-100 top-50 position-absolute translate-middle-y" />
             </div>
           </div>
           <div class="input-group mt-3">
             <span class="input-group-text">數量</span>
             <input type="number" class="form-control text-end" v-model.number="qty" min="1" @blur="validateQty"
-              :disabled="isAdding">
-            <button class="btn btn-info btn-lg" type="button" @click="addToCart()" :disabled="isAdding"><i
-                class="bi bi-cart"></i> 加到購物車</button>
+              :disabled="isAdding" />
+            <button class="btn btn-info btn-lg" type="button" @click="addToCart()" :disabled="isAdding">
+              <i class="bi bi-cart"></i> 加到購物車
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="bg-body">
-    <div class="container py-3">
-      <div class="purchase-info">
+    <div class="container py-5">
+      <div class="purchase-info mb-5">
         <h3>購買須知</h3>
-        <ul>
+        <ul class="fs-5">
           <li>農業產品有收成時段，商家不定時會撤下或新增商品。</li>
           <li>因為天然食材、拍攝或螢幕解析等原因，商品的色差可能會有所不同，請以實物為準。</li>
           <li>商品重量可能會因其放置環境及時長而有些微的誤差30克上下，屬於正常範圍。</li>
@@ -247,7 +244,7 @@ const goBack = () => {
         </ul>
       </div>
       <div>
-        <h3 class="mb-4">探索同分類商品</h3>
+        <h3 class="mb-3">探索同分類商品</h3>
         <Swiper :slidesPerView="1" :spaceBetween="20" :loop="false" :modules="modules" :autoHeight="false" :pagination="{
           clickable: true,
           renderCustom: renderCustomPagination
@@ -256,36 +253,35 @@ const goBack = () => {
             <div class="card h-100 w-100 position-relative overflow-hidden">
               <div class="ratio ratio-4x3 overflow-hidden main-image">
                 <img :src="item.imagesUrl?.[0] || 'placeholder.jpg'" class="card-img-top object-fit-cover zoomable-img"
-                  :alt="item.title">
+                  :alt="item.title" />
               </div>
               <div class="card-body text-center d-flex flex-column justify-content-between">
                 <h5 class="card-title border-bottom pb-3">{{ item.title }}</h5>
                 <div>
                   <p class="my-0" :class="item.origin_price !== item.price
-                    ? 'text-decoration-line-through fs-6'
-                    : 'fs-5'">
+                      ? 'text-decoration-line-through fs-6'
+                      : 'fs-5'
+                    ">
                     <span v-if="item.origin_price !== item.price">原價</span>
                     <span v-else>售價</span>
                     {{ $filters.currency(item.origin_price) }}元
                   </p>
                   <div v-if="item.origin_price !== item.price">
-                    <p class="fs-5 text-danger my-0 fw-bold">現在只要{{ $filters.currency(item.price) }}元!!</p>
+                    <p class="fs-5 text-danger my-0 fw-bold">
+                      現在只要{{ $filters.currency(item.price) }}元!!
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="card-footer p-0">
-                <button class="btn btn-info rounded-top-0 w-100" type="button" @click="addToCart(item.id, 1)">
+                <button class="btn btn-info rounded-top-0 w-100 stretched-link" type="button"
+                  @click="addToCart(item.id, 1)">
                   <span>加到購物車</span>
                 </button>
               </div>
             </div>
           </SwiperSlide>
         </Swiper>
-        <div class="text-center">
-          <button type="button" class="btn btn-lg btn-warning" @click="goBack">
-            想看其他商品
-          </button>
-        </div>
       </div>
     </div>
   </div>

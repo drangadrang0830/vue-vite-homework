@@ -31,9 +31,12 @@ const animateToStep = (targetStep) => {
 }
 
 //監視步驟調整進度條
-watch(() => props.step, (newStep) => {
-  animateToStep(newStep)
-})
+watch(
+  () => props.step,
+  (newStep) => {
+    animateToStep(newStep)
+  }
+)
 
 //創建時
 onMounted(() => {
@@ -53,10 +56,6 @@ const currentStep = computed(() => props.step)
 </script>
 
 <style scoped>
-.invert {
-  filter: invert(100%);
-}
-
 /* 增加組件間距控制 */
 .user-progress {
   margin-bottom: 2rem;
@@ -68,7 +67,7 @@ const currentStep = computed(() => props.step)
     <div class="container my-4 pt-3">
       <div class="px-5 pt-2 pb-5">
         <div class="position-relative">
-          <div class="progress" style="height: 10px;">
+          <div class="progress bg-secondary-subtle" style="height: 10px">
             <div class="progress-bar bg-primary" :style="{
               width: displayWidth,
               transition: 'width 1s cubic-bezier(0.8, 0, 1, 1)'
@@ -78,7 +77,8 @@ const currentStep = computed(() => props.step)
             <div v-for="(step, index) in steps" :key="index" class="position-relative">
               <div
                 class="rounded-circle d-flex align-items-center justify-content-center border border-4 shadow-sm position-absolute start-50 translate-middle"
-                :class="currentStep >= index ? 'border-primary' : 'border-secondary-subtle text-muted'" :style="{
+                :class="currentStep >= index ? 'border-primary' : 'border-secondary-subtle text-muted'
+                  " :style="{
                   width: '40px',
                   height: '40px',
                   top: '0px',
@@ -86,17 +86,21 @@ const currentStep = computed(() => props.step)
                   transition: 'border-color 1s cubic-bezier(0.8, 0, 1, 1), color 2.5s'
                 }">
                 <div
-                  class="bg-body text-body rounded-circle d-flex align-items-center justify-content-center w-100 h-100 invert position-absolute"
+                  class="rounded-circle d-flex align-items-center justify-content-center w-100 h-100 position-absolute"
                   :style="{
-                    opacity: currentStep >= index ? 1 : 0,
-                    transition: 'opacity 1s cubic-bezier(0.8, 0, 1, 1)'
+                    backgroundColor:
+                      currentStep >= index ? 'var(--bs-body-bg)' : 'var(--bs-secondary-bg)',
+                    color: currentStep >= index ? 'var(--bs-body-color)' : 'var(--bs-body-bg)',
+                    transition:
+                      'background-color 1s cubic-bezier(0.8, 0, 1, 1), color 1s cubic-bezier(0.8, 0, 1, 1)'
                   }">
                   <i :class="['bi', step.icon]"></i>
                 </div>
                 <i v-if="currentStep < index" :class="['bi', step.icon]"></i>
               </div>
+
               <div class="position-absolute start-50 translate-middle-x mt-4 small fw-bold text-nowrap"
-                :class="currentStep >= index ? 'text-body' : 'text-muted'" style="top: 10px;">
+                :class="currentStep >= index ? 'text-body' : 'text-muted'" style="top: 10px">
                 {{ step.title }}
               </div>
             </div>

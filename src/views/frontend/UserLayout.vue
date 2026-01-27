@@ -4,7 +4,6 @@ import Navbar from '@/components/frontend/UserNavbar.vue'
 import ToastMessages from '@/components/shared/ToastMessages.vue'
 
 const statusStore = useStatusStore()
-
 </script>
 
 <style scoped>
@@ -25,7 +24,7 @@ const statusStore = useStatusStore()
 <template>
   <div class="bg-body-secondary d-flex flex-column min-vh-100">
     <Navbar />
-    <main class="flex-grow-1" style="margin-top: var(--nav-height, 70px);">
+    <main class="flex-grow-1" style="margin-top: var(--nav-height, 70px)">
       <LoadingOverlay :active="statusStore.isLoading" :z-index="1070" />
       <ToastMessages />
       <RouterView />
@@ -33,7 +32,7 @@ const statusStore = useStatusStore()
     <div class="footer bg-info-subtle">
       <div class="container py-4">
         <div class="row justify-content-center">
-          <div class="col-12 col-lg-11  text-center">
+          <div class="col-12 col-lg-11 text-center">
             <h3 class="text-body">聯絡方式</h3>
             <div class="fs-4 mb-2">
               <RouterLink class="link-primary text-body mx-3" to="/">
@@ -46,7 +45,7 @@ const statusStore = useStatusStore()
                 <i class="bi bi-instagram"></i>
               </RouterLink>
               <div class="vr mx-3 d-lg-inline-block d-none"></div>
-              <hr class="d-lg-none">
+              <hr class="d-lg-none" />
               <a href="tel:+886987654321" class="link-primary text-body mx-3">
                 <i class="bi bi-telephone-fill"></i>
               </a>
@@ -58,9 +57,12 @@ const statusStore = useStatusStore()
                 <i class="bi bi-geo-alt-fill"></i>
               </a>
             </div>
-            <RouterLink class="btn btn-adaptive m-3" to="/login">管理員登入</RouterLink>
+            <RouterLink class="btn btn-adaptive m-3" to="/login">後台登入</RouterLink>
           </div>
-          <p class="mb-0 text-body text-center">本網站由范智聖設計 © 2025版權所有 <br>「本網站為專案練習使用，所載之圖片、資訊皆為虛構，無實際交易行為」</p>
+          <p class="mb-0 text-body text-center">
+            本網站由范智聖設計 © 2025版權所有
+            <br />「本網站為專案練習使用，所載之圖片、資訊皆為虛構，無實際交易行為」
+          </p>
         </div>
       </div>
     </div>

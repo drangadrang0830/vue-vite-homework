@@ -17,7 +17,7 @@ const form = ref({
     name: '',
     email: '',
     tel: '',
-    address: '',
+    address: ''
   },
   message: ''
 })
@@ -44,7 +44,7 @@ const isPhone = (value) => {
     <div class="row mt-4 g-4">
       <div class="col-md-5 my-2">
         <div class="card border-0 shadow h-100">
-          <div class="card-header bg-primary text-white py-4">
+          <div class="card-header bg-secondary text-white py-4">
             <h5 class="card-title mb-0 text-center fw-bold">
               <i class="bi bi-box-seam-fill me-2"></i>獅子鄉宅配須知
             </h5>
@@ -59,7 +59,7 @@ const isPhone = (value) => {
                     <p class="text-muted mb-0">
                       主要透過獅子鄉聯合行銷網進行線上訂購。
                       <span class="badge rounded-pill bg-info text-dark ms-1">季節限定</span>
-                      <br><small>不定期發布產銷履歷蔬菜箱預購連結。</small>
+                      <br /><small>不定期發布產銷履歷蔬菜箱預購連結。</small>
                     </p>
                   </div>
                 </div>
@@ -71,7 +71,7 @@ const isPhone = (value) => {
                     <div class="fw-bold fs-5 mb-1">運費與配送</div>
                     <p class="text-muted mb-0">
                       活動商品採含運價（如澎湃禮箱 $800）。
-                      <br><span class="text-primary fw-bold small"><i class="bi bi-calendar-event"></i> 每週二固定寄出</span>
+                      <br /><span class="text-primary fw-bold small"><i class="bi bi-calendar-event"></i> 每週二固定寄出</span>
                     </p>
                   </div>
                 </div>
@@ -82,8 +82,9 @@ const isPhone = (value) => {
                   <div>
                     <div class="fw-bold fs-5 mb-1">售後保障</div>
                     <p class="text-muted mb-0">
-                      若收到商品有問題，應於 <span class="text-danger fw-bold">24 小時內</span> 拍照並聯繫客服。
-                      <br><small>提供專人協助退換貨，保障農產品質。</small>
+                      若收到商品有問題，應於
+                      <span class="text-danger fw-bold">24 小時內</span> 拍照並聯繫客服。
+                      <br /><small>提供專人協助退換貨，保障農產品質。</small>
                     </p>
                   </div>
                 </div>
@@ -95,7 +96,7 @@ const isPhone = (value) => {
                     <div class="fw-bold fs-5 mb-1">大宗採購服務</div>
                     <p class="text-muted mb-0">
                       針對學校、團膳、公司行號提供「預約交易」。
-                      <br><small>包含分級包裝與直送到點服務。</small>
+                      <br /><small>包含分級包裝與直送到點服務。</small>
                     </p>
                   </div>
                 </div>
@@ -106,7 +107,7 @@ const isPhone = (value) => {
             <div class="px-0 mb-3">
               <p class="small text-secondary border-top pt-3">如有任何問題，歡迎使用線上客服</p>
             </div>
-            <RouterLink class="btn btn-warning btn-lg rounded-pill px-5 shadow-sm" to="/cart">
+            <RouterLink class="btn btn-secondary btn-lg rounded-pill px-5 shadow-sm" to="/cart">
               <i class="bi bi-arrow-left"></i> 返回購物車
             </RouterLink>
           </div>
@@ -119,7 +120,8 @@ const isPhone = (value) => {
             <div class="mb-3">
               <label for="name" class="form-label small fw-bold">收件人姓名</label>
               <v-field id="name" name="姓名" type="text" class="form-control" :class="{ 'is-invalid': errors['姓名'] }"
-                placeholder="請輸入姓名" rules="alpha_dash|required" v-model="form.user.name"></v-field>
+                placeholder="請輸入姓名" :rules="{ required: true, regex: /^[\u4e00-\u9fa5a-zA-Z\s]+$/ }"
+                v-model="form.user.name"></v-field>
               <error-message name="姓名" class="invalid-feedback"></error-message>
             </div>
             <div class="mb-3">
@@ -148,10 +150,9 @@ const isPhone = (value) => {
               <error-message name="留言" class="invalid-feedback"></error-message>
             </div>
             <div class="text-end d-flex justify-content-center mt-auto">
-
-              <button class="btn btn-success btn-lg rounded-pill px-5 shadow-sm" type="submit"
+              <button class="btn btn-info btn-lg rounded-pill px-5 shadow-sm" type="submit"
                 :disabled="statusStore.isLoading">
-                <span v-if="statusStore.isLoading" class="spinner-border spinner-border-sm me-1 "></span>
+                <span v-if="statusStore.isLoading" class="spinner-border spinner-border-sm me-1"></span>
                 <i class="bi bi-send me-1"></i>送出訂單
               </button>
             </div>

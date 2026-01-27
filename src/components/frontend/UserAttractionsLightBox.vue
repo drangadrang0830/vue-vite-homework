@@ -50,13 +50,31 @@ const formattedImgs = computed(() => {
 </template>
 
 <style scoped>
+.main-image {
+  cursor: pointer;
+  /* 1. 核心設置：隱藏溢出部分 */
+  overflow: hidden;
+
+  /* 2. 確保圓角被正確繼承 */
+  border-radius: 1rem;
+  /* 這裡要跟您的 rounded-4 (1rem) 一致 */
+
+  /* 3. 關鍵補丁：防止縮放時圓角失效 (針對 webkit 瀏覽器) */
+  transform: translateZ(0);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
 .main-image img {
   cursor: pointer;
 }
 
 .zoomable-img {
+  width: 100%;
+  height: 100%;
   transition: transform 0.3s ease;
   object-fit: cover;
+  /* 確保圖片本身也帶有圓角，雙重保險 */
+  border-radius: inherit;
 }
 
 .main-image:hover .zoomable-img {

@@ -12,13 +12,16 @@ onMounted(async () => {
 //邊框顏色
 const borderColor = (num) => {
   switch (num) {
-    case '熱門景點': return 'danger'
-    case '夜宿地點': return 'warning'
-    case '美食饗宴': return 'success'
-    default: return 'primary'
+    case '熱門景點':
+      return 'danger'
+    case '夜宿地點':
+      return 'warning'
+    case '美食饗宴':
+      return 'success'
+    default:
+      return 'primary'
   }
 }
-
 </script>
 
 <style scoped>
@@ -92,7 +95,7 @@ const borderColor = (num) => {
   border-style: solid;
   border-color: #fff transparent transparent transparent;
   position: absolute;
-  bottom: -19px;
+  bottom: -17px;
   left: 50%;
   z-index: 3;
   -webkit-transform: translateX(-50%);
@@ -104,9 +107,9 @@ const borderColor = (num) => {
   height: 0px;
   border-width: 12px;
   border-style: solid;
-  border-color: rgb(102, 16, 242) transparent transparent transparent;
+  border-color: #6c757d transparent transparent transparent;
   position: absolute;
-  bottom: -23px;
+  bottom: -21px;
   left: 50%;
   z-index: 2;
   -webkit-transform: translateX(-50%);
@@ -119,7 +122,7 @@ const borderColor = (num) => {
 }
 
 .fixed-box:hover .triangleBorder {
-  border-color: rgb(85, 14, 201) transparent transparent transparent;
+  border-color: #6c757d transparent transparent transparent;
 }
 </style>
 
@@ -129,7 +132,8 @@ const borderColor = (num) => {
       <div class="col border-setting p-3 position-relative rounded-4 border-primary mb-3"
         v-for="item in userProductsStore.attractionData" :key="item.id" :class="`border-${borderColor(item.category)}`">
         <div class="title-position position-absolute start-50 translate-middle-x bg-body-secondary px-3 fs-2">
-          {{ item.category }}</div>
+          {{ item.category }}
+        </div>
         <div class="row">
           <div class="col-lg-4 align-self-center text-center">
             <UserAttractionsLightBox :imgList="item.imagesUrl" :productTitle="item.title" stretched-link />
@@ -147,9 +151,10 @@ const borderColor = (num) => {
       </div>
     </div>
     <div class="fixed-box text-center d-none d-lg-block">
-      <RouterLink class="nav-link link-body-emphasis mx-3 " to="/products">
+      <RouterLink class="nav-link link-body-emphasis mx-3" to="/products">
         <div class="trianglePosition">
-          <p class="triangle-text border border-primary border-3 text-center text-dark rounded-4 py-1 px-4 lh-sm">前往農特產區
+          <p class="triangle-text border border-secondary border-3 text-center text-dark rounded-4 py-1 px-4 lh-sm">
+            前往農特產區
           </p>
           <div class="triangle"></div>
           <div class="triangleBorder"></div>

@@ -25,13 +25,15 @@ defineProps({
   color: var(--text-color);
   overflow: hidden;
   cursor: pointer;
-  transition: color 0.4s ease, border-color 0.4s ease;
+  transition:
+    color 0.4s ease,
+    border-color 0.4s ease;
   letter-spacing: 2px;
   outline: none;
 }
 
 /* 深色模式：僅切換邊框與初始文字顏色，不影響三角形變數 */
-[data-bs-theme="dark"] .btn-bite {
+[data-bs-theme='dark'] .btn-bite {
   --border-color: #ffffff;
   --text-color: #ffffff;
 }
@@ -97,7 +99,7 @@ defineProps({
 </style>
 
 <template>
-  <button :class="['btn-bite', `btn-${size}`, 'mt-3']" type="button">
+  <button class="rounded" :class="['btn-bite', `btn-${size}`, 'mt-3']" type="button">
     <!-- 保持原樣 -->
     <span v-for="n in 4" :key="'top-' + n" class="triangle top-row" :style="{ '--n': n }"></span>
     <span v-for="n in 5" :key="'bot-' + n" class="triangle bot-row" :style="{ '--n': n }"></span>

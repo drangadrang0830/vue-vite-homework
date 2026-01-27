@@ -46,21 +46,22 @@ const onSubmit = async () => {
       await fetchOrder()
       const totalAmount = orderData.value.order.total
 
-      const swalConfig = totalAmount > 1500
-        ? {
-          title: '感謝您的支持！',
-          text: `本次消費已達感恩大回饋門檻。您的85折優惠碼為【ShiziTownship】，請妥善收存`,
-          icon: 'success'
-        }
-        : {
-          title: '付款成功！',
-          text: '我們將盡快為您安排出貨，感謝您的購買。',
-          icon: 'success'
-        }
+      const swalConfig =
+        totalAmount > 1500
+          ? {
+            title: '感謝您的支持！',
+            text: `本次消費已達感恩大回饋門檻。您的85折優惠碼為【ShiziTownship】，請妥善收存`,
+            icon: 'success'
+          }
+          : {
+            title: '付款成功！',
+            text: '我們將盡快為您安排出貨，感謝您的購買。',
+            icon: 'success'
+          }
       await Swal.fire({
         ...swalConfig,
-        confirmButtonText: '回到商品頁面',
-        confirmButtonColor: '#198754',
+        confirmButtonText: '繼續購物去!',
+        confirmButtonColor: '#6c757d',
         allowOutsideClick: false
       })
 
@@ -70,55 +71,105 @@ const onSubmit = async () => {
     isSubmitting.value = false
   }
 }
-
 </script>
+
+<style scoped>
+.custom-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* 針對行動版與桌機版的比例調整 */
+.col-img {
+  width: 0%;
+}
+
+/* 手機版隱藏 */
+.col-name {
+  width: 40%;
+}
+
+.col-qty {
+  width: 30%;
+}
+
+.col-price {
+  width: 30%;
+}
+
+@media (min-width: 768px) {
+  .col-img {
+    width: 30%;
+  }
+
+  .col-name {
+    width: 30%;
+  }
+
+  .col-qty {
+    width: 20%;
+  }
+
+  .col-price {
+    width: 20%;
+  }
+}
+</style>
 
 <template>
   <div class="container my-4">
     <UserProgress :step="currentStep" />
     <div v-if="orderData" class="my-5 row justify-content-center">
-      <form class="col-md-8 bg-white border rounded-4 p-3" @submit.prevent="onSubmit">
+      <form class="col-md-6 bg-body border rounded-4 p-3" @submit.prevent="onSubmit">
         <h4 class="text-center fs-4 fw-bold">訂單資訊</h4>
         <div v-if="!orderData.order.is_paid" class="alert alert-danger text-center fw-bold fs-5" role="alert">
           應付總金額：{{ $filters.currency(orderData.order.total) }}
         </div>
-        <table class="table table-borderless">
-          <tbody>
-            <tr>
-              <th>姓名</th>
-              <td>{{ orderData.order.user.name }}</td>
-            </tr>
-            <tr>
-              <th>收件人電話</th>
-              <td>{{ orderData.order.user.tel }}</td>
-            </tr>
-            <tr>
-              <th width="100">Email</th>
-              <td>{{ orderData.order.user.email }}</td>
-            </tr>
-            <tr>
-              <th>收件人地址</th>
-              <td>{{ orderData.order.user.address }}</td>
-            </tr>
-            <tr>
-              <th>付款狀態</th>
-              <td>
-                <span v-if="!orderData.order.is_paid" class="text-danger">尚未付款</span>
-                <span v-else class="text-success">付款完成</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="row my-3 g-2">
+
+        <div class="mb-3 pb-2">
+          <div class="row gy-2">
+            <!-- 姓名 -->
+            <div class="col-12 col-md-3 fw-bold">姓名</div>
+            <div class="col-12 col-md-9 text-muted">
+              {{ orderData.order.user.name }}
+            </div>
+            <!-- 電話 -->
+            <div class="col-12 col-md-3 fw-bold">收件人電話</div>
+            <div class="col-12 col-md-9 text-muted">
+              {{ orderData.order.user.tel }}
+            </div>
+
+            <!-- Email -->
+            <div class="col-12 col-md-3 fw-bold">Email</div>
+            <div class="col-12 col-md-9 text-break text-muted">
+              {{ orderData.order.user.email }}
+            </div>
+
+            <!-- 地址 -->
+            <div class="col-12 col-md-3 fw-bold">收件人地址</div>
+            <div class="col-12 col-md-9 text-muted">
+              {{ orderData.order.user.address }}
+            </div>
+
+            <!-- 付款狀態 -->
+            <div class="col-12 col-md-3 fw-bold">付款狀態</div>
+            <div class="col-12 col-md-9 text-muted">
+              <span v-if="!orderData.order.is_paid" class="text-danger">尚未付款</span>
+              <span v-else class="text-success">付款完成</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3 g-2">
           <div class="col-6">
-            <button type="button" class="btn btn-warning w-100"
+            <button type="button" class="btn btn-secondary w-100"
               :disabled="statusStore.isLoading || isSubmitting || orderData.order.is_paid"
               @click="$router.push('/products')">
               稍後付款
             </button>
           </div>
           <div class="col-6">
-            <button class="btn btn-success w-100"
+            <button class="btn btn-info w-100"
               :disabled="statusStore.isLoading || isSubmitting || orderData.order.is_paid" type="submit">
               <span v-if="statusStore.isLoading || isSubmitting" class="spinner-border spinner-border-sm me-1"
                 role="status"></span>
@@ -136,32 +187,45 @@ const onSubmit = async () => {
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <table class="table align-middle table-borderless">
+                <table class="table align-middle table-borderless custom-table">
                   <thead>
                     <tr>
-                      <th class="w-25 fs-5">品名</th>
-                      <th class="fs-5 d-none d-md-table-cell"></th>
-                      <th class="text-end fs-5">數量</th>
-                      <th class="text-end fs-5">單價</th>
+                      <!-- 第一欄：圖片 (手機版 0% / MD 30%) -->
+                      <th class="d-none d-md-table-cell col-img">
+                        <span class="fs-5">品名</span>
+                      </th>
+
+                      <!-- 第二欄：名稱 (手機版 40% / MD 30%) -->
+                      <th class="fs-5 col-name">
+                        <span class="d-inline d-md-none">品名</span>
+                      </th>
+
+                      <!-- 第三欄：數量 (手機版 30% / MD 20%) -->
+                      <th class="text-end fs-5 col-qty">數量</th>
+
+                      <!-- 第四欄：單價 (手機版 30% / MD 20%) -->
+                      <th class="text-end fs-5 col-price">單價</th>
                     </tr>
                   </thead>
+
                   <tbody v-if="orderData">
                     <tr v-for="(item, key) in orderData.order.products" :key="key">
-                      <td><img :src="item.product.imagesUrl[0]" :alt="item.product.title"
-                          class="img-fluid rounded-4 d-none d-md-table-cell">
-                        <h6 class="d-md-none d-table-cell">{{ item.product.title }}</h6>
+                      <td class="d-none d-md-table-cell">
+                        <img :src="item.product.imagesUrl[0]" :alt="item.product.title" class="img-fluid rounded-4" />
                       </td>
-                      <td class="d-none d-md-table-cell">{{ item.product.title }}</td>
+                      <td class="text-break">{{ item.product.title }}</td>
                       <td class="text-end">{{ item.qty }} / {{ item.product.unit }}</td>
                       <td class="text-end">{{ $filters.currency(item.final_total) }}</td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td></td>
                       <td class="d-none d-md-table-cell"></td>
+                      <td></td>
                       <td class="text-end fw-bold fs-5">總計</td>
-                      <td class="text-end fw-bold">{{ $filters.currency(orderData.order.total) }}</td>
+                      <td class="text-end fw-bold">
+                        {{ $filters.currency(orderData.order.total) }}
+                      </td>
                     </tr>
                   </tfoot>
                 </table>
