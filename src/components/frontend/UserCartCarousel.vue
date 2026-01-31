@@ -65,8 +65,9 @@ const getProduct = (id) => {
         delay: 0,
         disableOnInteraction: false,
         pauseOnMouseEnter: true
-      }" :breakpoints="{ 768: { slidesPerView: 5, spaceBetween: 50 } }" :pagination="{ clickable: true }"
-      :modules="modules" class="pb-5 marquee-swiper ">
+      }"
+      :breakpoints="{ 768: { slidesPerView: 3, spaceBetween: 15 }, 1024: { slidesPerView: 4, spaceBetween: 20 }, 1400: { slidesPerView: 5, spaceBetween: 30 } }"
+      :pagination="{ clickable: true }" :modules="modules" class="pb-5 marquee-swiper ">
 
       <SwiperSlide v-for="product in userProductsStore.specialOfferProducts" :key="product.id">
         <div class="card h-100 position-relative overflow-hidden shadow-sm" @click="getProduct(product.id)">

@@ -154,6 +154,15 @@ const renderCustomPagination = (index, className) => {
 :deep(.thumbs-swiper .swiper-slide:hover .ratio) {
   border-color: var(--bs-info);
 }
+
+.special-offer {
+  position: absolute;
+  transform: scaleX(-1);
+  /* 讓圖片底部對齊文字基線，或改用 top: 0 */
+  bottom: 0;
+  /* 關鍵：永遠站在文字左邊邊界 */
+  right: 100%;
+}
 </style>
 
 <template>
@@ -174,6 +183,7 @@ const renderCustomPagination = (index, className) => {
         </li>
       </ol>
     </nav>
+
     <div class="row my-3">
       <div class="col-lg-6" v-if="isSwiperReady && product.imagesUrl && product.imagesUrl.length > 0">
         <swiper :spaceBetween="10" :thumbs="{ swiper: thumbsSwiper }" :modules="modules"
@@ -205,19 +215,18 @@ const renderCustomPagination = (index, className) => {
         <div>
           <div class="text-lg-end mt-4">
             <p class="my-0" :class="product.origin_price !== product.price
-                ? 'text-decoration-line-through fs-6 text-secondary'
-                : 'fs-4'
+              ? 'text-decoration-line-through fs-6 text-secondary'
+              : 'fs-4'
               ">
               <span v-if="product.origin_price !== product.price">原價</span>
               <span v-else>售價</span>
               {{ $filters.currency(product.origin_price) }}元
             </p>
-            <div v-if="product.origin_price !== product.price" class="position-relative">
-              <h3 class="fs-3 text-danger fw-bold">
+            <div v-if="product.origin_price !== product.price" class="position-relative d-inline-block float-lg-end">
+              <h3 class="fs-3 text-danger fw-bold m-0">
                 現在只要{{ $filters.currency(product.price) }}元!!
               </h3>
-              <img src="@/assets/special-offer.png" alt="特價標示圖"
-                class="w-25 d-none d-lg-block start-100 top-50 position-absolute translate-middle-y" />
+              <img src="@/assets/special-offer.png" alt="特價標示圖" class="special-offer w-50 d-none d-lg-block">
             </div>
           </div>
           <div class="input-group mt-3">
@@ -259,8 +268,8 @@ const renderCustomPagination = (index, className) => {
                 <h5 class="card-title border-bottom pb-3">{{ item.title }}</h5>
                 <div>
                   <p class="my-0" :class="item.origin_price !== item.price
-                      ? 'text-decoration-line-through fs-6'
-                      : 'fs-5'
+                    ? 'text-decoration-line-through fs-6'
+                    : 'fs-5'
                     ">
                     <span v-if="item.origin_price !== item.price">原價</span>
                     <span v-else>售價</span>
